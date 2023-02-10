@@ -1,0 +1,33 @@
+{
+    "infoSystemServer":[
+        {"name": "工业控制信息系统", "url": ""},
+        {"name": "制造执行信息系统",   "url": ""},
+        {"name": "安全生产信息系统", "url": ""},
+        {"name": "数控系统", "url": ""},
+        {"name": "工业通信设备", "url": ""},
+        {"name": "智慧物联技术服务", "url": ""},
+        {"name": "工业设计服务", "url": ""},
+        {"name": "3D打印",   "url": ""}
+    ],
+    "controlLayer": [
+        {"name": "工业控制设备", "url" :"" },
+        {"name": "工控显示设备",   "url" :"" }, 
+        {"name": "嵌入式计算机系统", "url" :"" }
+    ],
+    "perceptionLayer": [
+        {"name": "工业测控仪表", "url" : ""}
+    ],
+    "executiveLayer":[
+        {"name": "变频器设备", "url" :"" },
+        {"name": "微电机设备", "url" :"" }, 
+        {"name": "工业传动驱动设备", "url" :"" },
+        {"name": "机械臂及机器人",     "url" :"" }
+    ],
+    "supportingEquipment": [
+        {"name": "工业传输设备", "url" :"" },
+        {"name": "消防安全监控设备", "url" :"" }, 
+        {"name": "安防视频监控设备", "url" :"" },
+        {"name": "期视觉监测设备", "url" :"" },
+        {"name": "RFID器件", "url" :"" }
+    ]
+}

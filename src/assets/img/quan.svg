@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.5 (67469) - http://www.bohemiancoding.com/sketch -->
+    <title>分组 22</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="7.5" cy="7.5" r="5.5"></circle>
+        <filter x="-54.5%" y="-54.5%" width="209.1%" height="209.1%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0123297904   0 0 0 0 0.376036352   0 0 0 0 0.362755627  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="南京-领导指挥舱" transform="translate(-371.000000, -349.000000)" fill-rule="nonzero">
+            <g id="分组-22" transform="translate(373.000000, 351.000000)">
+                <circle id="椭圆形" stroke-opacity="0.5684726" stroke="#3CDB9F" stroke-width="0.5" fill-opacity="0.541553442" fill="#3CDB9F" cx="7.5" cy="7.5" r="7.5"></circle>
+                <g id="椭圆形">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use fill="#3CDB9F" xlink:href="#path-1"></use>
+                </g>
+                <circle id="椭圆形" fill="#71F4C2" cx="7.5" cy="7.5" r="2.5"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

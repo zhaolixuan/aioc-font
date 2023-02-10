@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0"
+    />
+
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="x5-fullscreen" content="true" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+
+    <title>iMap城市仿真平台</title>
+
+    <link href="./assets/css/common.css" rel="stylesheet" />
+    <link href="/static/lib/iconfont/iconfont.css" rel="stylesheet" />
+    <link href="./assets/css/map_common.css" rel="stylesheet" />
+    <style>
+
+    </style>
+  </head>
+
+  <body class="dark">
+    <div id="draw" class="gh_btn" style="top:150px;right:50px">
+      <span>开始选址</span>
+    </div>
+    <div id="popupview" style="display:none" class="project_pop small_pop">
+      <h2 data-bind="text:land.name"></h2>
+      <h3 data-bind="text:land.type"></h3>
+      <ul>
+        <li data-bind="text:land.areaString"></li>
+        <li data-bind="text:land.statusContent"></li>
+        <li data-bind="text:land.enterpriseNameString"></li>
+      </ul>
+      <div class="triangle"></div>
+    </div>
+    <!--搜索列表-->
+    <div id="searchContent" class="search_list" style="left:0;top: 150px;">
+      <div class="search_main">
+        <input type="text" name="请输入搜索内容" placeholder="请输入搜索内容" />
+        <span class="iconfont iconicon-sousuo"></span>
+      </div>
+      <div class="list_main" style="height: 524px;">
+        <div class="listtitle"><span>地块名称</span><span>状态</span></div>
+
+        <ul>
+          <!-- <span><span >地块名称</span><span>状态</span></span> -->
+        </ul>
+        <div class="page">
+          <!-- <p><span> < </span> <i class="on">1</i><i>2</i><i>3</i><i>4</i><i>5</i><span> > </span></p> -->
+        </div>
+      </div>
+    </div>
+
+    <!--选择弹框-->
+    <div class="pickPolygon select_pop">
+      <ul>
+        <li>
+          <span>项目名称：</span>
+          <select
+            data-bind="options:projectList,optionsText:'name',optionsValue:'id', value: value, optionsCaption: '请选择项目名称'"
+          >
+          </select>
+        </li>
+        <li class="mt_10">
+          <span>区域名称：</span
+          ><input type="text" data-bind="value:areaName" placeholder="请输入" />
+        </li>
+        <li><span>面积：</span><em data-bind="text:areaString"></em></li>
+        <li>
+          <span>意向企业名称：</span
+          ><em data-bind="text:company">NO A213323242</em>
+        </li>
+      </ul>
+      <div class="con_btn">
+        <span id="submit" class="on">提交</span><span id="reset">撤销</span>
+      </div>
+    </div>
+    <!--地块详情列表-->
+    <div class="pickPolygon details_list">
+      <div class="list_tit">地块详情列表</div>
+      <div class="dk_list">
+        <dl>
+          <dt><i class="iconfont iconicon-diqu"></i>东升乡2号地</dt>
+          <dd>
+            <span><i>用地类型</i>住宅用地</span>
+            <span><i>面积</i>2 km²</span>
+            <span><i>当前状态</i><b class="qyyx"></b>企业意向</span>
+          </dd>
+        </dl>
+        <dl>
+          <dt><i class="iconfont iconicon-diqu"></i>东升乡2号地</dt>
+          <dd>
+            <span><i>用地类型</i>住宅用地</span>
+            <span><i>面积</i>2 km²</span>
+            <span><i>当前状态</i><b class="cqz"></b>拆迁中</span>
+          </dd>
+        </dl>
+        <dl class="active">
+          <dt><i class="iconfont iconicon-diqu"></i>东升乡2号地</dt>
+          <dd>
+            <span><i>用地类型</i>住宅用地</span>
+            <span><i>面积</i>2 km²</span>
+            <span><i>当前状态</i><b class="wcq"></b>未拆迁</span>
+          </dd>
+        </dl>
+        <dl>
+          <dt><i class="iconfont iconicon-diqu"></i>东升乡2号地</dt>
+          <dd>
+            <span><i>用地类型</i>住宅用地</span>
+            <span><i>面积</i>2 km²</span>
+            <span><i>当前状态</i><b class="yrz"></b>已入驻</span>
+          </dd>
+        </dl>
+        <dl>
+          <dt><i class="iconfont iconicon-diqu"></i>东升乡2号地</dt>
+          <dd>
+            <span><i>用地类型</i>住宅用地</span>
+            <span><i>面积</i>2 km²</span>
+            <span><i>当前状态</i><b class="cqz"></b>拆迁中</span>
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <!--确认弹框-->
+    <div class="confirm_pop">
+      <p>
+        <i class=" iconfont iconicon-yiwen"></i
+        ><span>是否确认将"目标地块1"的意向企业变更为"梅赛德斯奔驰公司"?</span>
+      </p>
+      <div class="con_btn">
+        <span id="okClick" class="on">确认</span
+        ><span id="cancelClick">取消</span>
+      </div>
+    </div>
+
+    <!--加载前进行操作提示，优化用户体验-->
+    <div id="mask" class="signmask" onclick="removeMask()"></div>
+    <div id="cesiumContainer" class="cesium-container"></div>
+    <!--第三方lib-->
+    <script src="./assets/js/conf.js"></script>
+    <!-- script src="./assets/js/cookie.js"></script -->
+
+    <script type="text/javascript" src="/static/lib/include-lib.js" libpath="/static/lib/" include="jquery,layer,haoutil,turf,cesium-map"></script>
+    <script src="/static/lib/CesiumPlugins/jdMap/jdWidget.js"></script>
+    <script src="/static/lib/CesiumPlugins/newGeometry/CesiumGeometry-src.js"></script>
+    <script src="./assets/js/site.js"></script>
+  </body>
+</html>

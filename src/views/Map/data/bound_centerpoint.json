@@ -1,0 +1,22 @@
+{
+"type": "FeatureCollection",
+"name": "bound_centerpoint",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "name": "濂溪区" }, "geometry": { "type": "Point", "coordinates": [ 116.057065732855335, 29.666070009583109 ] } },
+{ "type": "Feature", "properties": { "name": "浔阳区" }, "geometry": { "type": "Point", "coordinates": [ 116.003887, 29.723197593688212 ] } },
+{ "type": "Feature", "properties": { "name": "柴桑区" }, "geometry": { "type": "Point", "coordinates": [ 115.792645846491837, 29.609795677768659 ] } },
+{ "type": "Feature", "properties": { "name": "武宁县" }, "geometry": { "type": "Point", "coordinates": [ 115.016012923068615, 29.257551753181815 ] } },
+{ "type": "Feature", "properties": { "name": "修水县" }, "geometry": { "type": "Point", "coordinates": [ 114.438807661719579, 28.994165440797474 ] } },
+{ "type": "Feature", "properties": { "name": "永修县" }, "geometry": { "type": "Point", "coordinates": [ 115.6035377500001, 29.138385836786938 ] } },
+{ "type": "Feature", "properties": { "name": "德安县" }, "geometry": { "type": "Point", "coordinates": [ 115.614480358879518, 29.406273734639456 ] } },
+{ "type": "Feature", "properties": { "name": "都昌县" }, "geometry": { "type": "Point", "coordinates": [ 116.333315042343997, 29.325547177948295 ] } },
+{ "type": "Feature", "properties": { "name": "湖口县" }, "geometry": { "type": "Point", "coordinates": [ 116.286002619864007, 29.661881837850899 ] } },
+{ "type": "Feature", "properties": { "name": "彭泽县" }, "geometry": { "type": "Point", "coordinates": [ 116.622174162943224, 29.829106589421883 ] } },
+{ "type": "Feature", "properties": { "name": "瑞昌市" }, "geometry": { "type": "Point", "coordinates": [ 115.440502000000151, 29.591972754867413 ] } },
+{ "type": "Feature", "properties": { "name": "共青城市" }, "geometry": { "type": "Point", "coordinates": [ 115.827339675803501, 29.250811941309848 ] } },
+{ "type": "Feature", "properties": { "name": "庐山市" }, "geometry": { "type": "Point", "coordinates": [ 116.068979999999897, 29.512254404212854 ] } },
+{ "type": "Feature", "properties": { "name": "九江经济技术开发区" }, "geometry": { "type": "Point", "coordinates": [ 115.958732,29.708508] } }
+
+]
+}

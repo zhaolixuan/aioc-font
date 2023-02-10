@@ -1,0 +1,404 @@
+﻿{
+	"financialAnalysis": [{
+			"industryName": "飞机及发动机制造",
+			"income": 854660.98,
+			"grossRate": 10.92,
+			"netInterestRate": 0.13,
+			"liabilityRate": 57.29
+		},
+		{
+			"industryName": "轮胎",
+			"income": 680399.21,
+			"grossRate": 17.21,
+			"netInterestRate": 3.35,
+			"liabilityRate": 52.74
+		},
+		{
+			"industryName": "LED显示屏",
+			"income": 528956.16,
+			"grossRate": 22.8,
+			"netInterestRate": 9.85,
+			"liabilityRate": 38
+		},
+		{
+			"industryName": "造纸",
+			"income": 306738.71,
+			"grossRate": 18.92,
+			"netInterestRate": 3.2,
+			"liabilityRate": 42.37
+		},
+		{
+			"industryName": "触摸屏系统",
+			"income": 303158.93,
+			"grossRate": 16.67,
+			"netInterestRate": -8.72,
+			"liabilityRate": 53.6
+		},
+		{
+			"industryName": "高温合金材料",
+			"income": 268321.92,
+			"grossRate": 34.2,
+			"netInterestRate": 9.51,
+			"liabilityRate": 39.13
+		},
+		{
+			"industryName": "染料",
+			"income": 244663.4,
+			"grossRate": 34.47,
+			"netInterestRate": 9.99,
+			"liabilityRate": 37.87
+		},
+		{
+			"industryName": "光伏电池组件",
+			"income": 225519.46,
+			"grossRate": 8.02,
+			"netInterestRate": -28.23,
+			"liabilityRate": 51.66
+		},
+		{
+			"industryName": "风电设备",
+			"income": 203588.1,
+			"grossRate": 24.99,
+			"netInterestRate": -6.21,
+			"liabilityRate": 45.33
+		},
+		{
+			"industryName": "光伏硅片材料",
+			"income": 197038.18,
+			"grossRate": 6.43,
+			"netInterestRate": 4.16,
+			"liabilityRate": 46.07
+		},
+		{
+			"industryName": "集成电路封装测试",
+			"income": 192838.35,
+			"grossRate": 22.55,
+			"netInterestRate": -5.51,
+			"liabilityRate": 41.2
+		},
+		{
+			"industryName": "锂电池",
+			"income": 164719.95,
+			"grossRate": 19.64,
+			"netInterestRate": 4.06,
+			"liabilityRate": 41.56
+		},
+		{
+			"industryName": "汽车车身配件",
+			"income": 155986.51,
+			"grossRate": 20.33,
+			"netInterestRate": 4.71,
+			"liabilityRate": 36.88
+		},
+		{
+			"industryName": "航空机载设备",
+			"income": 152880.81,
+			"grossRate": 32.02,
+			"netInterestRate": 9.44,
+			"liabilityRate": 41.31
+		},
+		{
+			"industryName": "内燃机及配件",
+			"income": 144779.14,
+			"grossRate": 21.82,
+			"netInterestRate": -28.64,
+			"liabilityRate": 39.49
+		},
+		{
+			"industryName": "有机硅",
+			"income": 129332.37,
+			"grossRate": 20.18,
+			"netInterestRate": 5.8,
+			"liabilityRate": 25.43
+		},
+		{
+			"industryName": "石墨材料",
+			"income": 126555.18,
+			"grossRate": 38.26,
+			"netInterestRate": 1.8,
+			"liabilityRate": 42.18
+		},
+		{
+			"industryName": "发动机配件",
+			"income": 119047.35,
+			"grossRate": 26.29,
+			"netInterestRate": -1.59,
+			"liabilityRate": 47.89
+		},
+		{
+			"industryName": "蓝宝石材料",
+			"income": 117123.29,
+			"grossRate": 3.65,
+			"netInterestRate": -150.92,
+			"liabilityRate": 40.09
+		}
+	],
+	"company": [{
+			"industryName": "配电开关检测控制设备",
+			"aCompany": 38,
+			"threeCompany": 62,
+			"fourCompany": 238,
+			"Financed": 36
+		},
+		{
+			"industryName": "发动机配件",
+			"aCompany": 32,
+			"threeCompany": 32,
+			"fourCompany": 88,
+			"Financed": 53
+		},
+		{
+			"industryName": "光伏电池组件",
+			"aCompany": 27,
+			"threeCompany": 10,
+			"fourCompany": 30,
+			"Financed": 40
+		},
+		{
+			"industryName": "汽车车身配件",
+			"aCompany": 27,
+			"threeCompany": 13,
+			"fourCompany": 59,
+			"Financed": 40
+		},
+		{
+			"industryName": "造纸",
+			"aCompany": 25,
+			"threeCompany": 19,
+			"fourCompany": 88,
+			"Financed": 49
+		},
+		{
+			"industryName": "风电设备",
+			"aCompany": 24,
+			"threeCompany": 9,
+			"fourCompany": 32,
+			"Financed": 35
+		},
+		{
+			"industryName": "锂电池",
+			"aCompany": 20,
+			"threeCompany": 19,
+			"fourCompany": 58,
+			"Financed": 84
+		},
+		{
+			"industryName": "机床工具",
+			"aCompany": 20,
+			"threeCompany": 31,
+			"fourCompany": 173,
+			"Financed": 82
+		},
+		{
+			"industryName": "磁性材料",
+			"aCompany": 16,
+			"threeCompany": 18,
+			"fourCompany": 50,
+			"Financed": 48
+		},
+		{
+			"industryName": "变压器设备",
+			"aCompany": 16,
+			"threeCompany": 36,
+			"fourCompany": 67,
+			"Financed": 26
+		},
+		{
+			"industryName": "橡胶制品",
+			"aCompany": 16,
+			"threeCompany": 19,
+			"fourCompany": 114,
+			"Financed": 43
+		},
+		{
+			"industryName": "化学试剂及助剂",
+			"aCompany": 16,
+			"threeCompany": 38,
+			"fourCompany": 169,
+			"Financed": 68
+		},
+		{
+			"industryName": "塑料管材",
+			"aCompany": 15,
+			"threeCompany": 35,
+			"fourCompany": 159,
+			"Financed": 24
+		},
+		{
+			"industryName": "油漆涂料",
+			"aCompany": 15,
+			"threeCompany": 30,
+			"fourCompany": 173,
+			"Financed": 64
+		},
+		{
+			"industryName": "内燃机及配件",
+			"aCompany": 14,
+			"threeCompany": 9,
+			"fourCompany": 34,
+			"Financed": 22
+		},
+		{
+			"industryName": "光电薄膜制品",
+			"aCompany": 14,
+			"threeCompany": 12,
+			"fourCompany": 13,
+			"Financed": 41
+		},
+		{
+			"industryName": "超硬材料及工具",
+			"aCompany": 13,
+			"threeCompany": 14,
+			"fourCompany": 39,
+			"Financed": 45
+		},
+		{
+			"industryName": "触摸屏系统",
+			"aCompany": 13,
+			"threeCompany": 6,
+			"fourCompany": 17,
+			"Financed": 30
+		},
+		{
+			"industryName": "油墨颜料",
+			"aCompany": 12,
+			"threeCompany": 18,
+			"fourCompany": 38,
+			"Financed": 17
+		}
+	],
+	"financing": [{
+			"industryName": "轮胎",
+			"privateMoney": 312,
+			"investment": 9,
+			"bank": 8,
+			"insurance ": 14
+		},
+		{
+			"industryName": "石油开采助剂",
+			"privateMoney": 158,
+			"investment": 0,
+			"bank": 4,
+			"insurance ": 0
+		},
+		{
+			"industryName": "LED显示屏",
+			"privateMoney": 139,
+			"investment": 9,
+			"bank": 5,
+			"insurance ": 0
+		},
+		{
+			"industryName": "水处理助剂",
+			"privateMoney": 186,
+			"investment": 4,
+			"bank": 3,
+			"insurance ": 0
+		},
+		{
+			"industryName": "造纸",
+			"privateMoney": 318,
+			"investment": 9,
+			"bank": 5,
+			"insurance ": 0
+		},
+		{
+			"industryName": "塑料管材",
+			"privateMoney": 250,
+			"investment": 8,
+			"bank": 5,
+			"insurance ": 2
+		},
+		{
+			"industryName": "汽车车身配件",
+			"privateMoney": 323,
+			"investment": 10,
+			"bank": 7,
+			"insurance ": 5
+		},
+		{
+			"industryName": "变压器电感器",
+			"privateMoney": 105,
+			"investment": 8,
+			"bank": 1,
+			"insurance ": 0
+		},
+		{
+			"industryName": "非晶纳米材料",
+			"privateMoney": 108,
+			"investment": 3,
+			"bank": 2,
+			"insurance ": 0
+		},
+		{
+			"industryName": "触摸屏系统",
+			"privateMoney": 389,
+			"investment": 9,
+			"bank": 8,
+			"insurance ": 3
+		},
+		{
+			"industryName": "纳米碳酸钙",
+			"privateMoney": 62,
+			"investment": 0,
+			"bank": 1,
+			"insurance ": 0
+		},
+		{
+			"industryName": "碳纤维材料",
+			"privateMoney": 376,
+			"investment": 14,
+			"bank": 6,
+			"insurance ": 14
+		},
+		{
+			"industryName": "运动健身器材",
+			"privateMoney": 340,
+			"investment": 3,
+			"bank": 3,
+			"insurance ": 17
+		},
+		{
+			"industryName": "电子传感器",
+			"privateMoney": 749,
+			"investment": 14,
+			"bank": 9,
+			"insurance ": 10
+		},
+		{
+			"industryName": "橡胶制品",
+			"privateMoney": 258,
+			"investment": 8,
+			"bank": 5,
+			"insurance ": 2
+		},
+		{
+			"industryName": "耐磨材料",
+			"privateMoney": 86,
+			"investment": 8,
+			"bank": 0,
+			"insurance ": 0
+		},
+		{
+			"industryName": "磁性材料",
+			"privateMoney": 402,
+			"investment": 8,
+			"bank": 1,
+			"insurance ": 0
+		},
+		{
+			"industryName": "军警用防弹设备",
+			"privateMoney": 20,
+			"investment": 0,
+			"bank": 2,
+			"insurance ": 0
+		},
+		{
+			"industryName": "油墨颜料",
+			"privateMoney": 157,
+			"investment": 6,
+			"bank": 1,
+			"insurance ": 0
+		}
+	]
+}

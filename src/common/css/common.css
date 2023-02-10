@@ -1,0 +1,32 @@
+.nj_tit{
+  height: 1.34rem !important;
+}
+.main-nj-bg{
+  background:url("../../assets/img/nj_bg.png") repeat-y;
+  min-height: 10.8rem;
+  height: auto;
+  background-size:cover;
+}
+.content{
+  padding:0 .6rem;
+  display: flex;
+  min-height:5rem;
+}
+.content .right{
+  flex: 1;
+  margin-left: .4rem;
+  background: rgba(61,124,240,0.07)
+}
+.sx_tit{
+  margin: .35rem 0 0 .25rem;
+  color: #87bdff;
+  font-size: .18rem;
+}
+.table_main{
+  min-height: 5rem;
+}
+.page_box{
+  margin-right: .2rem;
+  padding-bottom: .4rem;
+}
+

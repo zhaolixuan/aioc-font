@@ -1,0 +1,299 @@
+{
+    "gdp":{
+      "speedUp":8.1,
+      "speedUpName":"GDP增速",
+      "sum": 11715,
+      "sumName":"生产总值",
+      "sumUnit":"亿元",
+      "order": 2,
+      "orderName":"生产总值省内排名",
+      "fixedAssets": 6362,
+      "fixedAssetsName":"固定资产投资",
+      "fixedAssetsUnit":"亿元",
+      "population": 680,
+      "populationName":"总人口",
+      "populationUnit":"万人"
+    },
+    "chanyefazhan":{
+      "speedUp": 8.1,
+      "speedUpName": "GDP增速",
+      "sum": 11715,
+      "sumName": "生产总值",
+      "sumUnit": "亿元",
+      "order": 2,
+      "orderName": "生产总值省内排名",
+      "fixedAssets": 6362,
+      "fixedAssetsName": "固定资产投资",
+      "fixedAssetsUnit": "亿元",
+      "population": 680,
+      "populationName": "总人口",
+      "populationUnit": "万人",
+      "title": "产业发展",
+      "hsunit": "万户",
+      "first": "第一产业",
+      "second": "第二产业",
+      "third": "第三产业",
+      "firstIndustry": 2.2,
+      "secondIndustry": 38.0,
+      "thirdlyIndustry": 59.8,
+      "marketEntity": 107,
+      "marketEntityProportion": 30,
+      "registeredFundProportion": 43,
+      "registeredFund": 19534,
+      "enterpriseNum": 55,
+      "enterpriseNumProportion": 25,
+      "individualNum": 52,
+      "individualNumProportion": 75,
+      "boxcy_tit": "三大产业占比",
+      "scztzl": "市场主体总量（万户）",
+      "zczj": "注册资金(亿元)",
+      "scztzlunit": "万户",
+      "zczjunit": "亿元",
+      "qyhs": "企业户数",
+      "gths": "个体户数"
+    },
+    "cyzcz":{
+      "title":"产业总产值",
+      "value": "150.95",
+      "data":[{
+        "name":"石油石化",
+        "value": 150.95
+      },{
+        "name":"临港新材料",
+        "value": 27.17
+      },{
+        "name":"电子信息",
+        "value": 33.21
+      },{
+        "name":"食品",
+        "value": 51.32
+      },{
+        "name":"海洋",
+        "value": 22.64
+      },{
+        "name":"木材",
+        "value": 16.6
+      },{
+        "name":"高端服务业",
+        "value": 16.6
+      }]
+    },
+    "szsy":{
+      "title":"招商引资",
+      "data":{
+        "fundingAvailability":20,
+        "yjgw": 32.58,
+        "yjgwt": "引进国外总投资",
+        "qnyStage": "签约阶段",
+        "hrStage": "签约阶段",
+        "rateOfOperation": 100,
+        "yjsw": 323.8,
+        "yjswt":"引进市外总投资",
+        "qyxmkgl":"签约项目开工率",
+        "quxmzjdwl":"签约项目资金到位率",
+        "hrxmdqcy":"华润项目",
+        "qnycy":"氢能源项目"
+
+      }
+    },
+    "rcyj":{
+      "title":"招财引智",
+      "hxjsry":"核心技术人员",
+      "hb":"环比",
+      "data":{
+        "introductionArray": [
+          {
+            "name": "石油石化",
+            "hb": 8,
+            "talentsNum": 150
+          },{
+            "name": "新材料",
+            "hb": 5,
+            "talentsNum": 280
+          },{
+            "name": "电子信息",
+            "hb": 10,
+            "talentsNum": 300
+          },{
+            "name": "食品",
+            "hb": 9,
+            "talentsNum": 200
+          },{
+            "name": "海洋",
+            "hb": 9,
+            "talentsNum": 100
+          },{
+            "name": "木材",
+            "hb": 9,
+            "talentsNum": 100
+          },{
+            "name": "高端服务业",
+            "hb": 9,
+            "talentsNum": 100
+          }
+        ]
+      }
+    },
+    "gdpTrend":{
+      "title":"生产总值趋势",
+      "unit":"亿元/年",
+      "data":{
+        "monthTrend": [
+          {
+            "month": "1",
+            "value": 6,
+            "tb":0.6
+          },{
+            "month": "2",
+            "value": 5.5,
+            "tb":0.55
+          },{
+            "month": "3",
+            "value": 3,
+            "tb":0.3
+          },{
+            "month": "4",
+            "value": 2,
+            "tb":0.2
+          },{
+            "month": "5",
+            "value": 1.8,
+            "tb":0.18
+          },{
+            "month": "6",
+            "value": 1.7,
+            "tb":0.25
+          },{
+            "month": "7",
+            "value": 1.6,
+            "tb":0.30
+          },{
+            "month": "8",
+            "value": 1.5,
+            "tb":0.15
+          },{
+            "month": "9",
+            "value": 1.4,
+            "tb":0.14
+          },{
+            "month": "10",
+            "value": 1.1,
+            "tb":0.11
+          },{
+            "month": "11",
+            "value": 1,
+            "tb":0.1
+          },{
+            "month": "12",
+            "value": 0.5,
+            "tb":0.05
+          }
+        ]
+      }
+    },
+    "hjzy":{
+      "wspj":"污水排减",
+      "yysdb":"饮水达标",
+      "title":"资源环境",
+      "zywr":"主要污染",
+      "aqi": "良",
+      "aqiname":"空气质量",
+      "nationwideOrder": 3,
+      "drinking": 1,
+      "pollutant": "可吸入颗粒物",
+      "provinceOrder": 4,
+      "aqiLevel": 80,
+      "aqiLevelName":"AQI指数",
+      "sewage": 0.2,
+      "blueSky": 70,
+      "blueSkyName":"蓝天比率"
+    },
+    "tpgj":{
+      "title":"人才储备",
+      "data":{
+        "ggtsytprk":"全市人才需求数量/万人",
+        "familyNum": 56.7,
+        "populationNum": 4146,
+        "ggtsytprkunit1":"户",
+        "ggtsytprkunit2":"人",
+
+        "ggtsyclpkc":"巩固提升已出列贫困村",
+        "totalPovertyCountry": 37,
+        "ggtsyclpkcunit":"个",
+
+        "tspkhrjhj":"人工智能产业人才缺口/万人",
+        "rjhj": 4.5,
+        "tspkhrjhjunit":"户",
+
+        "gspkhzftj":"高等教育应届毕业生数/万人",
+        "zftj": 33.7,
+        "gspkhzftjunit":"户",
+
+        "sscyfpxm":"原相关行业科研人才数/万人",
+        "industryTotal": 7.5,
+        "sscyfpxmunit":"个",
+
+        "xsfpbz":"孝善扶贫补助",
+        "xsfp": 727,
+        "xsfpbzunit":"人"
+      }
+    },
+    "zwfw":{
+      "title":"政务服务",
+      "ycsl":"一窗受理",
+      "ycbj":"一次办结",
+      "qzmyd":"群众满意度",
+      "xzgj":"加强管理信息归集",
+      "data":{
+        "jzfq":"简政放权",
+
+        "yxfqlqd":"不见面事项",
+        "avgPeriod": 1479,
+        "yxfqlqdunit":"项",
+
+        "xfxzqqd":"见一次面事项",
+        "powerList": 204,
+        "xfxzqqdunit":"项",
+
+        "fwts":"服务提升",
+        "ycsl": 70,
+        "finish": 80,
+        "massSatisfaction": 90,
+        "jqgljgxxgj":"加强管理监管信息归集",
+        "informationCollection": 100
+      }
+    },
+    "gdpmap":{
+      "map":{
+        "background": "url('../assets/img/beihaimap.png')1rem 0 no-repeat",
+        "width":"7.4rem",
+        "height": "5.15rem",
+        "background-size": "7.44rem 5.15rem",
+        "margin": " .8rem auto 0 auto",
+        "padding": "0 2.5rem 0 0",
+        "position": "relative"
+      },
+      "data":[
+        {
+          "gardenType": "麒麟科技创新园",
+          "income": 83,
+          "population": 107.8,
+          "gdp":1935
+        },{
+          "gardenType": "海城区",
+          "income":32625 ,
+          "population": 37.06,
+          "gdp": 517.2
+        },{
+          "gardenType": "银海区",
+          "income": 31751,
+          "population": 19.53,
+          "gdp": 127.06
+        },{
+          "gardenType": "铁山港区",
+          "income": 31252,
+          "population": 15.22,
+          "gdp": 330.8
+        }]
+    }
+  }
