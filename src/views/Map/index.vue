@@ -46,12 +46,12 @@ import roads from "./data/roads.json";
 import centerPoint from "./data/bound_centerpoint.json";
 import InformationPanel from "./Panel/InformationPanel";
 import waterJson from "./data/water.json";
-import {
-  EffectLayer,
-  EffectMarker,
-  GLTFLayer,
-  GLTFMarker
-} from "@maptalks/gltf-layer";
+// import {
+//   EffectLayer,
+//   EffectMarker,
+//   GLTFLayer,
+//   GLTFMarker
+// } from "@maptalks/gltf-layer";
 import centerPointData from "./data/centerPoints.js";
 const edgeColor = "#87CEFA";
 const polygonColors = ["#C0C0C0", "#00BAB7"];

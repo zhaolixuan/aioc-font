@@ -37,7 +37,7 @@
     "maptalks.animatemarker": "^0.4.0",
     "maptalks.mapboxgl": "^0.3.3",
     "maptalks.three": "^0.11.5",
-    "node-sass": "^4.12.0",
+    "node-sass": "4.14.1",
     "sass-loader": "^7.1.0",
     "three": "^0.117.0",
     "three-obj-mtl-loader": "^1.0.3",
