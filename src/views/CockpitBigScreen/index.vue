@@ -44,7 +44,7 @@
       </div>
     </div>
     <div class="footer">
-      <Footer />
+      <!-- <Footer /> -->
     </div>
   </div>
 </template>
