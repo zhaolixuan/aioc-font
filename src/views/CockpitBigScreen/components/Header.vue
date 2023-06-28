@@ -1,10 +1,10 @@
 <template>
   <div class="header_wrap">
     <div class="address">
-      <span class="imgBox">
+      <!-- <span class="imgBox">
         <img src="../assets/address.png" alt="">
       </span>
-      <span class="name">九江</span>
+      <span class="name">九江</span> -->
     </div>
     <div class="infor" style="padding-left:5%;box-sizing:border-box;">
       <p class="item_infor">B2C网络零售额
@@ -16,12 +16,13 @@
         <span class="unit">万元</span>
       </p>
     </div>
-    <p class="title">九江市电商领导驾驶舱</p>
+    <p class="title">周界预骜监测系统</p>
     <div class="infor">
-      <p class="item_infor">实物网络零售额
+      <p  class="item_infor">{{ currentData +'  '+  currentTime }}</p>
+      <!-- <p class="item_infor">实物网络零售额
         <span class="value">{{infor.salesamountMaterialCount || 0}}</span>
         <span class="unit">万元</span>
-      </p>
+      </p> -->
       <p class="item_infor">非实物网络零售额
         <span class="value">{{infor.salesamountNotMaterialCount || 0}}</span>
         <span class="unit">万元</span>
@@ -30,6 +31,8 @@
   </div>
 </template>
 <script>
+// import chineseLunar from 'chinese-lunar'
+
 export default {
   name: 'Header',
   props: {
@@ -43,7 +46,10 @@ export default {
   },
   data () {
     return {
-      dataObj: {}
+      dataObj: {},
+      currentData:'',
+      currentTime:'',
+      time:null
     }
   },
   created () {},
@@ -54,7 +60,44 @@ export default {
         this.dataObj = this.infor
       }
     }
-  }
+  },
+  mounted(){
+    this.navDate()
+    this.time = setInterval(() => {
+        this.updateTime()
+      }, 1000)
+  },
+  methods:{
+    navDate () {
+      let now = new Date()
+      let month = now.getMonth() + 1
+      let day = now.getDate()
+      let weeks = ['日', '一', '二', '三', '四', '五', '六']
+      let week = weeks[now.getDay()]
+      if (month < 10) {
+        month = '0' + month
+      }
+      if (day < 10) {
+        day = '0' + day
+      }
+      this.currentData =  month + '月' + day + '日' + ' 星期' + week 
+      this.updateTime()
+     
+    },
+    updateTime() {
+      let date = new Date()
+      let hours = date.getHours()
+      let minutes = date.getMinutes()
+      let seconds = date.getSeconds()
+      this.currentTime =  `${this.formatTime(hours)}:${this.formatTime(minutes)}:${this.formatTime(seconds)}`
+    },
+    formatTime(time) {
+      return time < 10 ? `0${time}` : time
+    }
+  },
+  destroyed(){
+    clearInterval(this.time)
+  },
 }
 </script>
 <style lang="less" scoped>

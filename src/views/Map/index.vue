@@ -88,13 +88,13 @@ export default {
       });
       this.maptalksMap = new maptalks.Map("map", {
         center: [87.617733, 43.792818], //[116.404269, 39.914935],
-        zoom: 9,
-        minZoom: 3,
+        zoom: 5,
+        minZoom: 6,
         maxZoom: 22,
         pitch: 0,
         bearing: 0,
         maxPitch: 60,
-        dragPitch: false,
+        dragPitch: true,
         centerCross: false,
         doubleClickZoom: false,
         baseLayer: this.mapboxBaseLayer,
@@ -720,8 +720,8 @@ export default {
       setTimeout(() => {
         _this.maptalksMap.animateTo(
           {
-            center: [87.617733, 43.792818],
-            zoom: 9,
+            center: [84.65767573322091, 41.00901531447968],
+            zoom: 6,
             pitch: 60,
             bearing: 32,
           },
@@ -730,8 +730,9 @@ export default {
           }
         );
       }, 2000);
-      var extent = _this.maptalksMap.getExtent();
-      _this.maptalksMap.setMaxExtent(extent);
+      // var extent = _this.maptalksMap.getExtent();
+      // 锁定视角
+      // _this.maptalksMap.setMaxExtent(extent);
       setTimeout(() => {
         _this.initAddLayers();
       }, 1000);
