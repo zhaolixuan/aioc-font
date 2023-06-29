@@ -7,41 +7,23 @@
       <Header :infor="topData" />
     </div>
     <div class="left_wrap">
-      <p class="bigTitle_left">
+      <!-- <p class="bigTitle_left">
         九江市网零发展
-        <!-- <img src="./assets/left_title.png" /> -->
-      </p>
+      </p> -->
       <BusinessIncome :infor="BusinessIncome"></BusinessIncome>
       <TrueTopTen :infor="topTenData"></TrueTopTen>
       <NotGoodNetWork :infor="topFiveData"></NotGoodNetWork>
     </div>
     <div class="right_wrap">
-      <p class="bigTitle_right">
+      <!-- <p class="bigTitle_right">
         县（市、区）网零发展
-        <!-- <img src="./assets/right_title.png" /> -->
-      </p>
+      </p> -->
       <TotalSaleMoney :infor="ljData" :flag="flag" @changeFlag="changeFlag"></TotalSaleMoney>
       <GoodsTypeZB></GoodsTypeZB>
       <ShopNumber></ShopNumber>
     </div>
     <div class="center">
       <CenterDataView :infor="topData" :list="tableList"></CenterDataView>
-    </div>
-    <div class="left_qyzh">
-      <div class="title_box">
-        电商企业数
-      </div>
-      <div class="left_chart">
-        <div class="chart_bg"><span class="chart_on"><i>{{topData.salesamountRetailersCount || 0}}家</i></span></div>
-      </div>
-    </div>
-    <div class="right_tdmj">
-      <div class="title_box title_box_2">
-        店铺数
-      </div>
-      <div class="right_chart">
-        <div class="chart_bg"><span class="chart_on"><i>{{topData.salesamountShopCount || 0}}家</i></span></div>
-      </div>
     </div>
     <div class="footer">
       <Footer />
@@ -152,6 +134,7 @@ export default {
             return item.materialNetworkSales
           })
           this.topFiveData.data = res.data.netWorkTop5Map
+          console.log(this.topFiveData);
           /* 累计网络零售额数据* */
           // res.data.notNetWorkRankMap.push({
           //   district: '曲周县',
@@ -217,7 +200,7 @@ export default {
     height: 100%;
     position: absolute;
     z-index: 12;
-    background: url('./assets/main_bg.png') no-repeat;
+    // background: url('./assets/main_bg.png') no-repeat;
     background-size: 100% 100%;
     pointer-events: none;
   }

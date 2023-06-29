@@ -1,7 +1,7 @@
 <template>
   <div class="BusinessIncome_wrap">
     <div class="card_wrap">
-      <norm title="网络零售额发展趋势及增速" :icon="1"/>
+      <norm title="光路质量" :icon="1"/>
     </div>
     <div class="scroll">
       <div ref="canvasChart" style="height:2rem;width:100%"></div>
@@ -42,18 +42,7 @@ export default {
   computed: {
     computedOptions () {
       let option = this.defaultOptions
-      option.series[1].data = this.infor.value || []
-      let arr = [...this.infor.value]
-      let objFirst = interva.intervalFun(arr)
-      option.yAxis[1].interval = objFirst.interval
-      option.yAxis[1].max = objFirst.max
-      option.yAxis[1].min = objFirst.min
-      option.series[0].data = arr.fill(NaN, 0, arr.length - 1) || []
-      //  零售饿
-      option.series[2].data = this.infor.value2 // 零售额
-      let obj = interva.intervalFun(this.infor.value2)
-      option.yAxis[0].interval = obj.interval
-      option.yAxis[0].max = obj.max
+      option.series[0].data = this.infor.value2 // 零售额
       option.xAxis.data = this.infor.name
       if (option.xAxis.data.length == 1) {
            option.xAxis.data.push('')

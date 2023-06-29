@@ -1,7 +1,7 @@
 <template>
   <div class="NoPhysicalOnlineSales_wrap">
     <div class="card_wrap">
-      <norm title="非实物行业网络零售额分布(万元)" :icon="3"/>
+      <norm title="历史报警数量" :icon="1"/>
     </div>
     <div class="scroll">
       <div ref="canvasChart" style="height:2rem;width:100%"></div>
@@ -45,7 +45,6 @@ export default {
 <style lang="less" scoped>
 .NoPhysicalOnlineSales_wrap {
   width: 100%;
-  margin-left: 0.6rem;
   box-sizing: border-box;
   height: 25%;
 }

@@ -9,7 +9,7 @@
       </div>
     </div>
     <div class="dark_table">
-      <el-table :data="tableData" style="width: 80%" v-if="title=='明星企业'">
+      <el-table :data="tableData" style="width: 100%" v-if="title=='明星企业'">
         <el-table-column align="left" prop="rank" label="排名" width="48">
         </el-table-column>
         <el-table-column align="left" prop="entName" label="企业名称" width="110" show-overflow-tooltip>
@@ -21,7 +21,7 @@
         <el-table-column align="left" prop="district" label="县(市、区)" width="100" show-overflow-tooltip>
         </el-table-column>
       </el-table>
-      <el-table :data="tableData" style="width: 80%" v-if="title=='明星店铺'">
+      <el-table :data="tableData" style="width: 100%" v-if="title=='明星店铺'">
         <el-table-column align="left" prop="rank" label="排名" width="48">
         </el-table-column>
         <el-table-column align="left" prop="shopName" width="110" label="店铺名称" show-overflow-tooltip>
@@ -191,7 +191,7 @@ export default {
   }
   .dark_table {
     margin-top: 0.2rem;
-    margin-left: -15%;
+    // margin-left: -15%;
   }
 }
 </style>

@@ -7,25 +7,19 @@
       <span class="name">九江</span> -->
     </div>
     <div class="infor" style="padding-left:5%;box-sizing:border-box;">
-      <p class="item_infor">B2C网络零售额
-        <span class="value">{{infor.salesamountB2cCount || 0}}</span>
-        <span class="unit">万元</span>
+      <p class="item_infor">
+
       </p>
-      <p class="item_infor">C2C网络零售额
-        <span class="value">{{infor.salesamountC2cCount || 0}}</span>
-        <span class="unit">万元</span>
+      <p class="item_infor">
       </p>
     </div>
-    <p class="title">周界预骜监测系统</p>
-    <div class="infor">
+    <p class="title">周界预警监测系统</p>
+    <div class="infor right">
       <p  class="item_infor">{{ currentData +'  '+  currentTime }}</p>
-      <!-- <p class="item_infor">实物网络零售额
-        <span class="value">{{infor.salesamountMaterialCount || 0}}</span>
-        <span class="unit">万元</span>
-      </p> -->
-      <p class="item_infor">非实物网络零售额
-        <span class="value">{{infor.salesamountNotMaterialCount || 0}}</span>
-        <span class="unit">万元</span>
+    
+      <p class="item_infor">
+        admin
+       <img src="../assets/quit.svg" alt="">
       </p>
     </div>
   </div>
@@ -148,6 +142,7 @@ export default {
     line-height: 0;
     font-size: 0rem;
     text-align: left;
+    display: flex;
     &:first-child {
       text-align: right;
       padding-right: 0.3rem;
@@ -161,6 +156,10 @@ export default {
       margin-left: 0.3rem;
       display:inline-block;
       font-family: 'PingFangSC-Medium';
+      flex: 1;
+      align-items: center;
+      display: flex;
+      justify-content: center;
     }
     .value {
       font-size: 0.20rem;
@@ -172,5 +171,6 @@ export default {
       color: #fff;
     }
   }
+  
 }
 </style>

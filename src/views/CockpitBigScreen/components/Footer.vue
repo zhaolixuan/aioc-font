@@ -1,8 +1,7 @@
 <template>
   <div class="footer_wrap">
     <div class="title">
-      <p>Copyright © 2020-2025 JDCloud.com</p>
-      <p>版权所有</p>
+    
     </div>
   </div>
 </template>
@@ -10,7 +9,6 @@
   .footer_wrap{
     width: 100%;
     height: 100%;
-    background: url('../assets/footer_bg.png') no-repeat;
     background-size:100% 100%;
     position: relative;
     pointer-events: none;

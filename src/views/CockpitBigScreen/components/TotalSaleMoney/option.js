@@ -1,87 +1,57 @@
 import echarts from 'echarts'
 export default {
-  grid: {
-    left: '5%',
-    right: '5%',
-    bottom: '5%',
-    top: '5%',
-    containLabel: true
-  },
-  tooltip: {
-    trigger: 'axis',
-    axisPointer: {
-      type: 'none'
-    },
-    formatter: function (params) {
-      return params[0].name + '<br/>' +
-          "<span style='display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:rgba(36,207,233,0.9)'></span>" +
-          params[0].seriesName + ' : ' + params[0].value + ' 万元<br/>' //  Number((params[0].value.toFixed(4) / 10000).toFixed(2)).toLocaleString()
-    }
-  },
-  xAxis: {
-    show: false,
-    type: 'value'
-  },
-  yAxis: [{
-    type: 'category',
-    inverse: true,
-    axisLabel: {
-      show: true,
-      textStyle: {
-        color: '#82BCF1'
+  series: [
+    {
+      type: 'gauge',
+      radius:'100%',
+      axisLine: {
+        lineStyle: {
+          width: 20,
+          color: [
+            [0.3, '#67e0e3'],
+            [0.7, '#37a2da'],
+            [1, '#fd666d']
+          ]
+        }
       },
-      interval: 0
-    },
-    splitLine: {
-      show: false
-    },
-    axisTick: {
-      show: false
-    },
-    axisLine: {
-      show: false
-    }
-  },
-  {
-    type: 'category',
-    inverse: true,
-    axisTick: 'none',
-    axisLine: 'none',
-    show: true,
-    axisLabel: {
-      textStyle: {
-        color: '#ffffff',
-        fontSize: '12'
+      pointer: {
+        itemStyle: {
+          color: 'auto'
+        }
       },
-      formatter: function (value) {
-        // if (value >= 10000) {
-        // return Number((Number(value).toFixed(4) / 10000).toFixed(2)).toLocaleString() + '万'
-        return value + '万元'
-        // }
-        // else {
-        //   return value.toLocaleString() + '万'
-        // }
-      }
+      axisTick: {
+        distance: -20,
+        length: 8,
+        lineStyle: {
+          color: '#fff',
+          width: 2
+        }
+      },
+      splitLine: {
+        distance: -20,
+        length: 20,
+        lineStyle: {
+          color: '#fff',
+          width: 2
+        }
+      },
+      axisLabel: {
+        color: 'auto',
+        distance: 5,
+        fontSize:window.offsetWidth / 1082 * 14
+      },
+      detail: {
+        valueAnimation: true,
+        formatter: '{value} %',
+        color: 'auto',
+      },
+      data: [
+        {
+          value: 70
+        }
+      ]
     }
-  } ],
-  series: [{
-    name: '金额',
-    type: 'bar',
-    zlevel: 1,
-    itemStyle: {
-      normal: {
-        barBorderRadius: 30,
-        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
-          offset: 0,
-          color: 'rgba(12,115,248,0)'
-        }, {
-          offset: 1,
-          color: 'rgba(28,216,252,1)'
-        }])
-      }
-    },
-    barWidth: 8,
-    barCateGoryGap: 30
-  }
   ]
+
+
 }
