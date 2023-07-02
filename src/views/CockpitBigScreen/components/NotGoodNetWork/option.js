@@ -13,7 +13,6 @@ export default {
       type: "none"
     },
     formatter(params) {
-      console.log(params, "hahah");
       return `${params[0].marker}${params[0].axisValue}:${params[0].data}万元`;
     }
   },
