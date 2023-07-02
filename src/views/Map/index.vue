@@ -30,6 +30,7 @@ import mapboxgl from "mapbox-gl";
 import { MapboxglLayer } from "maptalks.mapboxgl";
 import roads from "./data/roads.json";
 import InformationPanel from "./Panel/InformationPanel";
+import { log } from "three";
 export default {
   name: "MainMap",
 
@@ -43,6 +44,7 @@ export default {
       myType: "", //点类型
       lastClickedPoint: null, //存储点击的社区、乡镇点、街道
       points: [], //存储区县点位
+      lines: [],
       myDataList: [],
       srceenSize: [
         document.documentElement.clientWidth,
@@ -110,7 +112,6 @@ export default {
       _this.flyToView();
 
       this.maptalksMap.on("dblclick", function (e) {
-        console.log(e.coordinate);
         // console.log(
         //   _this.maptalksMap.getCenter(),
         //   _this.maptalksMap.getPitch(),
@@ -129,6 +130,7 @@ export default {
           },
           function (geos) {
             if (geos.length === 0) {
+              console.log("初始化");
               _this.isShow = false;
               _this.centerPointLayer.getGeometries().forEach((element) => {
                 element.updateSymbol({
@@ -163,11 +165,12 @@ export default {
         /**
          * 移出地图范围，关闭弹窗
          */
+        // console.log("移出地图范围，关闭弹窗");
         _this.isShow = false;
       });
     },
     initAddLayers() {
-      // this.addCenterPoints();
+      this.addCenterPoints();
       this.addLiners();
     },
     /**
@@ -188,278 +191,174 @@ export default {
       }).addTo(this.maptalksMap); //centerPointData
 
       api.getWholeNetworkJiujiangIndexList().then((res) => {
-        var data = res.records;
+        var data = [res.records[0]];
         if (data.length > 0) {
-          var lnglat = [
-            feature.geometry.coordinates[0],
-            feature.geometry.coordinates[1],
-          ];
-          var item = data.filter(
-            (item) => item.district == feature.properties.name
-          )[0];
-          if (item !== undefined) {
-            var value = item.salesamount;
-            var point = new maptalks.Marker(lnglat, {
-              properties: {
-                altitude: 50,
-                name: feature.properties.name,
-                labelName:
-                  feature.properties.name +
-                  " " +
-                  item.salesamountRank +
-                  " " +
-                  value +
-                  "万元",
-                value: value,
-                wllse: item.salesamount,
-                tb: item.salesamountMom,
-                // swwl: item.salesamountMaterial,
-                // b2cwl: item.salesamountB2c,
-                dpsl: item.salesamountShop,
-                qys: item.salesamountRetailers,
-                type: "other",
-              },
-              symbol: [
-                {
-                  markerFile: require(`../../assets/img/community.png`),
-                  markerWidth: 25 / 1.5,
-                  markerHeight: 41 / 1.5,
-                  markerDx: 0,
-                  markerDy: 0,
-                  markerOpacity: 1,
+          data.forEach((item) => {
+            if (item !== undefined) {
+              var lnglat = [87.29075215756086, 43.831270468528686];
+              var value = item.salesamount;
+              var point = new maptalks.Marker(lnglat, {
+                properties: {
+                  altitude: 50,
+                  name: item.district,
+                  labelName:
+                    item.district +
+                    " " +
+                    item.salesamountRank +
+                    " " +
+                    value +
+                    "万元",
+                  value: value,
+                  wllse: item.salesamount,
+                  tb: item.salesamountMom,
+                  // swwl: item.salesamountMaterial,
+                  // b2cwl: item.salesamountB2c,
+                  dpsl: item.salesamountShop,
+                  qys: item.salesamountRetailers,
+                  type: "other",
                 },
-                {
-                  textName: "{labelName}", //value from name in geometry's properties
-                  textWeight: "normal", //'bold', 'bolder'
-                  textStyle: "normal", //'italic', 'oblique'
-                  textSize: 14,
-                  textFont: null, //same as CanvasRenderingContext2D.font, override textName, textWeight and textStyle
-                  textFill: "#FFFFFF",
-                  textOpacity: 1,
-                  textHaloFill: "#00DDFF",
-                  textHaloRadius: 0.1,
-                  textWrapWidth: null,
-                  textWrapCharacter: "\n",
-                  textLineSpacing: 0,
-                  textDx: 0,
-                  textDy: -40,
-                  textHorizontalAlignment: "middle", //left | middle | right | auto
-                  textVerticalAlignment: "middle", // top | middle | bottom | auto
-                  textAlign: "center", //left | right | center | auto
-                },
-              ],
-            })
-              .on("mouseout", function () {
-                _this.isShow = false;
-
-                if (
-                  _this.centerPointLayer != null &&
-                  _this.centerPointLayer.getGeometries().length > 0
-                ) {
-                  _this.isShow = false;
-                  _this.centerPointLayer.getGeometries().forEach((element) => {
-                    if (element !== _this.lastClickedPoint) {
-                      element.updateSymbol({
-                        markerFile: require(`../../assets/img/community.png`),
-                        markerWidth: 25 / 1.5,
-                        markerHeight: 41 / 1.5,
-                        textName: "{labelName}", //value from name in geometry's properties
-                        textWeight: "normal", //'bold', 'bolder'
-                        textStyle: "normal", //'italic', 'oblique'
-                        textSize: 14,
-                        textFont: null, //same as CanvasRenderingContext2D.font, override textName, textWeight and textStyle
-                        textFill: "#FFFFFF",
-                        textOpacity: 1,
-                        textHaloFill: "#00DDFF",
-                        textHaloRadius: 0.1,
-                        textWrapWidth: null,
-                        textWrapCharacter: "\n",
-                        textLineSpacing: 2,
-                        textDx: 0,
-                        textDy: -40,
-                        textHorizontalAlignment: "middle", //left | middle | right | auto
-                        textVerticalAlignment: "middle", // top | middle | bottom | auto
-                        textAlign: "center", //left | right | center | auto
-                      });
-                    } else {
-                      element.updateSymbol({
-                        markerFile: require(`../../assets/img/community.png`),
-                        markerWidth: 25 / 1.5,
-                        markerHeight: 41 / 1.5,
-                        textName: "{labelName}", //value from name in geometry's properties
-                        textWeight: "normal", //'bold', 'bolder'
-                        textStyle: "normal", //'italic', 'oblique'
-                        textSize: 14,
-                        textFont: null, //same as CanvasRenderingContext2D.font, override textName, textWeight and textStyle
-                        textFill: "#FFFFFF",
-                        textOpacity: 1,
-                        textHaloFill: "#00DDFF",
-                        textHaloRadius: 0.1,
-                        textWrapWidth: null,
-                        textWrapCharacter: "\n",
-                        textLineSpacing: 2,
-                        textDx: 0,
-                        textDy: -40,
-                        textHorizontalAlignment: "middle", //left | middle | right | auto
-                        textVerticalAlignment: "middle", // top | middle | bottom | auto
-                        textAlign: "center", //left | right | center | auto
-                      });
-                    }
-                  });
-                }
+                symbol: [
+                  {
+                    markerFile: require(`../../assets/img/community.png`),
+                    markerWidth: 25 / 1.5,
+                    markerHeight: 41 / 1.5,
+                    markerDx: 0,
+                    markerDy: 0,
+                    markerOpacity: 1,
+                  },
+                  {
+                    textName: "{labelName}", //value from name in geometry's properties
+                    textWeight: "normal", //'bold', 'bolder'
+                    textStyle: "normal", //'italic', 'oblique'
+                    textSize: 14,
+                    textFont: null, //same as CanvasRenderingContext2D.font, override textName, textWeight and textStyle
+                    textFill: "#FFFFFF",
+                    textOpacity: 0,
+                    textHaloFill: "#00DDFF",
+                    textHaloRadius: 0.1,
+                    textWrapWidth: null,
+                    textWrapCharacter: "\n",
+                    textLineSpacing: 0,
+                    textDx: 0,
+                    textDy: -40,
+                    textHorizontalAlignment: "middle", //left | middle | right | auto
+                    textVerticalAlignment: "middle", // top | middle | bottom | auto
+                    textAlign: "center", //left | right | center | auto
+                  },
+                ],
               })
-              .on(
-                "mouseenter",
-                debounce(function (e) {
+                .on("mouseout", function () {
+                  console.log("mack移除");
+                  _this.isShow = false;
+                })
+                .on(
+                  "mouseenter",
+                  debounce(function (e) {
+                    console.log(
+                      _this.centerPointLayer.getGeometries(),
+                      e.target
+                    );
+                    _this.centerPointLayer
+                      .getGeometries()
+                      .forEach((element) => {
+                        if (element == e.target) {
+                          console.log(element);
+                          el = document.getElementById("informationPanel");
+                          _this.isShow = true;
+                          _this.myTitleName = element.properties.name;
+                          _this.myType = element.properties.type;
+                          _this.myDataList = [
+                            {
+                              fieldName: "网络零售额：",
+                              value: element.properties.wllse,
+                              unit: "万元",
+                            },
+                            {
+                              fieldName: "店铺数量：",
+                              value: element.properties.dpsl,
+                              unit: "家",
+                            },
+                            {
+                              fieldName: "企业数：",
+                              value: element.properties.qys,
+                              unit: "家",
+                            },
+                          ];
+                          console.log(e.coordinate, e.target.getCoordinates());
+                          marker = new maptalks.ui.UIMarker(e.target.getCoordinates(), {
+                            draggable: false,
+                            single: false,
+                            content: el,
+                            dx: -0,
+                            dy: -130,
+                          });
+                          marker.addTo(_this.maptalksMap).show();
+
+                          _this.lastClickedPoint = e.target;
+                        }
+                      });
+                  }, 200)
+                )
+                .on("click", function (e) {
                   _this.centerPointLayer.getGeometries().forEach((element) => {
                     if (element !== e.target) {
-                      if (element !== _this.lastClickedPoint) {
-                        element.updateSymbol({
-                          markerFile: require(`../../assets/img/community.png`),
-                          markerWidth: 25 / 1.5,
-                          markerHeight: 41 / 1.5,
-                          textName: "{labelName}", //value from name in geometry's properties
-                          textWeight: "normal", //'bold', 'bolder'
-                          textStyle: "normal", //'italic', 'oblique'
-                          textSize: 14,
-                          textFont: null, //same as CanvasRenderingContext2D.font, override textName, textWeight and textStyle
-                          textFill: "#FFFFFF",
-                          textOpacity: 1,
-                          textHaloFill: "#00DDFF",
-                          textHaloRadius: 0.1,
-                          textWrapWidth: null,
-                          textWrapCharacter: "\n",
-                          textLineSpacing: 2,
-                          textDx: 0,
-                          textDy: -40,
-                          textHorizontalAlignment: "middle", //left | middle | right | auto
-                          textVerticalAlignment: "middle", // top | middle | bottom | auto
-                          textAlign: "center", //left | right | center | auto
-                        });
-                      }
-                    } else {
-                      e.target.updateSymbol({
+                      element.updateSymbol({
                         markerFile: require(`../../assets/img/community.png`),
-                        markerWidth: 25,
-                        markerHeight: 41,
-                        textFaceName: "sans-serif",
-                        textName: "{labelName}",
-                        textWeight: "normal",
-                        textStyle: "normal",
-                        textSize: 0,
-                        textFont: null,
-                        textFill: "#FFFFFF",
-                        textOpacity: 1,
-                        textHaloFill: "#00DDFF",
-                        textHaloRadius: 0.1,
-                        textWrapWidth: null,
-                        textWrapCharacter: "\n",
-                        textLineSpacing: 2,
-                        textDx: 0,
-                        textDy: -40,
-                        textHorizontalAlignment: "middle",
-                        textVerticalAlignment: "middle",
-                        textAlign: "center",
+                        markerWidth: 25 / 2,
+                        markerHeight: 41 / 2,
                       });
-                      el = document.getElementById("informationPanel");
-                      _this.isShow = true;
-                      _this.myTitleName = element.properties.name;
-                      _this.myType = element.properties.type;
-                      _this.myDataList = [
+                    } else {
+                      _this.maptalksMap.animateTo(
                         {
-                          fieldName: "网络零售额：",
-                          value: element.properties.wllse,
-                          unit: "万元",
-                        },
-                        // {
-                        //   fieldName: "同比：",
-                        //   value: element.properties.tb,
-                        //   unit: "%"
-                        // },
-
-                        {
-                          fieldName: "店铺数量：",
-                          value: element.properties.dpsl,
-                          unit: "家",
+                          center: [
+                            e.target.getCoordinates().x,
+                            e.target.getCoordinates().y + 0.02,
+                          ],
+                          zoom: 13,
+                          pitch: 60,
+                          bearing: 0,
                         },
                         {
-                          fieldName: "企业数：",
-                          value: element.properties.qys,
-                          unit: "家",
-                        },
-                      ];
-                      marker = new maptalks.ui.UIMarker(
-                        e.target.getCoordinates(),
-                        {
-                          draggable: false,
-                          single: false,
-                          content: el,
-                          dx: -0,
-                          dy: -130,
+                          duration: 500,
                         }
                       );
-                      marker.addTo(_this.maptalksMap).show();
 
                       _this.lastClickedPoint = e.target;
                     }
                   });
-                }, 200)
-              )
-              .on("click", function (e) {
-                _this.centerPointLayer.getGeometries().forEach((element) => {
-                  if (element !== e.target) {
-                    element.updateSymbol({
-                      markerFile: require(`../../assets/img/community.png`),
-                      markerWidth: 25 / 2,
-                      markerHeight: 41 / 2,
-                    });
-                  } else {
-                    _this.maptalksMap.animateTo(
-                      {
-                        center: [
-                          e.target.getCoordinates().x,
-                          e.target.getCoordinates().y + 0.02,
-                        ],
-                        zoom: 13,
-                        pitch: 60,
-                        bearing: 0,
-                      },
-                      {
-                        duration: 500,
-                      }
-                    );
-
-                    _this.lastClickedPoint = e.target;
-                  }
                 });
-              });
 
-            _this.points.push(point);
-            point.properties.labelName =
-              feature.properties.name + " " + item.salesamountRank;
-          }
-          this.centerPointLayer.addGeometry(_this.points);
+              _this.points.push(point);
+              point.properties.labelName =
+                item.district + " " + item.salesamountRank;
+            }
+            this.centerPointLayer.addGeometry(_this.points);
+          });
         }
       });
-
       this.centerPointLayer.setZIndex(999);
     },
 
     addLiners() {
-      let linerList = [];
+      var _this = this;
+      var el, marker;
+
       let data = [
         [
           [87.29075215756086, 43.831270468528686],
           [87.51104516347652, 43.62870369331276],
         ],
         [
-        [87.51104516347652, 43.62870369331276],
+          [87.51104516347652, 43.62870369331276],
           [87.52903114251455, 43.59056209551258],
         ],
       ];
 
       data.forEach((i) => {
         let line = new maptalks.LineString(i, {
+          properties: {
+            name: "测试线段",
+          },
           // arrowStyle : null, // arrow-style : now we only have classic
           // arrowPlacement : 'vertex-last', // arrow's placement: vertex-first, vertex-last, vertex-firstlast, point
           visible: true,
@@ -473,14 +372,95 @@ export default {
             lineWidth: 3,
           },
         })
-        linerList.push(line);
-      })
+          .on("mouseout", function () {
+            console.log("line移除");
+            _this.isShow = false;
+          })
+          .on(
+            "mouseenter",
+            debounce(function (e) {
+              console.log(
+                      _this.centerPointLayer.getGeometries(),
+                      e.target
+                    );
+              _this.centerPointLayer.getGeometries().forEach((element) => {
+                if (element == e.target) {
+                console.log(element);
+                  el = document.getElementById("informationPanel");
+                  _this.isShow = true;
+                  _this.myTitleName = element.properties.name;
+                  _this.myType = element.properties.type;
+                  _this.myDataList = [
+                    {
+                      fieldName: "网络零售额：",
+                      value: element.properties.wllse || 0,
+                      unit: "万元",
+                    },
+                    {
+                      fieldName: "店铺数量：",
+                      value: element.properties.dpsl || 0,
+                      unit: "家",
+                    },
+                    {
+                      fieldName: "企业数：",
+                      value: element.properties.qys || 0,
+                      unit: "家",
+                    },
+                  ];
+                  console.log(e.target.getCoordinates());
+                  marker = new maptalks.ui.UIMarker(e.coordinate, {
+                    draggable: false,
+                    single: false,
+                    content: el,
+                    dx: -0,
+                    dy: -130,
+                  });
+                  marker.addTo(_this.maptalksMap).show();
 
-      window.map = this.maptalksMap;
-      this.linersList = new maptalks.VectorLayer("vector", linerList).addTo(this.maptalksMap);
+                  _this.lastClickedPoint = e.target;
+                }
+              });
+            }, 200)
+          )
+          .on("click", function (e) {
+            _this.centerPointLayer.getGeometries().forEach((element) => {
+              if (element !== e.target) {
+                element.updateSymbol({
+                  markerFile: require(`../../assets/img/community.png`),
+                  markerWidth: 25 / 2,
+                  markerHeight: 41 / 2,
+                });
+              } else {
+                _this.maptalksMap.animateTo(
+                  {
+                    center: [
+                      e.target.getCoordinates().x,
+                      e.target.getCoordinates().y + 0.02,
+                    ],
+                    zoom: 13,
+                    pitch: 60,
+                    bearing: 0,
+                  },
+                  {
+                    duration: 500,
+                  }
+                );
 
-      this.getliner(this.linersList, [87.51104516347652, 43.62870369331276],)
+                _this.lastClickedPoint = e.target;
+              }
+            });
+          });
+        this.lines.push(line);
+        this.centerPointLayer.addGeometry(_this.lines);
+      });
 
+      this.centerPointLayer.setZIndex(999);
+
+      // this.linersList = new maptalks.VectorLayer("vector", _this.lines).addTo(
+      //   this.maptalksMap
+      // );
+
+      // this.getliner(this.linersList, [87.51104516347652, 43.62870369331276]);
     },
 
     getliner(lines, startCoord) {
@@ -494,18 +474,18 @@ export default {
       // 遍历线段数组
       for (var i = 0; i < lines._geoList.length; i++) {
         var line = lines._geoList[i];
-        console.log('line.getCoordinates()',line.getCoordinates());
+        console.log("line.getCoordinates()", line.getCoordinates());
 
         // 获取线段的起始点位和结束点位
         var start = line.getCoordinates()[0];
         // var end = line.getCoordinates()[1];
-        let point = [start.x,start.y]
-        JSON.stringify(point)
+        let point = [start.x, start.y];
+        JSON.stringify(point);
         // 判断起始点位是否与给定的起始点位相同
         if (JSON.stringify(point) == JSON.stringify(startCoord)) {
           // 找到了对应的线段
-          console.log("找到了对应的线段：" , line);
-          line.setSymbol({'lineColor':'red','lineWidth':5})
+          console.log("找到了对应的线段：", line);
+          line.setSymbol({ lineColor: "red", lineWidth: 5 });
           // line.set_symbol({  lineColor: "red"})
           break;
         }

@@ -36,7 +36,7 @@ export default {
       show: true,
       textStyle: {
         color: '#3671A7',
-        fontSize: window.offsetWidth / 1082 * 14
+        fontSize: window.innerWidth / 1082 * 10
       }
     }
   },
@@ -49,7 +49,7 @@ export default {
       offset: 0,
     axisLabel: {
       color: '#82BCF1',
-      fontSize: window.offsetWidth / 1082 * 14,
+      fontSize: window.innerWidth / 1082 * 10,
     },
     axisLine: {
       show: true,

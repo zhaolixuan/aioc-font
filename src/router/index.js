@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Leader from '@/views/CockpitBigScreen/index'
-
+import Login from '@/views/login/index'
 
 import { getCookie } from '@/api/cookie'
 import logindomain from '@/api/domain_sso'
@@ -16,6 +16,12 @@ const router = new Router({
             name: 'Leader',
             component: Leader
         },
+        {
+            path: '/login',
+            name: 'Login',
+            component: Login
+        },
+
         
 
     ]

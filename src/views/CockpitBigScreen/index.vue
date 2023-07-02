@@ -7,43 +7,41 @@
       <Header :infor="topData" />
     </div>
     <div class="left_wrap">
-      <!-- <p class="bigTitle_left">
-        九江市网零发展
-      </p> -->
       <BusinessIncome :infor="BusinessIncome"></BusinessIncome>
       <TrueTopTen :infor="topTenData"></TrueTopTen>
       <NotGoodNetWork :infor="topFiveData"></NotGoodNetWork>
     </div>
     <div class="right_wrap">
-      <!-- <p class="bigTitle_right">
-        县（市、区）网零发展
-      </p> -->
-      <TotalSaleMoney :infor="ljData" :flag="flag" @changeFlag="changeFlag"></TotalSaleMoney>
-      <GoodsTypeZB></GoodsTypeZB>
+      <TotalSaleMoney
+        :infor="ljData"
+        :flag="flag"
+        @changeFlag="changeFlag"
+      ></TotalSaleMoney>
       <ShopNumber></ShopNumber>
+      <GoodsTypeZB></GoodsTypeZB>
     </div>
     <div class="center">
       <CenterDataView :infor="topData" :list="tableList"></CenterDataView>
     </div>
     <div class="footer">
-      <Footer />
+      <Footer @handelgive="handelgive" />
     </div>
   </div>
 </template>
 <script>
-import api from '@/api/api'
-import Header from './components/Header.vue'
-import Footer from './components/Footer.vue'
-import CenterDataView from './components/CenterDataView'
-import BusinessIncome from './components/BusinessIncome/index'
-import TrueTopTen from './components/TrueTopTen'
-import NotGoodNetWork from './components/NotGoodNetWork'
-import TotalSaleMoney from './components/TotalSaleMoney'
-import GoodsTypeZB from './components/GoodsTypeZB'
-import ShopNumber from './components/ShopNumber'
-import Map from '../Map/index.vue'
+import api from "@/api/api";
+import Header from "./components/Header.vue";
+import Footer from "./components/Footer.vue";
+import CenterDataView from "./components/CenterDataView";
+import BusinessIncome from "./components/BusinessIncome/index";
+import TrueTopTen from "./components/TrueTopTen";
+import NotGoodNetWork from "./components/NotGoodNetWork";
+import TotalSaleMoney from "./components/TotalSaleMoney";
+import GoodsTypeZB from "./components/GoodsTypeZB";
+import ShopNumber from "./components/ShopNumber";
+import Map from "../Map/index.vue";
 export default {
-  name: 'CockpitBigScreen',
+  name: "CockpitBigScreen",
   components: {
     Header,
     BusinessIncome,
@@ -54,112 +52,127 @@ export default {
     NotGoodNetWork,
     TotalSaleMoney,
     GoodsTypeZB,
-    ShopNumber
+    ShopNumber,
   },
-  data () {
+  data() {
     return {
       tableList: [],
-      industry: '',
+      industry: "",
       topData: {},
-      GoodsTypeZBData: { name: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'], value: [101, 100, 130, 15, 16, 17, 18, 19, 10, 22, 122] },
+      GoodsTypeZBData: {
+        name: [
+          "1月",
+          "2月",
+          "3月",
+          "4月",
+          "5月",
+          "6月",
+          "7月",
+          "8月",
+          "9月",
+          "10月",
+          "11月",
+          "12月",
+        ],
+        value: [101, 100, 130, 15, 16, 17, 18, 19, 10, 22, 122],
+      },
       BusinessIncome: { name: [], value: [], value2: [] },
       EnterpriseNumber: {},
-      content: '',
+      content: "",
       topTenData: {
         name: [],
         value: [],
-        data: []
+        data: [],
       },
       topFiveData: {
         name: [],
         value: [],
-        data: []
+        data: [],
       },
       ljData: {
         name: [],
         value: [],
         data: [
           {
-            district: 0
+            district: 0,
           },
           {
-            district: 0
+            district: 0,
           },
           {
-            district: 0
-          }
+            district: 0,
+          },
         ],
         newName: [],
-        newValue: []
+        newValue: [],
       },
-      flag: false
-    }
+      flag: false,
+    };
   },
-  created () {
-    this.getData()
+  created() {
+    this.getData();
   },
   methods: {
-    changeFlag (val) {
-      this.flag = val
+    // 获取底部表格数据
+    getFootDara(){
+
     },
-    getData () {
-      api.getAllViewData({}).then(res => {
+    // foot点击处理时间
+    handelgive(data){
+
+    },
+    changeFlag(val) {
+      this.flag = val;
+    },
+    getData() {
+      api.getAllViewData({}).then((res) => {
         if (res.code === 200) {
-          this.tableList = res.data.notNetWorkProvinceMap
-          this.topData = res.data.returnIndexMap
-          this.BusinessIncome.name = res.data.netWorkDevelopeMap.map((item) => {
-            return item.name
-          })
-          // 网络零售额---增速
-          this.BusinessIncome.value = res.data.netWorkDevelopeMap.map((item) => {
-            return item.salesamountMom
-          })
-          // 网络零售额
-          this.BusinessIncome.value2 = res.data.netWorkDevelopeMap.map((item) => {
-            return item.salesamountMonth
-          })
+          this.tableList = res.data.notNetWorkProvinceMap;
+          this.topData = res.data.returnIndexMap;
+
+          // 光路质量 name:x轴 value2:y轴数据
+          this.BusinessIncome.name = [1, 2, 3, 4, 5];
+          this.BusinessIncome.value2 = res.data.netWorkDevelopeMap.map(
+            (item) => {
+              return item.salesamountMonth;
+            }
+          );
+
+          // 历史报警数量 name:x轴 value2:y轴数据
+          this.topFiveData.name = ['未分派','以分派','已完成','关闭',]
+          this.topFiveData.value = res.data.netWorkTop5Map.map((item) => {
+            return item.materialNetworkSales;
+          });
+
           /* top10数据* */
           this.topTenData.name = res.data.netWorkTop10Map.map((item) => {
-            return item.oneLevelName
-          })
+            return item.oneLevelName;
+          });
           this.topTenData.value = res.data.netWorkTop10Map.map((item) => {
-            return item.materialNetworkSales
-          })
-          this.topTenData.data = res.data.netWorkTop10Map
-          /* top5数据* */
-          this.topFiveData.name = res.data.netWorkTop5Map.map((item) => {
-            return item.nonMaterialIndustry
-          })
-          this.topFiveData.value = res.data.netWorkTop5Map.map((item) => {
-            return item.materialNetworkSales
-          })
-          this.topFiveData.data = res.data.netWorkTop5Map
-          console.log(this.topFiveData);
-          /* 累计网络零售额数据* */
-          // res.data.notNetWorkRankMap.push({
-          //   district: '曲周县',
-          //   salesamountCount: 1000
-          // })
+            return item.materialNetworkSales;
+          });
+          this.topTenData.data = res.data.netWorkTop10Map;
+
           this.ljData.name = res.data.notNetWorkRankMap.map((item) => {
-            return item.district
-          })
+            return item.district;
+          });
           this.ljData.value = res.data.notNetWorkRankMap.map((item) => {
-            return item.salesamountCount
-          })
-          this.ljData.data = res.data.notNetWorkRankMap
+            return item.salesamountCount;
+          });
+          this.ljData.data = res.data.notNetWorkRankMap;
           this.ljData.newName = res.data.notNetWorkRankMap.map((item) => {
-            return item.district
-          })
-          this.ljData.newName = [...this.ljData.newName.slice(3)]
+            return item.district;
+          });
+          this.ljData.newName = [...this.ljData.newName.slice(3)];
           this.ljData.newValue = res.data.notNetWorkRankMap.map((item) => {
-            return item.salesamountCount
-          })
-          this.ljData.newValue = [...this.ljData.newValue.slice(3)]
+            return item.salesamountCount;
+          });
+          this.ljData.newValue = [...this.ljData.newValue.slice(3)];
         }
-      })
-    }
-  }
-}
+      });
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 .LeaderCockpit {
@@ -187,13 +200,13 @@ export default {
     z-index: 11;
   }
   .footer {
-    height: 2.2rem;
+    // height: 2.2rem;
     width: 100%;
     position: fixed;
     left: 0rem;
-    bottom: -0.05rem;
-    z-index: 11;
-    pointer-events: none;
+    bottom: 0rem;
+    z-index: 101;
+    // pointer-events: none;
   }
   .section {
     width: 100%;
@@ -210,15 +223,15 @@ export default {
     height: 100%;
     position: fixed;
     z-index: 100;
-    top: 13.5%;
+    top: 6.5%;
     .item {
       margin-bottom: 0.15rem;
     }
     .bigTitle_left {
-      font-family: 'PingFangSC-Semibold';
+      font-family: "PingFangSC-Semibold";
       width: 2.7rem;
-      height: .15rem;
-      background: url('./assets/left_title.png') no-repeat;
+      height: 0.15rem;
+      background: url("./assets/left_title.png") no-repeat;
       background-size: 100% 100%;
       font-size: 0.16rem;
       color: #e2feff;
@@ -229,15 +242,15 @@ export default {
       margin-left: 15%;
       margin-top: 5%;
     }
-     .bigTitle_right {
-      font-family: 'PingFangSC-Semibold';
+    .bigTitle_right {
+      font-family: "PingFangSC-Semibold";
       width: 3.18rem;
-      height: .15rem;
-      background: url('./assets/right_title.png') no-repeat;
+      height: 0.15rem;
+      background: url("./assets/right_title.png") no-repeat;
       background-size: 100% 100%;
       font-size: 0.16rem;
       color: #e2feff;
-      line-height: .15rem;
+      line-height: 0.15rem;
       text-shadow: 0 0 2px #00627a;
       margin-bottom: 0.28rem;
       text-align: center;
@@ -249,10 +262,10 @@ export default {
     width: 50%;
     height: 0.9rem;
     position: absolute;
-    left:0;
-    right:0;
+    left: 0;
+    right: 0;
     margin: auto;
-    margin-top: 1.8rem;
+    margin-top: 1.2rem;
     box-sizing: border-box;
     z-index: 1000;
   }
@@ -286,7 +299,7 @@ export default {
   height: 2.53rem;
 }
 .left_chart .chart_bg {
-  background: url('./assets/chart.png') no-repeat;
+  background: url("./assets/chart.png") no-repeat;
   width: 1.47rem;
   height: 2.35rem;
   background-size: 1.47rem 2.35rem;
@@ -298,7 +311,7 @@ export default {
   font-style: normal;
   font-size: 0.12rem;
   position: absolute;
-  background: url('./assets/bq_bg.png') no-repeat;
+  background: url("./assets/bq_bg.png") no-repeat;
   width: 0.58rem;
   height: 0.24rem;
   background-size: 0.58rem 0.24rem;
@@ -312,7 +325,7 @@ export default {
   font-style: normal;
   font-size: 0.12rem;
   position: absolute;
-  background: url('./assets/bq_bg.png') no-repeat;
+  background: url("./assets/bq_bg.png") no-repeat;
   width: 0.58rem;
   height: 0.24rem;
   background-size: 0.58rem 0.24rem;
@@ -325,7 +338,7 @@ export default {
 }
 .left_chart .chart_bg .chart_on {
   position: absolute;
-  background: url('./assets/chart_on.png') no-repeat bottom;
+  background: url("./assets/chart_on.png") no-repeat bottom;
   width: 1.35rem;
   height: 75%;
   background-size: 1.35rem 2.21rem;
@@ -379,7 +392,7 @@ export default {
   height: 2.56rem;
 }
 .right_chart .chart_bg {
-  background: url('./assets/chart.png') no-repeat;
+  background: url("./assets/chart.png") no-repeat;
   width: 1.47rem;
   height: 2.35rem;
   background-size: 1.47rem 2.35rem;
@@ -389,7 +402,7 @@ export default {
 }
 .right_chart .chart_bg .chart_on {
   position: absolute;
-  background: url('./assets/chart_on.png') no-repeat bottom;
+  background: url("./assets/chart_on.png") no-repeat bottom;
   width: 1.35rem;
   height: 63%;
   background-size: 1.35rem 2.21rem;
@@ -434,7 +447,7 @@ export default {
   margin-left: 12%;
 }
 .title_box i {
-  background: url('./assets/titicon.png') no-repeat;
+  background: url("./assets/titicon.png") no-repeat;
   width: 0.22rem;
   height: 0.22rem;
   background-size: 0.22rem 0.22rem;

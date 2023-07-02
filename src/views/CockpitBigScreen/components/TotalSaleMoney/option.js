@@ -37,13 +37,15 @@ export default {
       },
       axisLabel: {
         color: 'auto',
-        distance: 5,
-        fontSize:window.offsetWidth / 1082 * 14
+        distance: 3,
+        fontSize:window.innerWidth / 1082 * 8
       },
       detail: {
         valueAnimation: true,
         formatter: '{value} %',
         color: 'auto',
+        fontSize:window.innerWidth / 1082 * 14
+        
       },
       data: [
         {

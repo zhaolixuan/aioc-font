@@ -4,7 +4,8 @@
       <norm title="终端系统状态" :icon="1" />
     </div>
     <div class="scroll">
-      <div ref="canvasChart" style="height:2rem;width:100%"></div>
+      <div ref="canvasChart" style="height:2rem;width:50%"></div>
+      <div ref="canvasChart1" style="height:2rem;width:50%"></div>
     </div>
   </div>
 </template>
@@ -27,9 +28,23 @@ export default {
     }
   },
   mounted() {
+    
+    this.chart1 = this.$echarts.init(this.$refs.canvasChart1)
+    this.chart1.setOption(this.computedOptions)
     // let option = this.defaultOptions
     this.timer = setInterval(() => {
       this.chart.setOption({
+        series: [
+          {
+            data: [
+              {
+                value: +(Math.random() * 100).toFixed(0)
+              }
+            ]
+          }
+        ]
+      });
+      this.chart1.setOption({
         series: [
           {
             data: [
@@ -106,5 +121,8 @@ export default {
     }
   }
 
-  .scroll {}
+  .scroll {
+    display: flex;
+    
+  }
 }</style>
