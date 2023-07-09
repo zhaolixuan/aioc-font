@@ -233,6 +233,9 @@ export default {
     };
   },
   methods: {
+    onSubmit(){
+
+    },
     handelgive(data) {
       this.$emit("handelgive", data.row);
     },
@@ -286,10 +289,26 @@ export default {
     padding: 0 0.4rem;
 
     .el-table__body-wrapper {
-      height: 1.6rem;
+      height: 1.3rem;
       overflow: hidden;
       overflow-y: auto;
     }
   }
+}
+</style>
+<style lang="less">
+.el-select-dropdown{
+  background-color: rgba(0, 81, 127, 0.22) !important;
+  .el-select-dropdown__item{
+    color: #fff;
+  }
+  .el-select-dropdown__item.selected{
+    color: #409EFF;
+  }
+}
+.el-button{
+  background: transparent !important;
+    color: #fff !important;
+    padding: 10px 12px;
 }
 </style>

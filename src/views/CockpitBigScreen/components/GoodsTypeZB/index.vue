@@ -1,320 +1,201 @@
 <template>
-  <div class="GoodsTypeZB_wrap">
+  <div class="ShopNumber_wrap">
     <div class="card_wrap">
-      <norm title="实物明星行业零售榜" :icon="1" />
+      <norm title="实时AI分析" :icon="6" />
       <div class="tab_wrap">
-        <p
-          v-for="item in tabListFirst"
-          :key="item.firstId"
-          @click="handlerTabFirst(item.firstId)"
-          :class="tabsFirstId === item.firstId ? 'left' : ''"
-        >
-          {{ item.title }}
-        </p>
-      </div>
-      <div class="tab_wraps">
-        <p
-          v-for="item in tabList"
-          :key="item.id"
-          @click="handlerTab(item.id)"
-          :class="tabsId === item.id ? 'left' : ''"
-        >
+        <p v-for="item in tabList" :key="item.id" @click="handlerTab(item.id)" :class="item.className">
           {{ item.title }}
         </p>
       </div>
     </div>
-    <div class="scroll">
-      <div ref="canvasChart" style="height:1.5rem;width:100%"></div>
+    <div class="dark_table">
+      <el-table :data="tableData" style="width: 100%" center>
+        <el-table-column align="center" prop="entName" label="中心距离" show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column align="center" prop="shopCount" label="振幅" show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column align="center" prop="shopCount" label="冲击次数" width="100" show-overflow-tooltip>
+        </el-table-column>
+      </el-table>
+
     </div>
   </div>
 </template>
 <script>
-import norm from "../norm";
-import initChart from "@/mixins/initChart.js";
-import defaultOptions from "./option.js";
-import echarts from "echarts";
-import api from "@/api/api";
+import api from '@/api/api'
+import norm from '../norm'
 export default {
-  mixins: [initChart],
-  name: "GoodsTypeZB",
+  name: 'ShopNumber',
   components: { norm },
-  props: {},
+  props: {
+    infor: {
+      type: Object
+    }
+  },
   data() {
     return {
-      defaultOptions,
-      title: "",
-      tabListFirst: [
+      title: '明星企业',
+      tabList: [
         {
-          title: "互联网+",
-          firstId: 0
-        },
-        {
-          title: "TOP3",
-          firstId: 1
+          id: 0,
+          className: 'left',
+          title: '明星企业'
+        }, {
+          id: 1,
+          className: '',
+          title: '明星店铺'
         }
       ],
-      tabList: [],
-      tabsFirstId: 0,
-      tabsId: 0,
-      name: [],
-      val: []
-    };
+      timer: null,
+      allTableData: [],
+      tableData: [],
+      currrentPage: 1,
+      pageSize: 5,
+      total: 0,
+      totalPages: 0
+    }
   },
   created() {
-    this.getData();
+    this.getData()
+    this.title = this.tabList[0].title
+    this.timer = setInterval(() => {
+      let tmpList = this.allTableData.map(item => item)
+      const shiftItems = tmpList.splice(0, 5)
+      tmpList = tmpList.concat(shiftItems)
+      this.allTableData = tmpList
+      this.tableData = this.allTableData.slice(0, 5)
+    }, 3000)
   },
-  mounted() {
-    this.title = this.tabList.length ? this.tabList[0].title : "";
-    this.tabsId = 0;
+  destroyed() {
+    clearInterval(this.timer)
   },
-  watch: {
-    handlerTab: {
-      deep: true,
-      handler() {
-        this.getData();
-        this.chart.setOption(this.computedOptions);
-      }
-    },
-    handlerTabFirst: {
-      deep: true,
-      handler() {
-        this.getData();
-        this.chart.setOption(this.computedOptions);
-      }
-    }
-  },
+
+  watch: {},
   methods: {
     getData() {
-      api.getAllViewData({}).then(res => {
-        if (res.code === 200) {
-          /* tablist----数据处理 */
-          if (this.tabsFirstId === 0) {
-            res.data.notNetWorkAddTypeMap.map((item, i) => {
-              item.id = i;
-              item.title = item.name;
-            });
-            this.tabList = res.data.notNetWorkAddTypeMap; // 互联网+
-          } else {
-            res.data.notNetWorkTopTypeMap.map((item, i) => {
-              item.id = i;
-              item.title = item.name;
-            });
-            this.tabList = res.data.notNetWorkTopTypeMap; // TOP3
-          }
-          /* tablist-----数据处理结束 */
-
-          // echarts数据--------处理echarts数据
-          if (this.tabsFirstId === 0) {
-            // 互联网+
-            if (this.tabsId === 0) {
-              let arr = res.data.notNetWorkAddMap.slice(0, 5);
-              this.name = arr.map(item => {
-                return item.district;
-              });
-              this.val = arr.map(item => {
-                return item.materialNetworkSales;
-              });
-              this.chart.setOption(this.computedOptions);
-            } else if (this.tabsId === 1) {
-              let arr1 = res.data.notNetWorkAddMap.slice(5, 10);
-              this.name = arr1.map(item => {
-                return item.district;
-              });
-              this.val = arr1.map(item => {
-                return item.materialNetworkSales;
-              });
-              this.chart.setOption(this.computedOptions);
-            } else if (this.tabsId === 2) {
-              let arr2 = res.data.notNetWorkAddMap.slice(10, 15);
-              this.name = arr2.map(item => {
-                return item.district;
-              });
-              this.val = arr2.map(item => {
-                return item.materialNetworkSales;
-              });
-              this.chart.setOption(this.computedOptions);
-            }
-          } else {
-            // TOP3
-            if (this.tabsId === 0) {
-              let arr = res.data.notNetWorkBusinessUse1Map.slice(0, 5);
-              this.name = arr.map(item => {
-                return item.district;
-              });
-              this.val = arr.map(item => {
-                return item.materialNetworkSales;
-              });
-              this.chart.setOption(this.computedOptions);
-            } else if (this.tabsId === 1) {
-              let arr1 = res.data.notNetWorkBusinessUse1Map.slice(5, 10);
-              this.name = arr1.map(item => {
-                return item.district;
-              });
-              this.val = arr1.map(item => {
-                return item.materialNetworkSales;
-              });
-              this.chart.setOption(this.computedOptions);
-            } else if (this.tabsId === 2) {
-              let arr2 = res.data.notNetWorkBusinessUse1Map.slice(10, 15);
-              this.name = arr2.map(item => {
-                return item.district;
-              });
-              this.val = arr2.map(item => {
-                return item.materialNetworkSales;
-              });
-              this.chart.setOption(this.computedOptions);
-            }
-          }
+      api.getComPanyAndShopList({}).then(res => {
+        if (this.title === '明星企业') {
+          this.allTableData = res.projectEntList
+          this.tableData = this.allTableData.slice(0, 5)
+        } else if (this.title === '明星店铺') {
+          this.allTableData = res.projectShopList
+          this.tableData = this.allTableData.slice(0, 5)
         }
-      });
+      })
     },
-    // 二级tab切换----更新数据
     handlerTab(id) {
-      this.title = this.tabList[id].title;
-      this.tabsId = id;
-      this.getData();
-    },
-    // 一级标题切换---更新二级tabList
-    handlerTabFirst(id) {
-      this.title = this.tabListFirst[id].title;
-      this.tabsFirstId = id;
-      this.tabsId = 0;
-      this.getData();
+      this.title = this.tabList[id].title
+      if (id === 0) {
+        this.tabList[0].className = 'left'
+        this.tabList[1].className = ''
+      } else {
+        this.tabList[0].className = ''
+        this.tabList[1].className = 'right'
+      }
+      this.getData()
     }
   },
-  computed: {
-    computedOptions() {
-      let option = this.defaultOptions;
-      option.xAxis[0].data = this.name || [];
-      option.series[0].data = this.val;
-      if (this.tabsId === 0) {
-        option.series[0].itemStyle = {
-          normal: {
-            // 服装
-            color: new echarts.graphic.LinearGradient(
-              0,
-              1,
-              0,
-              0, // 4个参数用于配置渐变色的起止位置, 这4个参数依次对应右/下/左/上四个方位. 而0 0 0 1则代表渐变色从正上方开始
-              [
-                { offset: 0, color: "rgba(251,124,124,0.25)" },
-                { offset: 1, color: "rgba(221,93,93,1)" }
-              ]
-            ) // 数组, 用于配置颜色的渐变过程. 每一项为一个对象, 包含offset和color两个参数. offset的范围是0 ~ 1, 用于表示位置
-          }
-        };
-      } else if (this.tabsId === 1) {
-        option.series[0].itemStyle = {
-          normal: {
-            // 家电
-            color: new echarts.graphic.LinearGradient(
-              0,
-              1,
-              0,
-              0, // 4个参数用于配置渐变色的起止位置, 这4个参数依次对应右/下/左/上四个方位. 而0 0 0 1则代表渐变色从正上方开始
-              [
-                { offset: 0, color: "rgba(43,165,188,0.25)" },
-                { offset: 1, color: "rgba(12,212,248,1)" }
-              ]
-            ) // 数组, 用于配置颜色的渐变过程. 每一项为一个对象, 包含offset和color两个参数. offset的范围是0 ~ 1, 用于表示位置
-          }
-        };
-      } else if (this.tabsId === 2) {
-        option.series[0].itemStyle = {
-          normal: {
-            // 家电
-            color: new echarts.graphic.LinearGradient(
-              0,
-              1,
-              0,
-              0, // 4个参数用于配置渐变色的起止位置, 这4个参数依次对应右/下/左/上四个方位. 而0 0 0 1则代表渐变色从正上方开始
-              [
-                { offset: 0, color: "rgba(0,163,247,0.26)" },
-                { offset: 1, color: "rgba(5,166,253,1)" }
-              ]
-            ) // 数组, 用于配置颜色的渐变过程. 每一项为一个对象, 包含offset和color两个参数. offset的范围是0 ~ 1, 用于表示位置
-          }
-        };
-      }
-      return option;
-    }
-  }
-};
+  computed: {}
+}
 </script>
+<style>
+.el-table,
+.el-table tr {
+  background-color: transparent !important;
+  border-bottom: none;
+}
+
+.el-table thead tr th {
+  background-color: transparent !important;
+  background: rgba(85, 187, 255, 0.26) !important;
+  color: #fff;
+  padding: 0px 0px !important;
+  height: 0.36rem !important;
+}
+
+.el-table td,
+.el-table th.is-leaf {
+  border-bottom: 0px !important;
+}
+
+.el-table td {
+  padding: 0 0 !important;
+  height: 0.36rem !important;
+  color: #b6dcff !important;
+}
+
+.el-table .el-table_body tr th:hover {
+  background: transparent !important;
+}
+
+.el-table tr:nth-child(even) {
+  background: rgba(85, 187, 255, 0.1) !important;
+}
+
+.el-table tr:hover td {
+  background: transparent !important;
+}
+
+.el-table tr td .cell {
+  font-size: .14rem;
+}
+
+.el-table--scrollable-x .el-table__body-wrapper {
+  overflow-x: hidden !important;
+}
+</style>
 <style lang="less" scoped>
-.GoodsTypeZB_wrap {
+.ShopNumber_wrap {
   height: 25%;
+
   .card_wrap {
+    margin-top: -.25rem;
     position: relative;
+
     .tab_wrap {
       position: absolute;
-      right: 8%;
-      top: 0.2rem;
+      right: 15%;
+      top: 0.18rem;
       height: 0.24rem;
       display: flex;
       align-items: center;
       justify-content: center;
+
       p {
         cursor: pointer;
-        width: 0.8rem;
+        width: .8rem;
         height: 0.3rem;
         line-height: 0.3rem;
         display: inline-block;
         font-size: 0.12rem;
-        color: rgba(138, 227, 255, 0.6);
-        background: url("../../assets/tab.png") no-repeat;
+        background: url('../../assets/tab.png') no-repeat;
         background-size: 100% 100%;
-        color: #75bdf4;
+        color: #75BDF4;
         text-align: center;
       }
+
       .left {
-        background: url("../../assets/active_tab.png") no-repeat;
+        background: url('../../assets/active_tab.png') no-repeat;
         background-size: 100% 100%;
-        color: #ffffff;
+        color: #FFFFFF;
       }
+
       .right {
-        border: 1px solid rgba(138, 227, 255, 1);
-        color: #8ae3ff;
-      }
-    }
-    .tab_wraps {
-      margin: 0.1rem 0;
-      margin-left: 20%;
-      margin-right: 20%;
-      height: 0.24rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      p {
-        width: 25%;
-        text-align: center;
-        cursor: pointer;
-        height: 0.24rem;
-        line-height: 0.24rem;
-        font-size: 0.14rem;
-        color: #2d92e5;
-      }
-      .left {
-        width: 25%;
-        text-align: center;
-        position: relative;
-        color: #00d5ff;
-      }
-      .left::before {
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
-        border-bottom: 5px solid #00d5ff;
-        content: "";
-        position: absolute;
-        width: 0;
-        top: 0.28rem;
-        left: 48%;
-      }
-      .right {
-        border: 1px solid rgba(138, 227, 255, 1);
-        color: #8ae3ff;
+        background: url('../../assets/active_tab.png') no-repeat;
+        background-size: 100% 100%;
+        color: #FFFFFF;
       }
     }
   }
-}
-</style>
+
+  .dark_table {
+    margin-top: 0.2rem;
+    // margin-left: -15%;
+  }
+
+  .btn {
+    padding: 2px 6px;
+    border: 1px solid #ddd;
+    background: #171616;
+  }
+}</style>

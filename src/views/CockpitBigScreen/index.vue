@@ -259,21 +259,21 @@ export default {
     }
   }
   .center {
-    width: 50%;
+    width: 40%;
     height: 0.9rem;
     position: absolute;
     left: 0;
     right: 0;
     margin: auto;
-    margin-top: 1.2rem;
+    margin-top: 1.1rem;
     box-sizing: border-box;
     z-index: 1000;
   }
   .left_wrap {
-    left: 4%;
+    left: 1%;
   }
   .right_wrap {
-    right: 3%;
+    right: 1%;
   }
 }
 .map {

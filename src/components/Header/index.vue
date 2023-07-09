@@ -328,7 +328,7 @@ export default {
     cursor: pointer;
     z-index: 999;
   }
-
+/* 
   .el-dialog__body{
     height: 100%!important;
     padding: 0;
@@ -341,7 +341,7 @@ export default {
   }
   .el-dialog__headerbtn{
     font-size: 30px!important;
-  }
+  } */
   .v-modal{
     z-index: 0!important;
   }

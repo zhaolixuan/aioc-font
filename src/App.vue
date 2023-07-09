@@ -46,7 +46,7 @@ export default {
     cursor: pointer;
     z-index: 999;
   }
-  .el-dialog__body{
+  /* .el-dialog__body{
     height: 100%!important;
     padding: 0;
   }
@@ -55,7 +55,7 @@ export default {
     padding: 0;
     z-index: 999;
     width: 100%;
-  }
+  } */
   #bgFrame{
     border:0
   }
