@@ -26,6 +26,14 @@
     <div class="footer">
       <Footer @handelgive="handelgive" />
     </div>
+
+    <el-dialog title="实时波峰图" :visible.sync="RealTimeDialog" width="50%">
+      <real-time-peak-graph></real-time-peak-graph>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="RealTimeDialog = false">关闭</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -39,6 +47,8 @@ import NotGoodNetWork from "./components/NotGoodNetWork";
 import TotalSaleMoney from "./components/TotalSaleMoney";
 import GoodsTypeZB from "./components/GoodsTypeZB";
 import ShopNumber from "./components/ShopNumber";
+import RealTimePeakGraph from "./components/RealTimePeakGraph";
+
 import Map from "../Map/index.vue";
 export default {
   name: "CockpitBigScreen",
@@ -53,6 +63,7 @@ export default {
     TotalSaleMoney,
     GoodsTypeZB,
     ShopNumber,
+    RealTimePeakGraph
   },
   data() {
     return {
@@ -107,6 +118,7 @@ export default {
         newValue: [],
       },
       flag: false,
+      RealTimeDialog:false
     };
   },
   created() {

@@ -1,6 +1,6 @@
 <template>
   <div class="footer">
-    <p>Copyright © www.jd.com, All Rights Reserved.</p>
+    <p>Copyright © www.xxx.com, All Rights Reserved.</p>
     <p>Email : 12345678@qq.com  QQ: 12345678</p>
   </div>
 </template>

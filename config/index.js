@@ -15,10 +15,10 @@ module.exports = {
       //   target: 'http://devcity.jdcloud.com',
       //   changeOrigin: true
       // }
-      '/api': {
-        target: 'http://jiujiang-cloud.xjoycity.com/api/',
-        changeOrigin: true
-      }
+      // '/api': {
+      //   target: 'http://jiujiang-cloud.xjoycity.com/api/',
+      //   changeOrigin: true
+      // }
     },
 
     // Various Dev Server settings

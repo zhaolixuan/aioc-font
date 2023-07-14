@@ -11,10 +11,7 @@ export default {
   getComPanyAndShopList (params) {
     return fetches('post', '/api/wholeNetworkJiujiangEntInfo/getEntAndTopList', params, 'json')
   },
-  /** Consume **/
-  getPoi () {
-    return fetches('get', '../../static/data/index_poi.json')
-  },
+
 
   // 验证gunsToken
   checkoutGunsToken (params) {

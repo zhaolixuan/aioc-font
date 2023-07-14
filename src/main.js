@@ -3,7 +3,7 @@ import App from './App'
 import router from './router'
 import echarts from 'echarts'
 import iconfont from './assets/iconfont/iconfont.css'
-import rem from './utils/rem'
+import './utils/rem'
 import store from './store'
 import ElementUI from 'element-ui'
 import animated from 'animate.css'
@@ -23,6 +23,8 @@ Vue.use(VueLazyload,{
   loading: require('./assets/img/moren.png')
 });
 /* eslint-disable no-new */
+
+
 
 new Vue({
   el: '#app',

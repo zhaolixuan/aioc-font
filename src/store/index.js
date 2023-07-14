@@ -1,9 +1,5 @@
 import Vue from 'vue'
 import vuex from 'vuex'
-import menuStore from './modules/menu_store'
-import headerStore from './modules/header_store'
-import equipment from './modules/equipment_store'
-import bigproject from './modules/bigproject_store'
 import quota from './modules/quota_store'
 
 Vue.use(vuex)
@@ -21,10 +17,6 @@ export default new vuex.Store({
 
   },
   modules: {
-    menuStore,
-    headerStore,
-    equipment,
-    bigproject,
     quota
   },
   mutations: { // 更改state状态

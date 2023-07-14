@@ -1,6 +1,6 @@
 <template>
   <div class="footer_wrap">
-    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+    <el-form :inline="true" :model="formInline"  class="demo-form-inline">
       <el-form-item label="主机">
         <el-select v-model="formInline.region" placeholder="选择基站">
           <el-option label="区域一" value="shanghai"></el-option>
@@ -45,6 +45,7 @@
         :width="item.width || ''"
         :key="index"
         :sortable="item.sortable"
+        align="center"
       >
         <template slot-scope="scope">
           <template v-if="item.label == '操作'">
@@ -286,7 +287,7 @@ export default {
     }
   }
   /deep/ .el-table {
-    padding: 0 0.4rem;
+    padding: 0 0.1rem;
 
     .el-table__body-wrapper {
       height: 1.3rem;

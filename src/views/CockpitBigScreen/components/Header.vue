@@ -6,99 +6,109 @@
       </span>
       <span class="name">九江</span> -->
     </div>
-    <div class="infor" style="padding-left:5%;box-sizing:border-box;">
-      <p class="item_infor">
-
-      </p>
-      <p class="item_infor">
-      </p>
+    <div class="infor" style="padding-left: 5%; box-sizing: border-box">
+      <p class="item_infor"></p>
+      <p class="item_infor"></p>
     </div>
     <p class="title">周界预警监测系统</p>
     <div class="infor right">
-      <p  class="item_infor">{{ currentData +'  '+  currentTime }}</p>
-    
-      <p class="item_infor">
-        admin
-       <img src="../assets/quit.svg" alt="">
-      </p>
+      <p class="item_infor">{{ currentData + "  " + currentTime }}</p>
+
+      <el-dropdown @command="handleLogin" class="title_dropdown">
+        <p class="item_infor">
+          admin
+          <img src="../assets/quit.svg" alt="" />
+        </p>
+        <el-dropdown-menu slot="dropdown" class="op-dropdown">
+          <el-dropdown-item class="op-dropdown-item">退出登录</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
   </div>
 </template>
 <script>
-// import chineseLunar from 'chinese-lunar'
+  import { removeToken } from '@/utils/token-util'
 
 export default {
-  name: 'Header',
+  name: "Header",
   props: {
     infor: {
-      type: [Array, Object]
+      type: [Array, Object],
     },
     isInfor: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
-  data () {
+  data() {
     return {
       dataObj: {},
-      currentData:'',
-      currentTime:'',
-      time:null
-    }
+      currentData: "",
+      currentTime: "",
+      time: null,
+    };
   },
-  created () {},
+  created() {},
   watch: {
     infor: {
       deep: true,
-      handler () {
-        this.dataObj = this.infor
-      }
-    }
+      handler() {
+        this.dataObj = this.infor;
+      },
+    },
   },
-  mounted(){
-    this.navDate()
+  mounted() {
+    this.navDate();
     this.time = setInterval(() => {
-        this.updateTime()
-      }, 1000)
+      this.updateTime();
+    }, 1000);
   },
-  methods:{
-    navDate () {
-      let now = new Date()
-      let month = now.getMonth() + 1
-      let day = now.getDate()
-      let weeks = ['日', '一', '二', '三', '四', '五', '六']
-      let week = weeks[now.getDay()]
+  methods: {
+    handleLogin(command) {
+      this.loginOut()
+    },
+    loginOut(){
+      removeToken()
+      this.$router.push({ path: '/login' })
+    },
+    navDate() {
+      let now = new Date();
+      let month = now.getMonth() + 1;
+      let day = now.getDate();
+      let weeks = ["日", "一", "二", "三", "四", "五", "六"];
+      let week = weeks[now.getDay()];
       if (month < 10) {
-        month = '0' + month
+        month = "0" + month;
       }
       if (day < 10) {
-        day = '0' + day
+        day = "0" + day;
       }
-      this.currentData =  month + '月' + day + '日' + ' 星期' + week 
-      this.updateTime()
-     
+      this.currentData = month + "月" + day + "日" + " 星期" + week;
+      this.updateTime();
     },
     updateTime() {
-      let date = new Date()
-      let hours = date.getHours()
-      let minutes = date.getMinutes()
-      let seconds = date.getSeconds()
-      this.currentTime =  `${this.formatTime(hours)}:${this.formatTime(minutes)}:${this.formatTime(seconds)}`
+      let date = new Date();
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      let seconds = date.getSeconds();
+      this.currentTime = `${this.formatTime(hours)}:${this.formatTime(
+        minutes
+      )}:${this.formatTime(seconds)}`;
     },
     formatTime(time) {
-      return time < 10 ? `0${time}` : time
-    }
+      return time < 10 ? `0${time}` : time;
+    },
   },
-  destroyed(){
-    clearInterval(this.time)
+  destroyed() {
+    clearInterval(this.time);
   },
-}
+};
 </script>
 <style lang="less" scoped>
 .header_wrap {
   width: 100%;
   height: 100%;
-  background: url('../assets/head_bg.png') no-repeat;
+  background: url("../assets/head_bg.png") no-repeat;
   background-size: 100% 100%;
   padding: 0rem 0.15rem;
   box-sizing: border-box;
@@ -125,7 +135,7 @@ export default {
   }
   .title {
     display: inline-block;
-    width:22%;
+    width: 22%;
     height: 1rem;
     margin: 0 auto;
     font-size: 0.36rem;
@@ -133,16 +143,19 @@ export default {
     line-height: 1rem;
     text-align: center;
     text-shadow: 0px 0.04rem 0.4rem #003858;
-    font-family: 'PingFangSC-Regular';
+    font-family: "PingFangSC-Regular";
   }
   .infor {
     display: inline-block;
     width: 36%;
-    height: 1rem;
+    height: .5rem;
+    margin-top: .2rem;
     line-height: 0;
     font-size: 0rem;
     text-align: left;
     display: flex;
+    justify-content: space-around;
+    align-content: center;
     &:first-child {
       text-align: right;
       padding-right: 0.3rem;
@@ -150,19 +163,19 @@ export default {
     }
     .item_infor {
       font-size: 0.14rem;
-      height: 1rem;
-      line-height: 1rem;
+      // height: 1rem;
+      // line-height: 1rem;
       color: #e2feff;
-      margin-left: 0.3rem;
-      display:inline-block;
-      font-family: 'PingFangSC-Medium';
-      flex: 1;
+      // margin-left: 0.3rem;
+      display: inline-block;
+      font-family: "PingFangSC-Medium";
+      // flex: 1;
       align-items: center;
       display: flex;
       justify-content: center;
     }
     .value {
-      font-size: 0.20rem;
+      font-size: 0.2rem;
       color: #fff;
       margin-left: 0.05rem;
     }
@@ -171,6 +184,31 @@ export default {
       color: #fff;
     }
   }
-  
+}
+.title_dropdown{
+  display: flex;
+  align-items: center;
+}
+.op-dropdown {
+  padding: 1px;
+  margin: 8px 0 0 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  background: linear-gradient(180deg, #082857 0%, #091827 100%) !important;
+  box-shadow: 0px 4px 8px rgba(4, 17, 38, 0.4);
+  border-radius: 0;
+}
+
+.op-dropdown .op-dropdown-item {
+  background-color: transparent;
+  color: #fff;
+}
+
+.op-dropdown .op-dropdown-item:hover {
+  background-color: rgba(0, 194, 255, 0.1);
+  color: #ffffff;
+}
+
+.op-dropdown .popper__arrow {
+  display: none;
 }
 </style>

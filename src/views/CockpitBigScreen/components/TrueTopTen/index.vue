@@ -10,8 +10,6 @@
     </div>
     <el-dialog title="实时监控预警" :visible.sync="warningType" width="50%">
       <Video></Video>
-
-
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="warningType = false">关闭</el-button>
       </span>
@@ -20,12 +18,10 @@
 </template>
 <script>
 import norm from '../norm'
-import initChart from '@/mixins/initChart.js'
 import defaultOptions from './option.js'
 import api from '@/api/api'
 import Video from "@/components/Video";
 export default {
-  mixins: [initChart],
   name: 'TrueTooTen',
   components: { norm,Video },
   props: {
@@ -41,6 +37,7 @@ export default {
     }
   },
   mounted() {
+
   },
   watch: {
     infor: {

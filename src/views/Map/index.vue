@@ -185,10 +185,7 @@ export default {
           _this.maptalksMap.getLayer("centerPointLayer")
         );
       }
-      this.centerPointLayer = new maptalks.VectorLayer("centerPointLayer", [], {
-        enableAltitude: true,
-        altitudeProperty: "altitude",
-      }).addTo(this.maptalksMap); //centerPointData
+      this.centerPointLayer = new maptalks.VectorLayer("centerPointLayer").addTo(this.maptalksMap); //centerPointData
 
       api.getWholeNetworkJiujiangIndexList().then((res) => {
         var data = [res.records[0]];
@@ -198,6 +195,7 @@ export default {
               var lnglat = [87.29075215756086, 43.831270468528686];
               var value = item.salesamount;
               var point = new maptalks.Marker(lnglat, {
+                id:'markeId',
                 properties: {
                   altitude: 50,
                   name: item.district,
@@ -285,13 +283,16 @@ export default {
                             },
                           ];
                           console.log(e.coordinate, e.target.getCoordinates());
-                          marker = new maptalks.ui.UIMarker(e.target.getCoordinates(), {
-                            draggable: false,
-                            single: false,
-                            content: el,
-                            dx: -0,
-                            dy: -130,
-                          });
+                          marker = new maptalks.ui.UIMarker(
+                            e.target.getCoordinates(),
+                            {
+                              draggable: false,
+                              single: false,
+                              content: el,
+                              dx: -0,
+                              dy: -130,
+                            }
+                          );
                           marker.addTo(_this.maptalksMap).show();
 
                           _this.lastClickedPoint = e.target;
@@ -332,14 +333,23 @@ export default {
               point.properties.labelName =
                 item.district + " " + item.salesamountRank;
             }
-            this.centerPointLayer.addGeometry(_this.points);
           });
+          
+
+
+          this.centerPointLayer.addGeometry(_this.points);
+          this.centerPointLayer.setZIndex(999);
+          const targetPoint = this.centerPointLayer.getGeometryById('markeId');
+          console.log('targetPoint',targetPoint);
         }
       });
-      this.centerPointLayer.setZIndex(999);
     },
 
     addLiners() {
+      this.centerLinesLayer = new maptalks.VectorLayer("vector", []).addTo(
+        this.maptalksMap
+      ); //centerPointData
+
       var _this = this;
       var el, marker;
 
@@ -354,10 +364,11 @@ export default {
         ],
       ];
 
-      data.forEach((i) => {
+      data.forEach((i,index) => {
         let line = new maptalks.LineString(i, {
+          id:'line'+index,
           properties: {
-            name: "测试线段",
+            name: "测试线段"+index,
           },
           // arrowStyle : null, // arrow-style : now we only have classic
           // arrowPlacement : 'vertex-last', // arrow's placement: vertex-first, vertex-last, vertex-firstlast, point
@@ -379,13 +390,9 @@ export default {
           .on(
             "mouseenter",
             debounce(function (e) {
-              console.log(
-                      _this.centerPointLayer.getGeometries(),
-                      e.target
-                    );
-              _this.centerPointLayer.getGeometries().forEach((element) => {
+              _this.centerLinesLayer.getGeometries().forEach((element) => {
                 if (element == e.target) {
-                console.log(element);
+                  console.log(element);
                   el = document.getElementById("informationPanel");
                   _this.isShow = true;
                   _this.myTitleName = element.properties.name;
@@ -421,50 +428,20 @@ export default {
                 }
               });
             }, 200)
-          )
-          .on("click", function (e) {
-            _this.centerPointLayer.getGeometries().forEach((element) => {
-              if (element !== e.target) {
-                element.updateSymbol({
-                  markerFile: require(`../../assets/img/community.png`),
-                  markerWidth: 25 / 2,
-                  markerHeight: 41 / 2,
-                });
-              } else {
-                _this.maptalksMap.animateTo(
-                  {
-                    center: [
-                      e.target.getCoordinates().x,
-                      e.target.getCoordinates().y + 0.02,
-                    ],
-                    zoom: 13,
-                    pitch: 60,
-                    bearing: 0,
-                  },
-                  {
-                    duration: 500,
-                  }
-                );
+          );
 
-                _this.lastClickedPoint = e.target;
-              }
-            });
-          });
         this.lines.push(line);
-        this.centerPointLayer.addGeometry(_this.lines);
       });
-
-      this.centerPointLayer.setZIndex(999);
-
-      // this.linersList = new maptalks.VectorLayer("vector", _this.lines).addTo(
-      //   this.maptalksMap
-      // );
-
-      // this.getliner(this.linersList, [87.51104516347652, 43.62870369331276]);
+      this.centerLinesLayer.addGeometry(_this.lines);
+      this.centerLinesLayer.setZIndex(999);
+      this.getliner('line1');
     },
 
-    getliner(lines, startCoord) {
-      // console.log(lines, startCoord);
+    getliner(id) {
+      let line = this.centerLinesLayer.getGeometryById(id)
+      console.log(line, "!!!!!!!!!!!");
+      line.setSymbol({ lineColor: "red", lineWidth: 5 });
+
       // 假设已经创建了多个线段，并将其存储在一个数组中
       // var lines = [line1, line2, line3, ...];
 
@@ -472,24 +449,27 @@ export default {
       // var startCoord = [x, y];
 
       // 遍历线段数组
-      for (var i = 0; i < lines._geoList.length; i++) {
-        var line = lines._geoList[i];
-        console.log("line.getCoordinates()", line.getCoordinates());
+      // for (var i = 0; i < lines._geoList.length; i++) {
+      //   var line = lines._geoList[i];
+      //   console.log("line.getCoordinates()", line.getCoordinates());
 
-        // 获取线段的起始点位和结束点位
-        var start = line.getCoordinates()[0];
-        // var end = line.getCoordinates()[1];
-        let point = [start.x, start.y];
-        JSON.stringify(point);
-        // 判断起始点位是否与给定的起始点位相同
-        if (JSON.stringify(point) == JSON.stringify(startCoord)) {
-          // 找到了对应的线段
-          console.log("找到了对应的线段：", line);
-          line.setSymbol({ lineColor: "red", lineWidth: 5 });
-          // line.set_symbol({  lineColor: "red"})
-          break;
-        }
-      }
+      //   // 获取线段的起始点位和结束点位
+      //   var start = line.getCoordinates()[0];
+      //   // var end = line.getCoordinates()[1];
+      //   let point = [start.x, start.y];
+      //   JSON.stringify(point);
+      //   // 判断起始点位是否与给定的起始点位相同
+      //   if (JSON.stringify(point) == JSON.stringify(startCoord)) {
+      //     // 找到了对应的线段
+      //     console.log("找到了对应的线段：", line);
+      //     line.setSymbol({ lineColor: "red", lineWidth: 5 });
+      //     line.on("click", function (e) {
+      //       console.log("e===========", e);
+      //     });
+      //     // line.set_symbol({  lineColor: "red"})
+      //     break;
+      //   }
+      // }
     },
 
     async addRoadThreeLayer() {

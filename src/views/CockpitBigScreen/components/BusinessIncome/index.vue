@@ -12,7 +12,6 @@
 import norm from '../norm'
 import initChart from '@/mixins/initChart.js'
 import defaultOptions from './option.js'
-import interva from '@/views/common/interva.js'
 export default {
   mixins: [initChart],
   name: 'BusinessIncome',
