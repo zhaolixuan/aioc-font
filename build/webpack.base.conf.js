@@ -42,7 +42,6 @@ module.exports = {
     }
   },
   externals: {
-    'jquery': 'jQuery',
     'Cesium': 'Cesium',
     'cs3d': 'cs3d'
   },
@@ -59,12 +58,22 @@ module.exports = {
         loader: 'babel-loader',
         include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
       },
+     
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
+        exclude: [resolve('src/assets/icons')],
         options: {
           limit: 10000,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
+        }
+      },
+      {
+        test: /\.svg$/,
+        loader: 'svg-sprite-loader',
+        include: [resolve('src/assets/icons')],
+        options: {
+          symbolId: 'icon-[name]'
         }
       },
       {
@@ -111,8 +120,6 @@ module.exports = {
   },
   plugins:[
     new webpack.ProvidePlugin({
-      $:'jquery',
-      jQuery: 'jquery'
     })
   ]
 

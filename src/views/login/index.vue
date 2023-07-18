@@ -1,191 +1,241 @@
 <template>
-    <div class="login_bg">
-      <div class="from_bg">
-        <p class="title">
-            周界预警监测系统
-        </p>
-        <p class="line"></p>
-        <el-form :model="ruleForm"
-                 status-icon
-                 :rules="rules"
-                 ref="ruleForm"
-                 label-width="0.8rem"
-                 class="demo-ruleForm">
-  
-          <el-form-item label="用户名"
-                        prop="name">
-            <el-input v-model.number="ruleForm.name"
-                      placeholder="请输入用户名"></el-input>
-          </el-form-item>
-          <el-form-item label="密码"
-                        prop="pass">
-            <el-input type="password"
-                      v-model="ruleForm.pass"
-                      placeholder="请输入密码"
-                      autocomplete="off"></el-input>
-          </el-form-item>
-          <el-button type="primary"
-                     @click="submitForm('ruleForm')">登录</el-button>
-        </el-form>
-      </div>
+  <div class="login">
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
+      <p class="title" style="font-size: .3rem;">{{ sysName }}</p>
+      <el-form-item prop="username">
+        <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
+          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="password">
+        <el-input v-model="loginForm.password" type="password" auto-complete="off" placeholder="密码"
+          @keyup.enter.native="handleLogin">
+          <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="code" v-if="captchaEnabled">
+        <el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" style="width: 63%"
+          @keyup.enter.native="handleLogin">
+          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
+        </el-input>
+        <div class="login-code">
+          <img :src="codeUrl" @click="getCode" class="login-code-img" />
+        </div>
+      </el-form-item>
+      <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
+      <el-form-item style="width:100%;">
+        <el-button :loading="loading" size="medium" type="primary" style="width:100%;"
+          @click.native.prevent="handleLogin">
+          <span v-if="!loading">登 录</span>
+          <span v-else>登 录 中...</span>
+        </el-button>
+        <div style="float: right;" v-if="register">
+          <router-link class="link-type" :to="'/register'">立即注册</router-link>
+        </div>
+      </el-form-item>
+    </el-form>
+    <!--  底部  -->
+    <div class="el-login-footer">
+      <span>Copyright © 2018-2023 mounttai All Rights Reserved.</span>
     </div>
-  </template>
-  
-  <script>
-  import { login } from '@/api/login'
-  import { getToken, setToken } from '@/utils/token-util'
-  
-  export default {
-    data() {
-      var validateName = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入用户名'))
-        } else {
-          callback()
-        }
-      }
-      var validatePass = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入密码'))
-        } else {
-          callback()
-        }
-      }
-      return {
-        ruleForm: {
-          name: '',
-          pass: '',
-        },
-        rules: {
-          name: [{ validator: validateName, trigger: 'blur' }],
-          pass: [{ validator: validatePass, trigger: 'blur' }],
-        },
-      }
-    },
-    created() {},
-    mounted() {},
-    methods: {
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.$router.push({ path: '/' })
-return
-            let data = {
-              account: this.ruleForm.name,
-              password: this.ruleForm.pass,
-            }
-            login(data)
-              .then((res) => {
-                if (res.code == '00000') {
-                  this.$message.success('成功')
-                  setToken(res.data.token, true)
-                  setTimeout(() => {
-                    this.$router.push({ path: '/' })
-                  }, 1000)
-                } else {
-                  this.$message.error(res.message)
-                }
-              })
-              .catch((err) => {
-                // console.log(err)
-                //   this.$message.error(err)
-              })
-          } else {
-            // console.log('error submit!!')
-            return false
-          }
-        })
+  </div>
+</template>
+
+<script>
+import { getCodeImg,login } from "@/api/login";
+import Cookies from "js-cookie";
+import { encrypt, decrypt } from '@/utils/jsencrypt'
+
+export default {
+  name: "Login",
+  data() {
+    return {
+      codeUrl: "",
+      loginForm: {
+        username: "admin",
+        password: "admin123",
+        rememberMe: false,
+        code: "",
+        uuid: "",
+        url: "ws://127.0.0.1:8080/websocket/message",
+        message: "",
+        text_content: "",
+        ws: null,
       },
+      loginRules: {
+        username: [
+          { required: true, trigger: "blur", message: "请输入您的账号" }
+        ],
+        password: [
+          { required: true, trigger: "blur", message: "请输入您的密码" }
+        ],
+        code: [{ required: true, trigger: "change", message: "请输入验证码" }]
+      },
+      loading: false,
+      // 验证码开关
+      captchaEnabled: true,
+      // 注册开关
+      register: false,
+      redirect: undefined
+    };
+  },
+  watch: {
+    $route: {
+      handler: function (route) {
+        this.redirect = route.query && route.query.redirect;
+      },
+      immediate: true
+    }
+  },
+  created() {
+    this.getCode();
+    this.getCookie();
+  },
+  methods: {
+    getCode() {
+      getCodeImg().then(res => {
+        this.captchaEnabled = res.captchaEnabled === undefined ? true : res.captchaEnabled;
+        if (this.captchaEnabled) {
+          this.codeUrl = "data:image/gif;base64," + res.img;
+          this.loginForm.uuid = res.uuid;
+        }
+      });
     },
-  }
-  </script>
-  
-  <style scoped lang="less">
-  .login_bg {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: url(~@/assets/img/login_bg.jpeg) no-repeat;
-    background-size: cover;
-  
-    .from_bg {
-      width: 6.97rem;
-      height: 6.1rem;
-      background: url(~@/assets/img/from_bg.png) no-repeat;
-      background-size: cover;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      // transform: translate(-50%, -50%);
-      .title {
-        background: linear-gradient(
-          180deg,
-          rgba(12, 171, 241, 1) 0%,
-          rgba(255, 255, 255, 1) 67.82083511352539%
-        );
-        font-size: 0.52rem;
-        font-family: JingDongLangZhengTi;
-        font-weight: bold;
-        color: transparent;
-        -webkit-background-clip: text;
-        margin-top: 0.8rem;
-      }
-      .line {
-        width: 5.8rem;
-        border: 1px solid;
-        margin-top: 0.21rem;
-        border-image: linear-gradient(
-            270deg,
-            rgba(0, 128, 255, 0) 0%,
-            rgba(0, 212, 255, 1) 51.5625%,
-            rgba(0, 128, 255, 0) 100%
-          )
-          2 2;
-        box-sizing: border-box;
-      }
-      .demo-ruleForm {
-        background: transparent;
-        width: 3.44rem;
-        margin-top: 0.89rem;
-        position: relative;
-  
-        /deep/ .el-form-item {
-          background: rgba(255, 255, 255, 1);
-          border-radius: 0.04rem;
-          height: 0.48rem;
-          .el-form-item__label {
-            height: 0.48rem;
-            line-height: 0.48rem;
-            font-size: 0.13rem;
-            font-family: JDLangZhengTi;
-            font-weight: normal;
-            color: rgba(51, 51, 51, 1);
-            text-align-last: justify;
-            text-align: justify;
-            padding: 0 0.16rem;
+    getCookie() {
+      const username = Cookies.get("username");
+      const password = Cookies.get("password");
+      const rememberMe = Cookies.get('rememberMe')
+      this.loginForm = {
+        username: username === undefined ? this.loginForm.username : username,
+        password: password === undefined ? this.loginForm.password : decrypt(password),
+        rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
+      };
+    },
+    handleLogin() {
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          this.loading = true;
+          if (this.loginForm.rememberMe) {
+            Cookies.set("username", this.loginForm.username, { expires: 30 });
+            Cookies.set("password", encrypt(this.loginForm.password), { expires: 30 });
+            Cookies.set('rememberMe', this.loginForm.rememberMe, { expires: 30 });
+          } else {
+            Cookies.remove("username");
+            Cookies.remove("password");
+            Cookies.remove('rememberMe');
           }
-          .el-form-item__content {
-            display: flex;
-            .el-input {
-              flex: 1;
+          let {username, password, code, uuid} = this.loginForm
+          login(username, password, code, uuid).then(res => {
+            this.$router.push({ path: this.redirect || "/" })
+          }).catch(error => {
+            this.loading = false;
+            if (this.captchaEnabled) {
+              this.getCode();
             }
-          }
-          .el-input__inner {
-            border: none !important;
-            height: 0.48rem;
-          }
+          })
+
         }
-        .el-button {
-          width: 100%;
-          height: 0.45rem;
-          background: rgba(0, 178, 255, 1);
-          border-radius: 0.04rem;
-          position: absolute;
-          top: 1.69rem;
-        }
-      }
+      });
+    },
+    // join() {
+    //   const wsuri = this.url;
+    //   this.ws = new WebSocket(wsuri);
+    //   const self = this;
+    //   this.ws.onopen = function (event) {
+    //     self.text_content = self.text_content + "已经打开连接!" + "\n";
+    //   };
+    //   this.ws.onmessage = function (event) {
+    //     self.text_content = event.data + "\n";
+    //   };
+    //   this.ws.onclose = function (event) {
+    //     self.text_content = self.text_content + "已经关闭连接!" + "\n";
+    //   };
+    // },
+    // exit() {
+    //   if (this.ws) {
+    //     this.ws.close();
+    //     this.ws = null;
+    //   }
+    // },
+    // send() {
+    //   if (this.ws) {
+    //     this.ws.send(this.message);
+    //   } else {
+    //     alert("未连接到服务器");
+    //   }
+    // },
+  }
+};
+</script>
+
+<style scoped lang="less">
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-image: url("~@/assets/img/login-background.jpg");
+  background-size: cover;
+}
+
+.title {
+  margin: 0px auto 30px auto;
+  text-align: center;
+  color: #707070;
+}
+
+.login-form {
+  border-radius: 6px;
+  background: #ffffff;
+  width: 400px;
+  padding: 25px 25px 5px 25px;
+
+  .el-input {
+    height: 38px;
+
+    input {
+      height: 38px;
     }
   }
-  </style>
+
+  .input-icon {
+    height: 39px;
+    width: 14px;
+    margin-left: 2px;
+  }
+}
+
+.login-tip {
+  font-size: 13px;
+  text-align: center;
+  color: #bfbfbf;
+}
+
+.login-code {
+  width: 33%;
+  height: 38px;
+  float: right;
+
+  img {
+    cursor: pointer;
+    vertical-align: middle;
+  }
+}
+
+.el-login-footer {
+  height: 40px;
+  line-height: 40px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  font-family: Arial;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.login-code-img {
+  height: 38px;
+}
+</style>

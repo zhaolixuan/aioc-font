@@ -1,38 +1,59 @@
-/*
- * @Author: diaolili
- * @Date: 2020-12-03 12:06:57
- * @Description: 登录等通用功能接口
- */
-import fetches from './fetches'
+import request from './request'
 
-/**
- * post 用户登录
- */
-export const login = data => {
-  return fetches({
-    method: 'POST',
-    url: '/user/login'
+// 登录方法
+export function login(username, password, code, uuid) {
+  const data = {
+    username,
+    password,
+    code,
+    uuid
+  }
+  return request({
+    url: '/login',
+    headers: {
+      isToken: false
+    },
+    method: 'post',
+    data: data
   })
 }
 
-/**
- * get 获取用户信息
- */
-export const getUserInfo = params => {
-  return fetches({
-    method: 'GET',
-    url: '/user/getUserInfo',
-    params
+// 注册方法
+export function register(data) {
+  return request({
+    url: '/register',
+    headers: {
+      isToken: false
+    },
+    method: 'post',
+    data: data
   })
 }
 
-/**
- * get 获取菜单
- */
-export const getMenuData = data => {
-  return fetches({
-    method: 'POST',
-    url: '/common/getCommonData/HQYHCDAN',
-    data
+// 获取用户详细信息
+export function getInfo() {
+  return request({
+    url: '/getInfo',
+    method: 'get'
+  })
+}
+
+// 退出方法
+export function logout() {
+  return request({
+    url: '/logout',
+    method: 'post'
+  })
+}
+
+// 获取验证码
+export function getCodeImg() {
+  return request({
+    url: '/captchaImage',
+    headers: {
+      isToken: false
+    },
+    method: 'get',
+    timeout: 20000
   })
 }

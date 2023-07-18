@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import vuex from 'vuex'
-import quota from './modules/quota_store'
 
 Vue.use(vuex)
 
@@ -16,9 +15,7 @@ export default new vuex.Store({
     isVisibleSecond: false
 
   },
-  modules: {
-    quota
-  },
+ 
   mutations: { // 更改state状态
     setActiveKey (state, value) {
       state.activeKey = value

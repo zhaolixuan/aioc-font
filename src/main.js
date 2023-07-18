@@ -7,13 +7,18 @@ import './utils/rem'
 import store from './store'
 import ElementUI from 'element-ui'
 import animated from 'animate.css'
+import '@/assets/styles/index.less' // global css
+import '@/assets/styles/mounttai.less' // mounttai css
+import './assets/icons' // icon
+
 import 'element-ui/lib/theme-chalk/index.css'
+
 import './common/js/css.js'
 import vuescroll from 'vuescroll'
 import VueLazyload from 'vue-lazyload'
-import $ from 'jquery'
 Vue.config.productionTip = false
 Vue.prototype.$echarts = echarts // 全局引入echarts，调用时通过 this.$echarts 调用
+Vue.prototype.sysName = '周界预警监控系统'
 
 Vue.use(ElementUI)
 Vue.use(animated)

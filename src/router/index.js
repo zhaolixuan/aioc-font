@@ -3,9 +3,6 @@ import Router from 'vue-router'
 import Leader from '@/views/CockpitBigScreen/index'
 import Login from '@/views/login/index'
 
-import { getCookie } from '@/api/cookie'
-import logindomain from '@/api/domain_sso'
-import api from '@/api/api'
 Vue.use(Router)
 
 const router = new Router({
