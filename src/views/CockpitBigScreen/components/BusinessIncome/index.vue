@@ -1,7 +1,7 @@
 <template>
   <div class="BusinessIncome_wrap">
     <div class="card_wrap">
-      <norm title="光路质量" :icon="1"/>
+      <norm title="光路质量" :icon="1" />
     </div>
     <div class="scroll">
       <div ref="canvasChart" style="height:2rem;width:100%"></div>
@@ -21,30 +21,41 @@ export default {
       type: Object
     }
   },
-  data () {
+  data() {
     return {
       defaultOptions
     }
   },
-  mounted () {
+  mounted() {
     //   console.log('更改代码查看变化');
   },
   watch: {
     infor: {
       deep: true,
-      handler () {
-        this.chart.setOption(this.computedOptions)
+      handler() {
+        // this.chart.setOption(this.computedOptions)
+        this.chart.setOption({
+          xAxis: {
+            data: this.infor.name
+          },
+          series: [
+            {
+              data: this.infor.value2
+            }
+          ]
+
+        })
       }
     }
   },
   methods: {},
   computed: {
-    computedOptions () {
+    computedOptions() {
       let option = this.defaultOptions
       option.series[0].data = this.infor.value2 // 零售额
       option.xAxis.data = this.infor.name
       if (option.xAxis.data.length == 1) {
-           option.xAxis.data.push('')
+        option.xAxis.data.push('')
       }
       return option
     }
@@ -54,6 +65,7 @@ export default {
 <style lang="less" scoped>
 .BusinessIncome_wrap {
   height: 25%;
+
   .card_wrap {
     margin-bottom: .12rem;
   }

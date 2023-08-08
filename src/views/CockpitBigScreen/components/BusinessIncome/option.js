@@ -13,10 +13,23 @@ export default {
   grid: {
     left: '0',
     right: '4%',
-    bottom: '5%',
-    top: '25%',
+    bottom: '20%',
+    top: '5%',
     containLabel: true
   },
+  dataZoom: [
+    {
+      type: 'inside',
+      start: 0,
+      end: 100
+    },
+    {
+      start: 0,
+      end: 100,
+      height: 20,
+      bottom: 0,
+    }
+  ],
   xAxis: {
     type: 'category',
     // data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
@@ -32,7 +45,7 @@ export default {
       show: false
     },
     axisLabel: {
-      interval: 0,
+      // interval: 0,
       show: true,
       textStyle: {
         color: '#3671A7',

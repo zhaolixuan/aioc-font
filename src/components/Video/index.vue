@@ -1,61 +1,91 @@
 <template>
     <div class="viodeBox">
-        <video-player ref="videoPlayer" :options="videoOptions" class="vjs-custom-skin videoPlayer"
-            :playsinline="true"></video-player>
+        <!-- <video-player ref="videoPlayer" :options="videoOptions" class="vjs-custom-skin videoPlayer"
+            :playsinline="true"></video-player> -->
+        <video muted autoplay :controls="false" style="object-fit: fill;" width="100%" height="100%" :id="id"
+            class="video"></video>
     </div>
 </template>
 
 <script>
-import 'video.js/dist/video-js.css'
-import { videoPlayer } from 'vue-video-player'
-import 'videojs-flash'
-import SWF_URL from 'videojs-swf/dist/video-js.swf'
+import flv from 'flv.js'
 export default {
     name: 'Video',
     props: {
-        infor: {
-            videoOptions: Object
-        }
+        videoInfo: Object,
+        id: String
     },
-    components: {
-        videoPlayer
-    },
+
     data() {
         return {
-            videoOptions: {
-                live: true,
-                autoplay: true,
-                fluid: true,
-                notSupportedMessage: '暂时无法播放',
-                controlBar: {
-                    timeDivider: true,
-                    durationDisplay: true,
-                    remainingTimeDisplay: false,
-                    fullscreenToggle: true // 全屏按钮
-                },
-                techOrder: ['flash'],
-                flash: {
-                    hls: { withCredentials: false },
-                    swf: SWF_URL // 引入静态文件swf
-                },
-                sources: [{ // 流配置，数组形式，会根据兼容顺序自动切换
-                    type: 'rtmp/mp4', // 视频格式
-                    src: '' // 视频路径
-                }]
-            }
+            flvUrl: '',
+            player: null
         }
     },
     mounted() {
+
     },
     watch: {
+        videoInfo: {
+            deep: true,
+            handler(newValue) {
+                if (newValue.flvUrl) {
+                    this.flvUrl = newValue.flvUrl
+                    this.createdPlay(this.flvUrl)
+                }
+                // let rtmpUrl = this.videoInfo.rtmpUrl && this.videoInfo.rtmpUrl.replace('localhost', '192.168.196.37')
 
+            }
+        }
+    },
+    // created() {
+    //     if (flv.isSupported()) {
+    //         this.player = flv.createPlayer({
+    //             type: "flv",
+    //             //url: "http://vjs.zencdn.net/v/oceans.mp4"
+    //             url: this.flvUrl
+    //         });
+
+    //     }
+    // },
+    mounted() {
+        // var videoElement = document.getElementById(this.id);
+        // this.player.attachMediaElement(videoElement);
+        // this.player.load();
+        // this.player.play();
     },
     methods: {
+        // 检测浏览器是否支持 flv.js
+        createdPlay(url) {
 
+            var videoElement = document.getElementById(this.id)
+            if (!videoElement) {
+                if (this.player !== null) {
+                    this.player.pause();
+                    this.player.unload();
+                    this.player.detachMediaElement();
+                }
+            }
+            if (flv.isSupported()) {
+                this.player = flv.createPlayer({
+                    type: 'flv', // 媒体类型，默认是 flv,
+                    url: url, // 流地址
+                })
+            }
+            this.player.attachMediaElement(videoElement)
+            this.player.load()
+        }
     },
-    computed: {
+    destroyVideos() {
 
+        if (!this.player) return
+        this.player.pause()
+        this.player.unload()
+        this.player.detachMediaElement()
+        this.player.destroy()
+        this.player = null
     }
+
 }
 
 </script>
@@ -63,12 +93,19 @@ export default {
 <style lang="less" scoped>
 .viodeBox {
     // height: 3rem;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+
+    .video {
+        background: #eee;
+    }
+
     .videoPlayer {
-  width: 100%;
-  height: 100%;
-}
+        width: 100%;
+        height: 100%;
+    }
 }
 </style>

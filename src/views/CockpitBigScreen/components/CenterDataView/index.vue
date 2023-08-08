@@ -2,15 +2,15 @@
   <div class="EnterpriseNumber">
     <div class="infor_wrap">
       <div class="infor_item">
-        <p class="name">{{ inforList.name }}</p>
-        <p class="num">{{ inforList.num }}</p>
+        <p class="name">当前报警数量</p>
+        <p class="num">{{ num }}</p>
       </div>
     </div>
     <div class="thorough">
-      <div v-for="i in thoroughList" :key="i.name" class="thorough_item">
-        <span>通道{{ i.index }}：</span>
-        <p class="line" :style="`background-color:${i.color} ;`"></p>
-        <p class="name">{{ i.name }}</p>
+      <div v-for="(i, index) in infor" :key="i.hostId" class="thorough_item">
+        <span>通道{{ i.channelNo }}：</span>
+        <p class="line" :style="`background-color:${index == 0 ? 'yellow' : 'blue'} ;`"></p>
+        <p class="name">{{ i.channelName }}</p>
       </div>
     </div>
   </div>
@@ -22,15 +22,14 @@ export default {
     infor: {
       type: [Object, Array],
     },
-    list: {
-      type: Array,
+    num: {
+      type: Number,
     },
   },
   data() {
     return {
       showTable: false,
       id: 1,
-      tableData: [],
       thoroughList: [
         {
           name: "霍尔果斯",
@@ -43,34 +42,21 @@ export default {
           index: 1,
         },
       ],
-      inforList: {
-        name: "当前报警数量",
-        num: 0,
-      },
     };
   },
   created() {
-    this.inforList.num = this.infor.salesamountCount || 0;
-    this.tableData = this.list;
+
   },
   watch: {
     infor: {
       deep: true,
       handler() {
-        this.inforList.num = this.infor.salesamountCount || 0;
-        this.tableData = this.list;
+
       },
     },
   },
   methods: {
-    handleMouseover(name) {
-      if (name === "全省排名") {
-        this.showTable = true;
-      }
-    },
-    handleMouseout() {
-      this.showTable = false;
-    },
+
   },
 };
 </script>
@@ -80,6 +66,7 @@ export default {
   background-color: transparent !important;
   border-bottom: none;
 }
+
 .el-table thead tr th {
   background-color: transparent !important;
   background: rgba(0, 81, 127, 0.22) !important;
@@ -87,30 +74,38 @@ export default {
   padding: 0px 0px !important;
   height: 0.29rem !important;
 }
+
 .el-table td,
 .el-table th.is-leaf {
   border-bottom: 0px !important;
 }
+
 .el-table td {
   padding: 0 0 !important;
   height: 0.29rem !important;
   color: #b6dcff !important;
 }
+
 .el-table .el-table_body tr th:hover {
   background: transparent !important;
 }
+
 .el-table tr:nth-child(even) {
   background: rgba(0, 81, 127, 0.22) !important;
 }
+
 .el-table tr:hover td {
   background: transparent !important;
 }
+
 .el-table tr td .cell {
   font-size: 0.12rem;
 }
+
 .el-table--scrollable-x .el-table__body-wrapper {
   overflow-x: hidden !important;
 }
+
 .tables {
   margin: 10px 15% 0 14%;
 }
@@ -122,6 +117,8 @@ export default {
   display: flex;
   pointer-events: auto;
   position: relative;
+  justify-content: center;
+
   .tableBox {
     width: 2.94rem;
     min-height: 2.2rem;
@@ -130,6 +127,7 @@ export default {
     position: absolute;
     top: -80%;
     left: 73%;
+
     .title {
       font-size: 14px;
       color: #fff;
@@ -138,6 +136,7 @@ export default {
       margin-left: 15px;
     }
   }
+
   .infor_wrap {
     display: flex;
     justify-content: center;
@@ -146,10 +145,12 @@ export default {
     color: #fff;
     line-height: 0.25rem;
     cursor: pointer;
+
     .infor_item {
       display: flex;
       flex-direction: column;
     }
+
     .name {
       font-size: 0.28rem;
       color: #a8e7f6;
@@ -157,54 +158,51 @@ export default {
 
     .num {
       text-align: center;
-      font-size: 0.14rem;
+      font-size: 0.4rem;
+      color: red;
+      margin-top: 0.2rem;
     }
+
     &:last-child {
       margin-right: 0rem;
     }
+
     .imgs {
       width: 0.5rem;
       margin-right: 0.1rem;
+
       img {
         display: block;
       }
     }
   }
-  .thorough{
+
+  .thorough {
     display: flex;
     flex-direction: column;
     position: absolute;
     left: 0;
     top: 0;
-    .thorough_item{
+
+    .thorough_item {
       display: flex;
       align-items: center;
       font-size: .14rem;
-      span{
+
+      span {
         color: #a8e7f6;
-        width: 0.6rem;
+        // width: 0.7rem;
       }
-      .name{
+
+      .name {
         color: #fff;
       }
-      .line{
+
+      .line {
         height: 3px;
         width: .5rem;
         margin-right: .1rem;
       }
     }
   }
-  .infor_wrap:nth-child(2) {
-    flex: 1;
-  }
-  .infor_wrap:nth-child(3) {
-    flex: 1;
-  }
-  .infor_wrap:first-child {
-    flex: 2;
-  }
-  .infor_wrap:last-child {
-    flex: 3;
-  }
-}
-</style>
+}</style>

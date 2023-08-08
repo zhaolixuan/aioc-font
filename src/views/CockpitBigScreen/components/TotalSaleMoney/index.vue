@@ -28,43 +28,42 @@ export default {
     }
   },
   mounted() {
-    
+
     this.chart1 = this.$echarts.init(this.$refs.canvasChart1)
     this.chart1.setOption(this.computedOptions)
-    // let option = this.defaultOptions
-    this.timer = setInterval(() => {
-      this.chart.setOption({
-        series: [
-          {
-            data: [
-              {
-                value: +(Math.random() * 100).toFixed(0)
-              }
-            ]
-          }
-        ]
-      });
-      this.chart1.setOption({
-        series: [
-          {
-            data: [
-              {
-                value: +(Math.random() * 100).toFixed(0)
-              }
-            ]
-          }
-        ]
-      });
-    }, 5000)
+
+
   },
-  destroyed() {
-    clearInterval(this.timer = null)
-  },
+
   watch: {
     infor: {
       deep: true,
-      handler() {
-        this.chart.setOption(this.computedOptions)
+      handler(n) {
+        this.chart.setOption({
+          series: 
+            {
+              data: [
+                {
+                  value: this.infor.cpu.sys,
+                  name:'cpu使用率'
+                }
+              ]
+            }
+          
+        })
+        this.chart1.setOption({
+          series: 
+            {
+              data: [
+                {
+                  value: this.infor.mem.usage,
+                  name:'内存使用率'
+
+                }
+              ]
+            }
+          
+        })
       }
     },
     flag: {
@@ -123,6 +122,7 @@ export default {
 
   .scroll {
     display: flex;
-    
+
   }
-}</style>
+}
+</style>

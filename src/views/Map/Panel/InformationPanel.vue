@@ -20,7 +20,7 @@
       >
         <el-row>
           <el-col :span="2">
-            <img src="../../../assets/img/item_icon.png" alt="" />
+            <img src="../../../assets/image/item_icon.png" alt="" />
           </el-col>
           <el-col :span="12">
             <span class="profession-item-field"
@@ -80,7 +80,7 @@ export default {
 
 <style lang="less" scoped>
 .profession-wrapper {
-  background-image: url("../../../assets/img/infor-panel.png");
+  background-image: url("../../../assets/image/infor-panel.png");
   background-size: contain;
   width: 2.42rem;
   height: 1.93rem;

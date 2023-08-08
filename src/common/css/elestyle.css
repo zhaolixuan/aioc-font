@@ -150,7 +150,7 @@ padding-left: .15rem;
 .cyl_left .el-tabs--card>.el-tabs__header .el-tabs__item{
   border-bottom: none;
   border-left: none;
-  background:url("../../assets/img/tabbg.png") no-repeat;
+  background:url("../../assets/image/tabbg.png") no-repeat;
    width: 2.11rem;
    height: .54rem;
   background-size: 2.11rem .54rem;
@@ -162,7 +162,7 @@ padding-left: .15rem;
 }
 .cyl_left .el-tabs--card>.el-tabs__header .el-tabs__item.is-active{
   color: #fff;
-  background:url("../../assets/img/tabactive.png") no-repeat;
+  background:url("../../assets/image/tabactive.png") no-repeat;
   width: 2.11rem;
   height: .54rem;
   background-size: 2.11rem .54rem;

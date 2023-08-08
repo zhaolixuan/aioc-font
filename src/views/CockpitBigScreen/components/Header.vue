@@ -1,11 +1,7 @@
 <template>
   <div class="header_wrap">
     <div class="address">
-      <!-- <span class="imgBox">
-        <img src="../assets/address.png" alt="">
-      </span>
-      <span class="name">九江</span> -->
-    </div>
+      </div>
     <div class="infor" style="padding-left: 5%; box-sizing: border-box">
       <p class="item_infor"></p>
       <p class="item_infor"></p>

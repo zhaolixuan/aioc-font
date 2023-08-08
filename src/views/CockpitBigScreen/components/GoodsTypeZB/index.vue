@@ -2,11 +2,6 @@
   <div class="ShopNumber_wrap">
     <div class="card_wrap">
       <norm title="实时AI分析" :icon="6" />
-      <div class="tab_wrap">
-        <p v-for="item in tabList" :key="item.id" @click="handlerTab(item.id)" :class="item.className">
-          {{ item.title }}
-        </p>
-      </div>
     </div>
     <div class="dark_table">
       <el-table :data="tableData" style="width: 100%" center>
@@ -73,15 +68,15 @@ export default {
   watch: {},
   methods: {
     getData() {
-      api.getComPanyAndShopList({}).then(res => {
-        if (this.title === '明星企业') {
-          this.allTableData = res.projectEntList
-          this.tableData = this.allTableData.slice(0, 5)
-        } else if (this.title === '明星店铺') {
-          this.allTableData = res.projectShopList
-          this.tableData = this.allTableData.slice(0, 5)
-        }
-      })
+      // api.getComPanyAndShopList({}).then(res => {
+      //   if (this.title === '明星企业') {
+      //     this.allTableData = res.projectEntList
+      //     this.tableData = this.allTableData.slice(0, 5)
+      //   } else if (this.title === '明星店铺') {
+      //     this.allTableData = res.projectShopList
+      //     this.tableData = this.allTableData.slice(0, 5)
+      //   }
+      // })
     },
     handlerTab(id) {
       this.title = this.tabList[id].title
