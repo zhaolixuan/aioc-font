@@ -45,6 +45,7 @@
 import { getCodeImg,login } from "@/api/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from '@/utils/jsencrypt'
+import { setToken } from '@/utils/auth'
 
 export default {
   name: "Login",
@@ -126,6 +127,7 @@ export default {
           }
           let {username, password, code, uuid} = this.loginForm
           login(username, password, code, uuid).then(res => {
+            setToken(res.token)
             this.$router.push({ path: this.redirect || "/" })
           }).catch(error => {
             this.loading = false;
@@ -174,7 +176,7 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image: url("~@/assets/img/login-background.jpg");
+  background-image: url("~@/assets/image/login-background.jpg");
   background-size: cover;
 }
 

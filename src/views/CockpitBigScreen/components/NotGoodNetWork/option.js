@@ -13,7 +13,7 @@ export default {
       type: "none"
     },
     formatter(params) {
-      return `${params[0].marker}${params[0].axisValue}:${params[0].data}万元`;
+      return `${params[0].marker}${params[0].axisValue}:${params[0].data}`;
     }
   },
   xAxis: {
@@ -39,7 +39,7 @@ export default {
   },
   series: [
     {
-      name: "非实物行业网络零售额分布",
+      name: "",
       type: "bar",
       barWidth: "25%",
       itemStyle: {

@@ -36,7 +36,7 @@ export default {
     /*height: 100%;*/
   /*}*/
   .nav_btn{
-    background: url("assets/img/nav_btn.png") no-repeat;
+    background: url("assets/image/nav_btn.png") no-repeat;
     width: .57rem;
     height: .77rem;
     background-size: .57rem .77rem;

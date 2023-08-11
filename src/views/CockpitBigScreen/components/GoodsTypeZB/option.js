@@ -4,7 +4,7 @@ export default {
     show: true,
     trigger: 'axis',
     formatter (params) {
-      return `${params[0].marker}${params[0].axisValue}:${params[0].data}万元`
+      return `${params[0].marker}${params[0].axisValue}:${params[0].data}`
     }
   },
   grid: {
@@ -42,7 +42,7 @@ export default {
 
   yAxis: [{
     type: 'value',
-    name: '单位：万元',
+    name: '',
     nameTextStyle: {
       color: '#A0ABB7'
     },

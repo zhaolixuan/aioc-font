@@ -265,7 +265,6 @@
     },
     "gdpmap":{
       "map":{
-        "background": "url('../assets/img/beihaimap.png')1rem 0 no-repeat",
         "width":"7.4rem",
         "height": "5.15rem",
         "background-size": "7.44rem 5.15rem",

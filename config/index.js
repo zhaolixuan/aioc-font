@@ -10,17 +10,12 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {
-      // '/': {
-      //   target: 'http://devcity.jdcloud.com',
-      //   changeOrigin: true
-      // }
-      // '/api': {
-      //   target: 'http://jiujiang-cloud.xjoycity.com/api/',
-      //   changeOrigin: true
-      // }
+    proxyTable:{
+      '/api': {
+        target: `http://192.168.124.6:3000`,
+        changeOrigin: true,
+      }
     },
-
     // Various Dev Server settings
     host: 'dev.xjoycity.com', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
@@ -51,7 +46,7 @@ module.exports = {
 
     cssSourceMap: true
   },
-
+ 
   build: {
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),

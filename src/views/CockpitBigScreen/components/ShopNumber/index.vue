@@ -2,25 +2,40 @@
   <div class="ShopNumber_wrap">
     <div class="card_wrap">
       <norm title="服务器系统状态" :icon="6" />
-      <div class="tab_wrap">
-        <p v-for="item in tabList" :key="item.id" @click="handlerTab(item.id)" :class="item.className">
-          {{item.title}}
-        </p>
-      </div>
     </div>
     <div class="dark_table">
-      <el-table :data="tableData" style="width: 100%" center>
-        <el-table-column align="center" prop="entName" label="模块"   show-overflow-tooltip>
-        </el-table-column>
-        <el-table-column align="center" prop="shopCount" label="状态" show-overflow-tooltip>
-        </el-table-column>
-        <el-table-column align="center" label="尝试操作" width="100" show-overflow-tooltip>
+      <el-table :data="infor">
+        <el-table-column label="模块名称" align="center" prop="moduleName" />
+        <el-table-column label="状态" align="center" prop="status">
           <template slot-scope="scope">
-            <span class="btn" @click="firing(scope.row)"> 启动 </span>
+            {{!scope.row.status ? '异常' : '正常' }}
           </template>
         </el-table-column>
+        <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+          <template slot-scope="scope">
+            <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['bussiness:sysStatus:edit']"
+          >修改</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['bussiness:sysStatus:remove']"
+          >删除</el-button>
+        </template>
+      </el-table-column> -->
       </el-table>
-     
+
     </div>
   </div>
 </template>
@@ -32,73 +47,22 @@ export default {
   components: { norm },
   props: {
     infor: {
-      type: Object
+      type: Array
     }
   },
-  data () {
+  data() {
     return {
-      title: '明星企业',
-      tabList: [
-        {
-          id: 0,
-          className: 'left',
-          title: '明星企业'
-        }, {
-          id: 1,
-          className: '',
-          title: '明星店铺'
-        }
-      ],
-      timer: null,
-      allTableData: [],
-      tableData: [],
-      currrentPage: 1,
-      pageSize: 5,
-      total: 0,
-      totalPages: 0
+
     }
   },
-  created () {
-    this.getData()
-    this.title = this.tabList[0].title
-    this.timer = setInterval(() => {
-      let tmpList = this.allTableData.map(item => item)
-      const shiftItems = tmpList.splice(0, 5)
-      tmpList = tmpList.concat(shiftItems)
-      this.allTableData = tmpList
-      this.tableData = this.allTableData.slice(0, 5)
-    }, 3000)
+  created() {
+
   },
-  destroyed () {
-    clearInterval(this.timer)
-  },
+
 
   watch: {},
   methods: {
-    getData () {
-      api.getComPanyAndShopList({}).then(res => {
-        if (this.title === '明星企业') {
-          this.allTableData = res.projectEntList
-          this.tableData = this.allTableData.slice(0, 5)
-        } else if (this.title === '明星店铺') {
-          this.allTableData = res.projectShopList
-          this.tableData = this.allTableData.slice(0, 5)
-        }
-      })
-    },
-    handlerTab (id) {
-      this.title = this.tabList[id].title
-      if (id === 0) {
-        this.tabList[0].className = 'left'
-        this.tabList[1].className = ''
-      } else {
-        this.tabList[0].className = ''
-        this.tabList[1].className = 'right'
-      }
-      this.getData()
-    }
-  },
-  computed: {}
+  }
 }
 </script>
 <style>
@@ -107,6 +71,7 @@ export default {
   background-color: transparent !important;
   border-bottom: none;
 }
+
 .el-table thead tr th {
   background-color: transparent !important;
   background: rgba(85, 187, 255, 0.26) !important;
@@ -114,37 +79,46 @@ export default {
   padding: 0px 0px !important;
   height: 0.36rem !important;
 }
+
 .el-table td,
 .el-table th.is-leaf {
   border-bottom: 0px !important;
 }
+
 .el-table td {
   padding: 0 0 !important;
   height: 0.36rem !important;
   color: #b6dcff !important;
 }
+
 .el-table .el-table_body tr th:hover {
   background: transparent !important;
 }
+
 .el-table tr:nth-child(even) {
   background: rgba(85, 187, 255, 0.1) !important;
 }
+
 .el-table tr:hover td {
   background: transparent !important;
 }
+
 .el-table tr td .cell {
   font-size: .14rem;
 }
+
 .el-table--scrollable-x .el-table__body-wrapper {
-    overflow-x: hidden!important;
+  overflow-x: hidden !important;
 }
 </style>
 <style lang="less" scoped>
 .ShopNumber_wrap {
   height: 25%;
+
   .card_wrap {
     margin-top: -.25rem;
     position: relative;
+
     .tab_wrap {
       position: absolute;
       right: 15%;
@@ -153,6 +127,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
+
       p {
         cursor: pointer;
         width: .8rem;
@@ -165,26 +140,29 @@ export default {
         color: #75BDF4;
         text-align: center;
       }
+
       .left {
         background: url('../../assets/active_tab.png') no-repeat;
         background-size: 100% 100%;
         color: #FFFFFF;
       }
+
       .right {
-         background: url('../../assets/active_tab.png') no-repeat;
+        background: url('../../assets/active_tab.png') no-repeat;
         background-size: 100% 100%;
         color: #FFFFFF;
       }
     }
   }
+
   .dark_table {
     margin-top: 0.2rem;
     // margin-left: -15%;
   }
-  .btn{
+
+  .btn {
     padding: 2px 6px;
     border: 1px solid #ddd;
     background: #171616;
   }
-}
-</style>
+}</style>

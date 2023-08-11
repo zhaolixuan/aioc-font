@@ -84,7 +84,7 @@ export default {
   // color: ['#44D7B6', '#D16823', '#32C5FF', '#6236FF', '#F7B500', '#EB9BC5', '#EA4646', '#0091FF', '#6DD400', '#B620E0'],
   tooltip: {
     trigger: 'item',
-    formatter: '{a} <br/>{b}: {c}万元 ({d}%)'
+    formatter: '{a} <br/>{b}: {c} ({d}%)'
   },
   // legend: {
   //   icon: 'circle',

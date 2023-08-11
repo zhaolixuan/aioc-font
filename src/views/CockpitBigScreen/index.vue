@@ -1,14 +1,14 @@
 <template>
   <div class="LeaderCockpit">
     <div class="mask_img"><img src="./assets/mask_bg.png" /></div>
-    <Map class="map"></Map>
+    <Map ref="map" class="map"></Map>
     <div class="section"></div>
     <div class="header">
       <Header :infor="topData" />
     </div>
     <div class="left_wrap">
       <BusinessIncome :infor="BusinessIncome"></BusinessIncome>
-      <TrueTopTen :infor="topTenData"></TrueTopTen>
+      <TrueTopTen></TrueTopTen>
       <NotGoodNetWork :infor="topFiveData"></NotGoodNetWork>
     </div>
     <div class="right_wrap">
@@ -17,21 +17,23 @@
         :flag="flag"
         @changeFlag="changeFlag"
       ></TotalSaleMoney>
-      <ShopNumber></ShopNumber>
+      <ShopNumber :infor="sysStatusList"></ShopNumber>
       <GoodsTypeZB></GoodsTypeZB>
     </div>
     <div class="center">
-      <CenterDataView :infor="topData" :list="tableList"></CenterDataView>
+      <CenterDataView :infor="centerData" :num="centerNumData"></CenterDataView>
     </div>
     <div class="footer">
-      <Footer @handelgive="handelgive" />
+      <Footer :footData="footData" @handelgive="handelgive" />
     </div>
 
     <el-dialog title="实时波峰图" :visible.sync="RealTimeDialog" width="50%">
       <real-time-peak-graph></real-time-peak-graph>
 
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="RealTimeDialog = false">关闭</el-button>
+        <el-button type="primary" @click="RealTimeDialog = false"
+          >关闭</el-button
+        >
       </span>
     </el-dialog>
   </div>
@@ -50,6 +52,9 @@ import ShopNumber from "./components/ShopNumber";
 import RealTimePeakGraph from "./components/RealTimePeakGraph";
 
 import Map from "../Map/index.vue";
+import { parseTime } from "@/utils/mounttai";
+import { setRedisData, getRedisData, lpopRedisData } from "@/utils/redis";
+
 export default {
   name: "CockpitBigScreen",
   components: {
@@ -63,7 +68,7 @@ export default {
     TotalSaleMoney,
     GoodsTypeZB,
     ShopNumber,
-    RealTimePeakGraph
+    RealTimePeakGraph,
   },
   data() {
     return {
@@ -100,89 +105,101 @@ export default {
         value: [],
         data: [],
       },
-      ljData: {
-        name: [],
-        value: [],
-        data: [
-          {
-            district: 0,
-          },
-          {
-            district: 0,
-          },
-          {
-            district: 0,
-          },
-        ],
-        newName: [],
-        newValue: [],
-      },
+      ljData: null,
       flag: false,
-      RealTimeDialog:false
+      RealTimeDialog: false,
+      centerData: null,
+      centerNumData: 0,
+      footData: [],
+      sysStatusList: [],
+      time: null,
+      glTime: null,
     };
   },
-  created() {
+  mounted() {
     this.getData();
+    this.glTime = setInterval(() => {
+      lpopRedisData("sys_alarm")
+        .then((res) => {
+          let data = eval(res.data.removedElement)[0];
+          this.setGlData(data);
+        })
+        .catch((error) => {
+          clearInterval(this.glTime);
+        });
+    }, 1000);
   },
   methods: {
-    // 获取底部表格数据
-    getFootDara(){
-
+    setGlData(data) {
+      this.BusinessIncome.name.push(data.time);
+      this.BusinessIncome.value2 = data.sensor;
     },
     // foot点击处理时间
-    handelgive(data){
-
+    handelgive(data) {
+      this.$refs.map.handelgive(data);
     },
     changeFlag(val) {
       this.flag = val;
     },
     getData() {
-      api.getAllViewData({}).then((res) => {
-        if (res.code === 200) {
-          this.tableList = res.data.notNetWorkProvinceMap;
-          this.topData = res.data.returnIndexMap;
 
-          // 光路质量 name:x轴 value2:y轴数据
-          this.BusinessIncome.name = [1, 2, 3, 4, 5];
-          this.BusinessIncome.value2 = res.data.netWorkDevelopeMap.map(
-            (item) => {
-              return item.salesamountMonth;
-            }
-          );
-
-          // 历史报警数量 name:x轴 value2:y轴数据
-          this.topFiveData.name = ['未分派','以分派','已完成','关闭',]
-          this.topFiveData.value = res.data.netWorkTop5Map.map((item) => {
-            return item.materialNetworkSales;
-          });
-
-          /* top10数据* */
-          this.topTenData.name = res.data.netWorkTop10Map.map((item) => {
-            return item.oneLevelName;
-          });
-          this.topTenData.value = res.data.netWorkTop10Map.map((item) => {
-            return item.materialNetworkSales;
-          });
-          this.topTenData.data = res.data.netWorkTop10Map;
-
-          this.ljData.name = res.data.notNetWorkRankMap.map((item) => {
-            return item.district;
-          });
-          this.ljData.value = res.data.notNetWorkRankMap.map((item) => {
-            return item.salesamountCount;
-          });
-          this.ljData.data = res.data.notNetWorkRankMap;
-          this.ljData.newName = res.data.notNetWorkRankMap.map((item) => {
-            return item.district;
-          });
-          this.ljData.newName = [...this.ljData.newName.slice(3)];
-          this.ljData.newValue = res.data.notNetWorkRankMap.map((item) => {
-            return item.salesamountCount;
-          });
-          this.ljData.newValue = [...this.ljData.newValue.slice(3)];
-        }
+      // 警告统计接口
+      api.alarmStatisticsList().then((res) => {
+        this.topFiveData.name = res.rows.map((i) => i.channelName);
+        this.topFiveData.value = res.rows.map((i) => i.total);
+        res.rows.forEach((i) => {
+          this.centerNumData += i.total;
+        });
       });
+      // 通道管理接口
+      api.channelList().then((res) => {
+        this.centerData = res.rows;
+      });
+      // 报警记录接口
+      api.alarmList().then((res) => {
+        res.rows.forEach((i) => {
+          this.footData.push(i);
+        });
+      });
+
+      // 查询系统状态列表
+      api.listSysStatus().then((res) => {
+        res.rows.forEach((i) => {
+          this.sysStatusList.push(i);
+        });
+      });
+
+      // 获取服务信息
+      api.getServer().then((res) => {
+        this.ljData = res.data;
+        this.time = setInterval(() => {
+          api
+            .getServer()
+            .then((res) => {
+              this.ljData = res.data;
+            })
+            .catch((error) => {
+              clearInterval(this.time);
+            });
+        }, 5000);
+      });
+
+      // 通道管理接口
+      // api.zoneList().then(res => {
+      //   console.log(1, res);
+
+      // })
+
+      // 查询传感器列表
+      // api.sensorList().then(res => {
+      //   console.log(2, res);
+      // })
     },
+  },
+  destroyed() {
+    clearInterval(this.time);
+    clearInterval(this.glTime);
+    
   },
 };
 </script>
@@ -192,12 +209,14 @@ export default {
   height: 100%;
   position: relative;
   overflow: hidden;
+
   .mask_img {
     position: fixed;
     width: 100%;
     height: 100%;
     z-index: 9;
     pointer-events: none;
+
     img {
       display: block;
       width: 100%;
@@ -205,12 +224,14 @@ export default {
       pointer-events: none;
     }
   }
+
   .header {
     height: 16%;
     width: 100%;
     position: fixed;
     z-index: 11;
   }
+
   .footer {
     // height: 2.2rem;
     width: 100%;
@@ -220,15 +241,16 @@ export default {
     z-index: 101;
     // pointer-events: none;
   }
+
   .section {
     width: 100%;
     height: 100%;
     position: absolute;
     z-index: 12;
-    // background: url('./assets/main_bg.png') no-repeat;
     background-size: 100% 100%;
     pointer-events: none;
   }
+
   .left_wrap,
   .right_wrap {
     width: 24%;
@@ -236,9 +258,11 @@ export default {
     position: fixed;
     z-index: 100;
     top: 6.5%;
+
     .item {
       margin-bottom: 0.15rem;
     }
+
     .bigTitle_left {
       font-family: "PingFangSC-Semibold";
       width: 2.7rem;
@@ -254,6 +278,7 @@ export default {
       margin-left: 15%;
       margin-top: 5%;
     }
+
     .bigTitle_right {
       font-family: "PingFangSC-Semibold";
       width: 3.18rem;
@@ -270,6 +295,7 @@ export default {
       margin-left: 15%;
     }
   }
+
   .center {
     width: 40%;
     height: 0.9rem;
@@ -277,39 +303,47 @@ export default {
     left: 0;
     right: 0;
     margin: auto;
-    margin-top: 1.1rem;
+    margin-top: 1.4rem;
     box-sizing: border-box;
-    z-index: 1000;
+    z-index: 99;
   }
+
   .left_wrap {
     left: 1%;
   }
+
   .right_wrap {
     right: 1%;
   }
 }
+
 .map {
   position: absolute;
 }
+
 ::-webkit-scrollbar {
   width: 0;
 }
+
 .left_qyzh {
   position: absolute;
   left: -0.1rem;
   bottom: 0.2rem;
   z-index: 100;
 }
+
 .left_qyzh img {
   width: 2.26rem;
   height: 2.53rem;
   display: block;
 }
+
 .left_chart {
   position: relative;
   width: 2.26rem;
   height: 2.53rem;
 }
+
 .left_chart .chart_bg {
   background: url("./assets/chart.png") no-repeat;
   width: 1.47rem;
@@ -318,6 +352,7 @@ export default {
   margin-left: 0.4rem;
   position: relative;
 }
+
 .left_chart .chart_bg i {
   display: block;
   font-style: normal;
@@ -332,6 +367,7 @@ export default {
   left: 0.3rem;
   top: -0.1rem;
 }
+
 .right_chart .chart_bg i {
   display: block;
   font-style: normal;
@@ -348,6 +384,7 @@ export default {
   transform: scaleX(-1);
   color: #fff;
 }
+
 .left_chart .chart_bg .chart_on {
   position: absolute;
   background: url("./assets/chart_on.png") no-repeat bottom;
@@ -357,28 +394,34 @@ export default {
   left: 0.15rem;
   bottom: 0.1rem;
 }
+
 .left_chart i {
   color: #fff;
   font-size: 0.12rem;
   position: absolute;
   font-style: normal;
 }
+
 .left_chart i.num_1 {
   left: 1.45rem;
   bottom: 0.02rem;
 }
+
 .left_chart i.num_2 {
   left: 0.7rem;
   bottom: 0.3rem;
 }
+
 .left_chart i.num_3 {
   left: 0.3rem;
   bottom: 1.4rem;
 }
+
 .left_chart i.num_4 {
   left: 0;
   bottom: 2.4rem;
 }
+
 .left_chart span {
   position: absolute;
   color: #a8e7f6;
@@ -393,16 +436,19 @@ export default {
   bottom: 0.2rem;
   z-index: 100;
 }
+
 .right_tdmj img {
   width: 2.75rem;
   height: 2.56rem;
   display: block;
 }
+
 .right_chart {
   position: relative;
   width: 2.75rem;
   height: 2.56rem;
 }
+
 .right_chart .chart_bg {
   background: url("./assets/chart.png") no-repeat;
   width: 1.47rem;
@@ -412,6 +458,7 @@ export default {
   left: 0.9rem;
   transform: scaleX(-1);
 }
+
 .right_chart .chart_bg .chart_on {
   position: absolute;
   background: url("./assets/chart_on.png") no-repeat bottom;
@@ -422,28 +469,34 @@ export default {
   bottom: 0.1rem;
   transform: scaleX(1);
 }
+
 .right_chart i {
   color: #a8e7f6;
   font-size: 0.12rem;
   position: absolute;
   font-style: normal;
 }
+
 .right_chart i.num_1 {
   right: 1.65rem;
   bottom: 0.02rem;
 }
+
 .right_chart i.num_2 {
   right: 0.7rem;
   bottom: 0.3rem;
 }
+
 .right_chart i.num_3 {
   right: 0.3rem;
   bottom: 1.4rem;
 }
+
 .right_chart i.num_4 {
   right: 0;
   bottom: 2.4rem;
 }
+
 .right_chart span {
   position: absolute;
   color: #a8e7f6;
@@ -451,6 +504,7 @@ export default {
   right: 2rem;
   bottom: 0.12rem;
 }
+
 .title_box {
   font-size: 0.14rem;
   color: #fff;
@@ -458,6 +512,7 @@ export default {
   margin-bottom: 0.1rem;
   margin-left: 12%;
 }
+
 .title_box i {
   background: url("./assets/titicon.png") no-repeat;
   width: 0.22rem;
@@ -466,6 +521,7 @@ export default {
   float: left;
   margin-right: 0.05rem;
 }
+
 .title_box_2 {
   margin-left: 75%;
 }

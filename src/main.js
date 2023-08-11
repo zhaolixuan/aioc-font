@@ -10,28 +10,40 @@ import animated from 'animate.css'
 import '@/assets/styles/index.less' // global css
 import '@/assets/styles/mounttai.less' // mounttai css
 import './assets/icons' // icon
+import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, handleTree } from "@/utils/mounttai";
 
 import 'element-ui/lib/theme-chalk/index.css'
+import DictTag from '@/components/DictTag'
 
 import './common/js/css.js'
 import vuescroll from 'vuescroll'
 import VueLazyload from 'vue-lazyload'
 Vue.config.productionTip = false
 Vue.prototype.$echarts = echarts // 全局引入echarts，调用时通过 this.$echarts 调用
+
+// 全局方法挂载
+Vue.prototype.parseTime = parseTime
+Vue.prototype.resetForm = resetForm
+Vue.prototype.addDateRange = addDateRange
+Vue.prototype.selectDictLabel = selectDictLabel
+Vue.prototype.selectDictLabels = selectDictLabels
+Vue.prototype.handleTree = handleTree
 Vue.prototype.sysName = '周界预警监控系统'
+
+
+Vue.component('DictTag', DictTag)
 
 Vue.use(ElementUI)
 Vue.use(animated)
 Vue.use(vuescroll)
 Vue.use(VueLazyload,{
-  error: require('./assets/img/moren.png'),
-  loading: require('./assets/img/moren.png')
+  error: require('./assets/image/moren.png'),
+  loading: require('./assets/image/moren.png')
 });
 /* eslint-disable no-new */
 
 
-
-new Vue({
+var vm = new Vue({
   el: '#app',
   router,
   store,

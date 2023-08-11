@@ -46,15 +46,14 @@ export default {
   optionSelect() {
     return request({
       url: "/bussiness/hostToZoneLine/optionSelect",
-      method: "GET"
+      method: "get"
     });
   },
-
   // 模块状态接口
   sysStatusList() {
     return request({
       url: "/bussiness/sysStatus/list",
-      method: "GET"
+      method: "get"
     });
   },
 
@@ -62,36 +61,35 @@ export default {
   alarmList() {
     return request({
       url: "/bussiness/alarm/list",
-      method: "GET"
+      method: "get"
     });
   },
   // 通道管理接口
   channelList() {
     return request({
       url: "/bussiness/channel/list",
-      method: "GET"
+      method: "get"
     });
   },
   // 警告统计接口
   alarmStatisticsList() {
     return request({
       url: "/bussiness/alarmStatistics/list",
-      method: "GET"
+      method: "get"
     });
   },
-
   // 外设管理接口
   aideDeviceList() {
     return request({
       url: "/bussiness/aideDevice/list",
-      method: "GET"
+      method: "get"
     });
   },
   // 主机管理接口
   hostManageList() {
     return request({
       url: "/bussiness/hostManage/list",
-      method: "GET"
+      method: "get"
     });
   },
 
@@ -99,7 +97,7 @@ export default {
   zoneList() {
     return request({
       url: "/bussiness/zone/list",
-      method: "GET"
+      method: "get"
     });
   },
 
@@ -107,7 +105,105 @@ export default {
   alarmTypeList() {
     return request({
       url: "/bussiness/alarmType/list",
-      method: "GET"
+      method: "get"
     });
-  }
+  },
+  // 查询警告类型列表,参数为字符串而不是一个对象。
+  optionsAlarmType() {
+    return request({
+      url: '/bussiness/alarmType/optionsAlarmType/biz_alarm_type',
+      method: 'get'
+    })
+  },
+
+  optionsAlarmCategory() {
+    return request({
+      url: '/bussiness/alarmType/optionsAlarmType/biz_alarm_type_3',
+      method: 'get'
+    })
+  },
+  // 查询系统状态列表
+  listSysStatus() {
+    return request({
+      url: '/bussiness/sysStatus/list',
+      method: 'get',
+    })
+  },
+  // 获取服务信息
+  getServer() {
+    return request({
+      url: '/monitor/server',
+      method: 'get'
+    })
+  },
+  // 查询传感器列表
+  sensorList() {
+    return request({
+      url: '/bussiness/sensor/list',
+      method: 'get'
+    })
+  },
+  // 查询管道线信息列表
+  listPipleLine() {
+    return request({
+      url: '/bussiness/hostToZoneLine/optionSelect',
+      method: 'get'
+    })
+  },
+  // 开启推流
+  startTranscode(params) {
+    return request({
+      url: '/hikCamera/startTranscode',
+      method: 'get',
+      params
+    })
+  },
+   // 结束推流
+   stopRtmp(params) {
+    return request({
+      url: '/hikCamera/stopRtmp',
+      method: 'get',
+      params
+    })
+  },
+  
+
+  // 方向控制
+  actionControl(params) {
+    return request({
+      url: '/hikCamera/actionControl',
+      method: 'get',
+      params
+    })
+  },
+
+  // 拍照
+  catchPic(params) {
+    return request({
+      url: '/gbcamera/catchPicForFlow',
+      method: 'get',
+      params
+    })
+  },
+
+ 
+
+   // 摄像头列表
+   cameraList(params) {
+    return request({
+      url: '/bussiness/hostToZoneLine/camera',
+      method: 'get',
+      params
+    })
+  },
+
+
+ 
+
+
+
+
 };
+
+
+
