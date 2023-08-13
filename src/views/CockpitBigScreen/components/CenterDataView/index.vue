@@ -8,9 +8,9 @@
     </div>
     <div class="thorough">
       <div v-for="(i, index) in infor" :key="i.hostId" class="thorough_item">
-        <span>通道{{ i.channelNo }}：</span>
-        <p class="line" :style="`background-color:${index == 0 ? 'yellow' : 'blue'} ;`"></p>
-        <p class="name">{{ i.channelName }}</p>
+        <span @click="handlerHostClick(i)">{{i.hostName}}：{{ i.hostNo }}</span>
+        <!-- <p class="line" :style="`background-color:${index == 0 ? 'yellow' : 'blue'} ;`"></p> -->
+        <!-- <p class="name">{{ i.hostName }}</p> -->
       </div>
     </div>
   </div>
@@ -56,7 +56,9 @@ export default {
     },
   },
   methods: {
-
+    handlerHostClick(data){
+      this.$emit('handlerHostClick',data)
+    }
   },
 };
 </script>
@@ -188,7 +190,7 @@ export default {
       display: flex;
       align-items: center;
       font-size: .14rem;
-
+cursor: pointer;
       span {
         color: #a8e7f6;
         // width: 0.7rem;

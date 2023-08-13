@@ -101,14 +101,15 @@
           <span>{{ parseTime(scope.row.warningTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="处理状态" align="center" prop="status">
+      <el-table-column label="处理状态" align="center" prop="status">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_data_status" :value="scope.row.status"/>
+          <span>{{ scope.row.status == '1' ? '已处理' : '未处理' }}</span>
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleAlarm(scope.row)">处理</el-button>
+          <el-button size="mini" type="text" v-if="scope.row.status != 1" icon="el-icon-edit"
+            @click="handleAlarm(scope.row)">处理</el-button>
 
         </template>
       </el-table-column>
@@ -180,13 +181,13 @@ export default {
       this.queryParams.hostId = null;
       this.queryParams.channelId = null;
       this.queryParams.channelZoneId = null;
-      this.resetForm("queryForm");
+      // this.resetForm("queryForm");
       this.handleQuery();
-      this.getOptionData();
+      // this.getOptionData();
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
-      this.getOptionData();
+      // this.getOptionData();
       this.getList();
     },
     getOptionData() {
@@ -197,10 +198,16 @@ export default {
     getList() {
       if (this.time) clearInterval(this.time)
       // this.time = setInterval(() => {
-        this.queryParams.params = {};
-        api.alarmList(this.queryParams).then(response => {
-          this.alarmList = response.rows || [{}];
+      this.queryParams.params = {};
+      api.alarmList(this.queryParams).then(response => {
+        console.log(response.rows );
+        this.alarmList = response.rows || [{}];
+        response.rows.forEach(element => {
+          if (element.status != 1) {
+            this.$emit("handelgive", element);
+          }
         });
+      });
       // }, 3000);
 
 
@@ -227,7 +234,6 @@ export default {
     loadPipleLineInfo() {
       //给下拉框赋值，主机、通道、分区等信息
       api.listPipleLine().then(response => {
-        console.log('listPipleLine', response.data);
         this.pipeLineList = response.data;
       });
     },
@@ -288,7 +294,13 @@ export default {
     },
 
     handleAlarm(data) {
-      this.$emit("handelgive", data);
+      api.updateAlarm({ alarmId: data.alarmId, status: 1 }).then(res => {
+        if (res && res.code == 200) {
+          data.status = 1
+
+        }
+      })
+      // this.$emit("handelgive", data);
     },
   },
 };

@@ -95,8 +95,8 @@ export default {
 
       // this.stopRtmp().then(() => {
       //   this.curVideoData = node.exObject
-        // 获取摄像头信息 开始推流
-        this.getVideoUrl()
+      // 获取摄像头信息 开始推流
+      this.getVideoUrl()
       // })
 
 
@@ -142,8 +142,9 @@ export default {
       console.log(params);
       api.startTranscode(params).then(res => {
         console.log(res);
-
-        this.videoInfo = res.data
+        if (res.code == 200) {
+          this.videoInfo = res.data
+        }
       })
     },
     handelrWarning() {

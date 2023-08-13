@@ -158,15 +158,15 @@ export default {
       params
     })
   },
-   // 结束推流
-   stopRtmp(params) {
+  // 结束推流
+  stopRtmp(params) {
     return request({
       url: '/hikCamera/stopRtmp',
       method: 'get',
       params
     })
   },
-  
+
 
   // 方向控制
   actionControl(params) {
@@ -186,10 +186,10 @@ export default {
     })
   },
 
- 
 
-   // 摄像头列表
-   cameraList(params) {
+
+  // 摄像头列表
+  cameraList(params) {
     return request({
       url: '/bussiness/hostToZoneLine/camera',
       method: 'get',
@@ -197,8 +197,24 @@ export default {
     })
   },
 
+  updateAlarm(data) {
+    return request({
+      url: '/bussiness/alarm',
+      method: 'put',
+      data: data
+    })
+  },
 
+  realTimeData(params) {
+    return request({
+      url: '/sensor/realTimeData',
+      method: 'get',
+      params: params
+    })
+  }
  
+
+
 
 
 

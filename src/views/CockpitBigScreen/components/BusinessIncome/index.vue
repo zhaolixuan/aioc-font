@@ -38,11 +38,7 @@ export default {
           xAxis: {
             data: this.infor.name
           },
-          series: [
-            {
-              data: this.infor.value2
-            }
-          ]
+          series:  this.infor.value2
 
         })
       }
@@ -52,7 +48,7 @@ export default {
   computed: {
     computedOptions() {
       let option = this.defaultOptions
-      option.series[0].data = this.infor.value2 // 零售额
+      option.series=this.infor.value2 
       option.xAxis.data = this.infor.name
       if (option.xAxis.data.length == 1) {
         option.xAxis.data.push('')

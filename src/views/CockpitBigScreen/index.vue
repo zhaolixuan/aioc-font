@@ -1,7 +1,7 @@
 <template>
   <div class="LeaderCockpit">
     <div class="mask_img"><img src="./assets/mask_bg.png" /></div>
-    <Map ref="map" class="map"></Map>
+    <Map ref="map" class="map" :center="curHostData.latscope"></Map>
     <div class="section"></div>
     <div class="header">
       <Header :infor="topData" />
@@ -12,16 +12,12 @@
       <NotGoodNetWork :infor="topFiveData"></NotGoodNetWork>
     </div>
     <div class="right_wrap">
-      <TotalSaleMoney
-        :infor="ljData"
-        :flag="flag"
-        @changeFlag="changeFlag"
-      ></TotalSaleMoney>
+      <TotalSaleMoney :infor="ljData" :flag="flag" @changeFlag="changeFlag"></TotalSaleMoney>
       <ShopNumber :infor="sysStatusList"></ShopNumber>
       <GoodsTypeZB></GoodsTypeZB>
     </div>
     <div class="center">
-      <CenterDataView :infor="centerData" :num="centerNumData"></CenterDataView>
+      <CenterDataView :infor="centerData" :num="centerNumData" @handlerHostClick="handlerHostClick"></CenterDataView>
     </div>
     <div class="footer">
       <Footer :footData="footData" @handelgive="handelgive" />
@@ -31,9 +27,7 @@
       <real-time-peak-graph></real-time-peak-graph>
 
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="RealTimeDialog = false"
-          >关闭</el-button
-        >
+        <el-button type="primary" @click="RealTimeDialog = false">关闭</el-button>
       </span>
     </el-dialog>
   </div>
@@ -92,7 +86,7 @@ export default {
         ],
         value: [101, 100, 130, 15, 16, 17, 18, 19, 10, 22, 122],
       },
-      BusinessIncome: { name: [], value: [], value2: [] },
+      BusinessIncome: { name: [], value: [], value2: [{ name: '', type: 'line', data: [] }] },
       EnterpriseNumber: {},
       content: "",
       topTenData: {
@@ -113,26 +107,19 @@ export default {
       footData: [],
       sysStatusList: [],
       time: null,
-      glTime: null,
+      lpopTime: null,
+      curHostData: {}
     };
   },
   mounted() {
     this.getData();
-    this.glTime = setInterval(() => {
-      lpopRedisData("sys_alarm")
-        .then((res) => {
-          let data = eval(res.data.removedElement)[0];
-          this.setGlData(data);
-        })
-        .catch((error) => {
-          clearInterval(this.glTime);
-        });
-    }, 1000);
+
   },
   methods: {
-    setGlData(data) {
-      this.BusinessIncome.name.push(data.time);
-      this.BusinessIncome.value2 = data.sensor;
+    handlerHostClick(data) {
+      if (this.curHostData.hostId == data.hostId) return
+      this.curHostData = data
+      this.getlpopRedisData()
     },
     // foot点击处理时间
     handelgive(data) {
@@ -141,22 +128,50 @@ export default {
     changeFlag(val) {
       this.flag = val;
     },
+    getlpopRedisData() {
+      if (this.lpopTime) clearInterval(this.lpopTime)
+      // this.lpopTime = setInterval(() => {
+      api.realTimeData({ step: 1 })
+        .then((res) => {
+
+          let data = JSON.parse(res.data[this.curHostData.hostId][0])
+          console.log('realTimeData',data);
+          // let data = eval(res.data.removedElement);
+          data.forEach((item, index) => {
+            let xdata = []
+            for (let index = 0; index < item.sensor.length; index++) {
+              xdata.push(index)
+            }
+            this.BusinessIncome.name = xdata
+            this.BusinessIncome.value2[index].name = item.channel
+            this.BusinessIncome.value2[index].data = item.sensor
+          })
+        })
+      // }, 1000);
+    },
     getData() {
+      //主机
+      api.hostManageList().then(res => {
+        this.centerData = res.rows;
+        this.curHostData = res.rows[0]
+        this.getlpopRedisData()
+      })
+
 
       // 警告统计接口
       api.alarmStatisticsList().then((res) => {
-        this.topFiveData.name = res.rows.map((i) => i.channelName);
+        this.topFiveData.name = res.rows.map((i) => i.status == 1 ? '已处理' : '未处理');
         this.topFiveData.value = res.rows.map((i) => i.total);
         res.rows.forEach((i) => {
           this.centerNumData += i.total;
         });
       });
       // 通道管理接口
-      api.channelList().then((res) => {
-        this.centerData = res.rows;
-      });
+      // api.channelList().then((res) => {
+      //   this.centerData = res.rows;
+      // });
       // 报警记录接口
-      api.alarmList().then((res) => {
+      api.alarmList({}).then((res) => {
         res.rows.forEach((i) => {
           this.footData.push(i);
         });
@@ -198,8 +213,8 @@ export default {
   },
   destroyed() {
     clearInterval(this.time);
-    clearInterval(this.glTime);
-    
+    clearInterval(this.lpopTime);
+
   },
 };
 </script>

@@ -1,11 +1,11 @@
 
 export function obtainZone(waringData, zoneList) {
-         return findIntervals(waringData.position, zoneList)
+         return findIntervals(waringData, zoneList)
 }
 
-function findIntervals(a, zoneList) {
+function findIntervals(waringData, zoneList) {
     // 将字符串a拆分为两个数字
-    const [start, end] = a.split('-').map(Number);
+    const {startPosition, endPosition} = waringData
 
     // 初始化结果数组
     const result = [];
@@ -15,7 +15,7 @@ function findIntervals(a, zoneList) {
         const {channelStartNum, channelEndNum} = zoneList[i];
 
         // 如果start和end都在当前区间内，则将当前区间添加到结果数组中
-        if (end >= channelStartNum) {
+        if (endPosition >= channelStartNum) {
             result.push({
                 name:zoneList[i].channelZoneName,
                 id:zoneList[i].channelZoneId,

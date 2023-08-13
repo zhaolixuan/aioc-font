@@ -25,8 +25,6 @@ import mapboxgl from "mapbox-gl";
 import { MapboxglLayer } from "maptalks.mapboxgl";
 import roads from "./data/roads.json";
 import InformationPanel from "./Panel/InformationPanel";
-import { log } from "three";
-import { number } from "echarts/lib/export";
 import { obtainZone } from "@/utils/pointiInZone"
 export default {
   name: "MainMap",
@@ -69,6 +67,25 @@ export default {
     });
   },
   watch: {
+    center(n) {
+      console.log(n);
+      let center = n.split(',')
+      if (this.maptalksMap) {
+        this.maptalksMap.animateTo(
+          {
+            // center: [87.617733, 43.792818],
+            center: center,
+            zoom: 8.5,
+            pitch: 0,
+            bearing: 0,
+          },
+          {
+            duration: 2000,
+          }
+        );
+      }
+
+    },
     srceenSize: {
       immediate: true,
       handler: function (newValue) {
@@ -77,10 +94,12 @@ export default {
     },
   },
   methods: {
-    handelgive(data) {
-      // let arr = obtainZone(data, this.zoneList)
+    handelgive(data = {}) {
+      let arr = obtainZone({ startPosition: 0, endPosition: 100 }, this.zoneList)
+      arr.forEach(i => {
+        this.getliner(i.id, data)
 
-      this.getliner(1,data)
+      })
     },
     initMapTalksMap() {
       var _this = this;
@@ -93,7 +112,7 @@ export default {
       });
       this.maptalksMap = new maptalks.Map("map", {
         // center: [87.617733, 43.792818], //[116.404269, 39.914935],
-        center: [116.38821589024599, 39.97533303800978],
+        center: (this.center && this.center.split(',')) || [116.38821589024599, 39.97533303800978],
         zoom: 5,
         minZoom: 6,
         maxZoom: 22,
@@ -190,137 +209,145 @@ export default {
         );
       }
       this.centerPointLayer = new maptalks.VectorLayer("centerPointLayer").addTo(this.maptalksMap); //centerPointData
+
+      // api.hostManageList().then(res => {
+      //   this.addMaker(res.rows)
+      // })
+
       api.aideDeviceList().then(res => {
-        var data = res.rows;
-        if (data.length > 0) {
-          data.forEach((item, index) => {
-            if (item !== undefined) {
-              var lnglat = item.latitude.split('|')
-              // if (index == 0) {
-              //   lnglat = [116.38821589024599, 39.97533303800978]
-              // } else if (index == 2) {
-              //   lnglat = [116.38966024924933, 39.982365972768]
-              // } else {
-              //   lnglat = [116.38778960137059, 39.978345549062944]
-              // }
-              var point = new maptalks.Marker(lnglat, {
-                id: item.aideDeviceId,
-                properties: {
-                  altitude: 50,
-                  name: item.hostName,
-                  labelName: item.hostName,
-                  
-                  channelName: item.channelName || '',
-                  channelZoneName: item.channelZoneName || '0',
-                  // swwl: item.salesamountMaterial,
-                  // b2cwl: item.salesamountB2c,
-                  ip: item.ip || '',
-                  type: "other",
-                },
-                symbol: [
-                  {
-                    markerFile: require(`../../assets/image/zhuji.png`),
-                    markerWidth: 20 / 1.5,
-                    markerHeight: 30 / 1.5,
-                    markerDx: 0,
-                    markerDy: 0,
-                    markerOpacity: 1,
-                  },
-                  
-                ],
-              })
-                .on("mouseout", function () {
-                  console.log("mack移除");
-                  _this.isShow = false;
-                })
-                .on(
-                  "mouseenter",
-                  debounce(function (e) {
-                    _this.centerPointLayer
-                      .getGeometries()
-                      .forEach((element) => {
-                        if (element == e.target) {
-                          // console.log(element);
-                          el = document.getElementById("informationPanel");
-                          _this.isShow = true;
-                          _this.myTitleName = element.properties.name;
-                          _this.myType = element.properties.type;
-                          _this.myDataList = [
-                            {
-                              fieldName: "所属通道",
-                              value: element.properties.channelName,
-                            },
-                            {
-                              fieldName: "所属分区",
-                              value: element.properties.channelZoneName,
-                            },
-                            {
-                              fieldName: "ip地址",
-                              value: element.properties.ip,
-                            },
-                          ];
-                          marker = new maptalks.ui.UIMarker(
-                            e.target.getCoordinates(),
-                            {
-                              draggable: false,
-                              single: false,
-                              content: el,
-                              dx: -0,
-                              dy: -130,
-                            }
-                          );
-                          marker.addTo(_this.maptalksMap).show();
+        this.addMaker(res.rows)
 
-                          _this.lastClickedPoint = e.target;
-                        }
-                      });
-                  }, 200)
-                )
-                .on("click", function (e) {
-                  _this.centerPointLayer.getGeometries().forEach((element) => {
-                    if (element !== e.target) {
-                      element.updateSymbol({
-                        markerFile: require(`../../assets/image/zhuji.png`),
-                        markerWidth: 25 / 2,
-                        markerHeight: 41 / 2,
-                      });
-                    } else {
-                      _this.maptalksMap.animateTo(
-                        {
-                          center: [
-                            e.target.getCoordinates().x,
-                            e.target.getCoordinates().y + 0.02,
-                          ],
-                          zoom: 13,
-                          pitch: 60,
-                          bearing: 0,
-                        },
-                        {
-                          duration: 500,
-                        }
-                      );
-
-                      _this.lastClickedPoint = e.target;
-                    }
-                  });
-                });
-
-              _this.points.push(point);
-              point.properties.labelName =
-                item.district + " " + item.salesamountRank;
-            }
-          });
-
-
-
-          this.centerPointLayer.addGeometry(_this.points);
-          this.centerPointLayer.setZIndex(999);
-          // const targetPoint = this.centerPointLayer.getGeometryById('markeId');
-        }
       })
+    },
+    addMaker(data) {
+      var _this = this;
+      var el;
+      var marker;
+      if (data.length > 0) {
+        data.forEach((item, index) => {
+          if (item !== undefined) {
+            var lnglat = item.latitude.split('|')
+            // if (index == 0) {
+            //   lnglat = [116.38821589024599, 39.97533303800978]
+            // } else if (index == 2) {
+            //   lnglat = [116.38966024924933, 39.982365972768]
+            // } else {
+            //   lnglat = [116.38778960137059, 39.978345549062944]
+            // }
+            var point = new maptalks.Marker(lnglat, {
+              id: item.aideDeviceId,
+              properties: {
+                altitude: 50,
+                name: item.hostName,
+                labelName: item.hostName,
+
+                channelName: item.channelName || '',
+                channelZoneName: item.channelZoneName || '0',
+                // swwl: item.salesamountMaterial,
+                // b2cwl: item.salesamountB2c,
+                ip: item.ip || '',
+                type: "other",
+              },
+              symbol: [
+                {
+                  markerFile: require(`../../assets/image/zhuji.png`),
+                  markerWidth: 20 / 1.5,
+                  markerHeight: 30 / 1.5,
+                  markerDx: 0,
+                  markerDy: 0,
+                  markerOpacity: 1,
+                },
+
+              ],
+            })
+              .on("mouseout", function () {
+                console.log("mack移除");
+                _this.isShow = false;
+              })
+              .on(
+                "mouseenter",
+                debounce(function (e) {
+                  _this.centerPointLayer
+                    .getGeometries()
+                    .forEach((element) => {
+                      if (element == e.target) {
+                        // console.log(element);
+                        el = document.getElementById("informationPanel");
+                        _this.isShow = true;
+                        _this.myTitleName = element.properties.name;
+                        _this.myType = element.properties.type;
+                        _this.myDataList = [
+                          {
+                            fieldName: "所属通道",
+                            value: element.properties.channelName,
+                          },
+                          {
+                            fieldName: "所属分区",
+                            value: element.properties.channelZoneName,
+                          },
+                          {
+                            fieldName: "ip地址",
+                            value: element.properties.ip,
+                          },
+                        ];
+                        marker = new maptalks.ui.UIMarker(
+                          e.target.getCoordinates(),
+                          {
+                            draggable: false,
+                            single: false,
+                            content: el,
+                            dx: -0,
+                            dy: -100,
+                          }
+                        );
+                        marker.addTo(_this.maptalksMap).show();
+
+                        _this.lastClickedPoint = e.target;
+                      }
+                    });
+                }, 200)
+              )
+              .on("click", function (e) {
+                _this.centerPointLayer.getGeometries().forEach((element) => {
+                  if (element !== e.target) {
+                    element.updateSymbol({
+                      markerFile: require(`../../assets/image/zhuji.png`),
+                      markerWidth: 25 / 2,
+                      markerHeight: 41 / 2,
+                    });
+                  } else {
+                    _this.maptalksMap.animateTo(
+                      {
+                        center: [
+                          e.target.getCoordinates().x,
+                          e.target.getCoordinates().y + 0.02,
+                        ],
+                        zoom: 13,
+                        pitch: 60,
+                        bearing: 0,
+                      },
+                      {
+                        duration: 500,
+                      }
+                    );
+
+                    _this.lastClickedPoint = e.target;
+                  }
+                });
+              });
+
+            _this.points.push(point);
+            point.properties.labelName =
+              item.district + " " + item.salesamountRank;
+          }
+        });
 
 
 
+        this.centerPointLayer.addGeometry(_this.points);
+        this.centerPointLayer.setZIndex(999);
+        // const targetPoint = this.centerPointLayer.getGeometryById('markeId');
+      }
     },
 
     addLiners() {
@@ -342,7 +369,6 @@ export default {
               let resData_item = j.split('|')
               pointData.push([resData_item[0] * 1, resData_item[1] * 1])
             })
-            console.log(pointData);
             let line = new maptalks.LineString(pointData, {
               id: item.channelZoneId,
               properties: {
@@ -350,8 +376,8 @@ export default {
                 channelStartNum: item.channelStartNum,
                 channelName: item.channelName,
                 channelEndNum: item.channelEndNum,
-                pointDataStart:pointData[0],
-                pointDataEnd:pointData[pointData.length - 1]
+                pointDataStart: pointData[0],
+                pointDataEnd: pointData[pointData.length - 1]
               },
               visible: true,
               editable: false,
@@ -383,13 +409,13 @@ export default {
                         },
                         {
                           fieldName: "分区起点：",
-                          value: element.properties.channelStartNum 
+                          value: element.properties.channelStartNum
                         },
                         {
-                          fieldName: "分区钟点：",
-                          value: element.properties.channelEndNum 
+                          fieldName: "分区终点：",
+                          value: element.properties.channelEndNum
                         },
-                        
+
                         // {
                         //   fieldName: "起点经纬度：",
                         //   value: element.properties.pointDataStart,
@@ -404,7 +430,7 @@ export default {
                         single: false,
                         content: el,
                         dx: -0,
-                        dy: -130,
+                        dy: -100,
                       });
                       marker.addTo(_this.maptalksMap).show();
                       _this.lastClickedPoint = e.target;
@@ -422,14 +448,16 @@ export default {
         this.centerLinesLayer.setZIndex(999);
       })
 
+
     },
 
-    getliner(id,data) {
-      console.log(data);
+    getliner(id, data) {
+
       let _this = this
-      let el,marker
+      let el, marker
       let line = this.centerLinesLayer.getGeometryById(id)
-      line.properties.waringTime = data.warningTime
+
+      line.properties.waringTime = data.waringTime
       line.setSymbol({ lineColor: "red", lineWidth: 5 });
       line.on('mouseenter', debounce(function (e) {
         _this.centerLinesLayer.getGeometries().forEach((element) => {
@@ -457,7 +485,7 @@ export default {
               single: false,
               content: el,
               dx: -0,
-              dy: -130,
+              dy: -100,
             });
             marker.addTo(_this.maptalksMap).show();
             _this.lastClickedPoint = e.target;
@@ -509,9 +537,7 @@ export default {
           far: camera.far,
         });
         let multiLineStrings = maptalks.GeoJSON.toGeometry(geojson);
-        // console.log('multiLineStrings',multiLineStrings);
         for (let multiLineString of multiLineStrings) {
-          // console.log('multiLineString',multiLineString);
           let lines = multiLineString._geometries.map((lineString) => {
             if (lineLength(lineString) > 100) {
               return new SpriteLine(
@@ -664,8 +690,7 @@ export default {
       _this.maptalksMap.animateTo(
         {
           // center: [87.617733, 43.792818],
-          center: [116.38821589024599, 39.97533303800978],
-
+          center: (this.center && this.center.split(','))  || [116.38821589024599, 39.97533303800978],
           zoom: 8.5,
           pitch: 0,
           bearing: 0,
@@ -678,7 +703,7 @@ export default {
         _this.maptalksMap.animateTo(
           {
             // center: [84.65767573322091, 41.00901531447968],
-            center: [116.38821589024599, 39.97533303800978],
+            center: (this.center && this.center.split(','))  || [116.38821589024599, 39.97533303800978],
             zoom: 13,
             pitch: 60,
             bearing: 32,
@@ -688,20 +713,11 @@ export default {
           }
         );
       }, 2000);
-      // var extent = _this.maptalksMap.getExtent();
-      // 锁定视角
-      // _this.maptalksMap.setMaxExtent(extent);
-      setTimeout(() => {
-        _this.initAddLayers();
-      }, 1000);
-      setTimeout(() => {
-        // _this.addThreeLayer();
-        // _this.addRoadThreeLayer();
 
-        // _this.addBloomThreeLayer();
-      }, 5000);
+      _this.initAddLayers();
 
-      // _this.rotateMap();
+
+      _this.rotateMap();
     },
     /**
      * [description] 旋转地图

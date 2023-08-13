@@ -51,7 +51,7 @@ export default {
         color: '#3671A7',
         fontSize: window.innerWidth / 1082 * 10
       }
-    }
+    },
   },
 
   yAxis: {
