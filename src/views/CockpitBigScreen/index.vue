@@ -133,7 +133,6 @@ export default {
       // this.lpopTime = setInterval(() => {
       api.realTimeData({ step: 1 })
         .then((res) => {
-
           let data = JSON.parse(res.data[this.curHostData.hostId][0])
           console.log('realTimeData',data);
           // let data = eval(res.data.removedElement);
