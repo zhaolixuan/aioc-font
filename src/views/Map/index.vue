@@ -2,8 +2,13 @@
   <div style="height: 100%; width: 100%">
     <div id="map" class="map"></div>
     <div class="map-mask"></div>
-    <InformationPanel id="informationPanel" v-show="isShow" :titleName="myTitleName" :dataList="myDataList"
-      :type="myType"></InformationPanel>
+    <InformationPanel
+      id="informationPanel"
+      v-show="isShow"
+      :titleName="myTitleName"
+      :dataList="myDataList"
+      :type="myType"
+    ></InformationPanel>
   </div>
 </template>
 
@@ -25,7 +30,9 @@ import mapboxgl from "mapbox-gl";
 import { MapboxglLayer } from "maptalks.mapboxgl";
 import roads from "./data/roads.json";
 import InformationPanel from "./Panel/InformationPanel";
-import { obtainZone } from "@/utils/pointiInZone"
+import { obtainZone } from "@/utils/pointiInZone";
+import { wgs84togcj02,wgs84toepsg3857 } from "@/utils/map";
+
 export default {
   name: "MainMap",
 
@@ -46,12 +53,13 @@ export default {
         document.documentElement.clientWidth,
         document.documentElement.clientHeight,
       ], //屏幕大小
+      MapCenter: null,
     };
   },
   components: {
     InformationPanel,
   },
-  beforeMount() { },
+  beforeMount() {},
   mounted() {
     window.animationFrameID1 = null;
     window.animationFrameID2 = null;
@@ -68,13 +76,15 @@ export default {
   },
   watch: {
     center(n) {
-      console.log(n);
-      let center = n.split(',')
+      console.log("!!!!!!!!!!!", n);
+      let center = n.split(",");
       if (this.maptalksMap) {
+        this.MapCenter = wgs84togcj02(center);
+        // console.log(' this.MapCenter', this.MapCenter);
         this.maptalksMap.animateTo(
           {
             // center: [87.617733, 43.792818],
-            center: center,
+            center: this.MapCenter,
             zoom: 8.5,
             pitch: 0,
             bearing: 0,
@@ -84,7 +94,6 @@ export default {
           }
         );
       }
-
     },
     srceenSize: {
       immediate: true,
@@ -95,11 +104,13 @@ export default {
   },
   methods: {
     handelgive(data = {}) {
-      let arr = obtainZone({ startPosition: 0, endPosition: 100 }, this.zoneList)
-      arr.forEach(i => {
-        this.getliner(i.id, data)
-
-      })
+      let arr = obtainZone(
+        { startPosition: 0, endPosition: 100 },
+        this.zoneList
+      );
+      arr.forEach((i) => {
+        this.getliner(i.id, data);
+      });
     },
     initMapTalksMap() {
       var _this = this;
@@ -110,9 +121,12 @@ export default {
           style: "mapbox://styles/zhaolixuan/clj0s1h4b00gp01pw7jg20h5i",
         },
       });
+      // console.log(wgs84toepsg3857([116.38821589024599, 39.97533303800978]));
       this.maptalksMap = new maptalks.Map("map", {
         // center: [87.617733, 43.792818], //[116.404269, 39.914935],
-        center: (this.center && this.center.split(',')) || [116.38821589024599, 39.97533303800978],
+        center:
+          this.MapCenter ||
+          wgs84togcj02([116.38821589024599, 39.97533303800978]),
         zoom: 5,
         minZoom: 6,
         maxZoom: 22,
@@ -123,8 +137,28 @@ export default {
         centerCross: false,
         doubleClickZoom: false,
         baseLayer: this.mapboxBaseLayer,
+        // baseLayer: new maptalks.TileLayer("tile", {
+        //   urlTemplate:
+        //     "http://mt2.google.cn/vt?lyrs=m@180000000&hl=zh-CN&gl=cn&src=app&x={x}&y={y}&z={z}&s=Gal",
+        // }),
+        // baseLayer: new maptalks.TileLayer("tile", {
+        //   crossOrigin: "Anonymous",
+        //   urlTemplate:
+        //     "http://t{s}.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=mytk",
+        //   subdomains: [1, 2, 3, 4],
+        // }),
       });
-      window.maptalksMap = this.maptalksMap
+      // const projection = this.maptalksMap.getProjection();
+      // console.log(maptalks);
+      // if (projection instanceof maptalks.Projection.EPSG3857) {
+      //   console.log("地图使用的是Web墨卡托投影");
+      // } else if (projection instanceof maptalks.Projection.EPSG4326) {
+      //   console.log("地图使用的是经纬度投影");
+      // } else {
+      //   console.log("地图使用的是其他自定义投影方式");
+      // }
+
+      window.maptalksMap = this.maptalksMap;
       document.getElementsByClassName("mapboxgl-ctrl-logo")[0].style.display =
         "none";
       document.getElementsByClassName(
@@ -191,6 +225,9 @@ export default {
         // console.log("移出地图范围，关闭弹窗");
         _this.isShow = false;
       });
+      this.maptalksMap.on("click", function (e) {
+        console.log(e);
+      });
     },
     initAddLayers() {
       this.addCenterPoints();
@@ -208,16 +245,17 @@ export default {
           _this.maptalksMap.getLayer("centerPointLayer")
         );
       }
-      this.centerPointLayer = new maptalks.VectorLayer("centerPointLayer").addTo(this.maptalksMap); //centerPointData
+      this.centerPointLayer = new maptalks.VectorLayer(
+        "centerPointLayer"
+      ).addTo(this.maptalksMap); //centerPointData
 
       // api.hostManageList().then(res => {
       //   this.addMaker(res.rows)
       // })
 
-      api.aideDeviceList().then(res => {
-        this.addMaker(res.rows)
-
-      })
+      api.aideDeviceList().then((res) => {
+        this.addMaker(res.rows);
+      });
     },
     addMaker(data) {
       var _this = this;
@@ -226,7 +264,7 @@ export default {
       if (data.length > 0) {
         data.forEach((item, index) => {
           if (item !== undefined) {
-            var lnglat = item.latitude.split('|')
+            var lnglat = item.latitude.split("|");
             // if (index == 0) {
             //   lnglat = [116.38821589024599, 39.97533303800978]
             // } else if (index == 2) {
@@ -234,18 +272,19 @@ export default {
             // } else {
             //   lnglat = [116.38778960137059, 39.978345549062944]
             // }
-            var point = new maptalks.Marker(lnglat, {
+            console.log(lnglat, wgs84togcj02(lnglat));
+            var point = new maptalks.Marker(wgs84togcj02(lnglat), {
               id: item.aideDeviceId,
               properties: {
                 altitude: 50,
                 name: item.hostName,
                 labelName: item.hostName,
 
-                channelName: item.channelName || '',
-                channelZoneName: item.channelZoneName || '0',
+                channelName: item.channelName || "",
+                channelZoneName: item.channelZoneName || "0",
                 // swwl: item.salesamountMaterial,
                 // b2cwl: item.salesamountB2c,
-                ip: item.ip || '',
+                ip: item.ip || "",
                 type: "other",
               },
               symbol: [
@@ -257,7 +296,6 @@ export default {
                   markerDy: 0,
                   markerOpacity: 1,
                 },
-
               ],
             })
               .on("mouseout", function () {
@@ -267,44 +305,42 @@ export default {
               .on(
                 "mouseenter",
                 debounce(function (e) {
-                  _this.centerPointLayer
-                    .getGeometries()
-                    .forEach((element) => {
-                      if (element == e.target) {
-                        // console.log(element);
-                        el = document.getElementById("informationPanel");
-                        _this.isShow = true;
-                        _this.myTitleName = element.properties.name;
-                        _this.myType = element.properties.type;
-                        _this.myDataList = [
-                          {
-                            fieldName: "所属通道",
-                            value: element.properties.channelName,
-                          },
-                          {
-                            fieldName: "所属分区",
-                            value: element.properties.channelZoneName,
-                          },
-                          {
-                            fieldName: "ip地址",
-                            value: element.properties.ip,
-                          },
-                        ];
-                        marker = new maptalks.ui.UIMarker(
-                          e.target.getCoordinates(),
-                          {
-                            draggable: false,
-                            single: false,
-                            content: el,
-                            dx: -0,
-                            dy: -100,
-                          }
-                        );
-                        marker.addTo(_this.maptalksMap).show();
+                  _this.centerPointLayer.getGeometries().forEach((element) => {
+                    if (element == e.target) {
+                      // console.log(element);
+                      el = document.getElementById("informationPanel");
+                      _this.isShow = true;
+                      _this.myTitleName = element.properties.name;
+                      _this.myType = element.properties.type;
+                      _this.myDataList = [
+                        {
+                          fieldName: "所属通道",
+                          value: element.properties.channelName,
+                        },
+                        {
+                          fieldName: "所属分区",
+                          value: element.properties.channelZoneName,
+                        },
+                        {
+                          fieldName: "ip地址",
+                          value: element.properties.ip,
+                        },
+                      ];
+                      marker = new maptalks.ui.UIMarker(
+                        e.target.getCoordinates(),
+                        {
+                          draggable: false,
+                          single: false,
+                          content: el,
+                          dx: -0,
+                          dy: -100,
+                        }
+                      );
+                      marker.addTo(_this.maptalksMap).show();
 
-                        _this.lastClickedPoint = e.target;
-                      }
-                    });
+                      _this.lastClickedPoint = e.target;
+                    }
+                  });
                 }, 200)
               )
               .on("click", function (e) {
@@ -342,8 +378,6 @@ export default {
           }
         });
 
-
-
         this.centerPointLayer.addGeometry(_this.points);
         this.centerPointLayer.setZIndex(999);
         // const targetPoint = this.centerPointLayer.getGeometryById('markeId');
@@ -357,18 +391,18 @@ export default {
 
       var _this = this;
       var el, marker;
-      api.zoneList().then(res => {
-        if (!res.rows.length) return
-        this.zoneList = res.rows
-        res.rows.forEach(item => {
+      api.zoneList().then((res) => {
+        if (!res.rows.length) return;
+        this.zoneList = res.rows;
+        res.rows.forEach((item) => {
           if (item.latscope) {
-            var reg = new RegExp("\n", "g")
-            let resData = item.latscope.replace(reg, '').split(',')
-            let pointData = []
-            resData.forEach(j => {
-              let resData_item = j.split('|')
-              pointData.push([resData_item[0] * 1, resData_item[1] * 1])
-            })
+            var reg = new RegExp("\n", "g");
+            let resData = item.latscope.replace(reg, "").split(",");
+            let pointData = [];
+            resData.forEach((j) => {
+              let resData_item = wgs84togcj02(j.split("|"));
+              pointData.push([resData_item[0] * 1, resData_item[1] * 1]);
+            });
             let line = new maptalks.LineString(pointData, {
               id: item.channelZoneId,
               properties: {
@@ -377,7 +411,7 @@ export default {
                 channelName: item.channelName,
                 channelEndNum: item.channelEndNum,
                 pointDataStart: pointData[0],
-                pointDataEnd: pointData[pointData.length - 1]
+                pointDataEnd: pointData[pointData.length - 1],
               },
               visible: true,
               editable: false,
@@ -409,11 +443,11 @@ export default {
                         },
                         {
                           fieldName: "分区起点：",
-                          value: element.properties.channelStartNum
+                          value: element.properties.channelStartNum,
                         },
                         {
                           fieldName: "分区终点：",
-                          value: element.properties.channelEndNum
+                          value: element.properties.channelEndNum,
                         },
 
                         // {
@@ -440,59 +474,59 @@ export default {
               );
 
             this.lines.push(line);
-
           }
-
-        })
+        });
         this.centerLinesLayer.addGeometry(_this.lines);
         this.centerLinesLayer.setZIndex(999);
-      })
-
-
+      });
     },
 
     getliner(id, data) {
+      let _this = this;
+      let el, marker;
+      let line = this.centerLinesLayer.getGeometryById(id);
 
-      let _this = this
-      let el, marker
-      let line = this.centerLinesLayer.getGeometryById(id)
-
-      line.properties.waringTime = data.waringTime
+      line.properties.waringTime = data.waringTime;
       line.setSymbol({ lineColor: "red", lineWidth: 5 });
-      line.on('mouseenter', debounce(function (e) {
-        _this.centerLinesLayer.getGeometries().forEach((element) => {
-          if (element == e.target) {
-            el = document.getElementById("informationPanel");
-            _this.isShow = true;
-            _this.myTitleName = element.properties.name;
-            _this.myType = element.properties.type;
-            _this.myDataList = [
-              {
-                fieldName: "报警分区名称：",
-                value: element.properties.name,
-              },
-              {
-                fieldName: "报警点：",
-                value: element.properties.channelStartNum + '-' + element.properties.channelEndNum,
-              },
-              {
-                fieldName: "报警时间",
-                value: element.properties.waringTime,
-              },
-            ];
-            marker = new maptalks.ui.UIMarker(e.coordinate, {
-              draggable: false,
-              single: false,
-              content: el,
-              dx: -0,
-              dy: -100,
-            });
-            marker.addTo(_this.maptalksMap).show();
-            _this.lastClickedPoint = e.target;
-          }
-        });
-      }, 200))
-
+      line.on(
+        "mouseenter",
+        debounce(function (e) {
+          _this.centerLinesLayer.getGeometries().forEach((element) => {
+            if (element == e.target) {
+              el = document.getElementById("informationPanel");
+              _this.isShow = true;
+              _this.myTitleName = element.properties.name;
+              _this.myType = element.properties.type;
+              _this.myDataList = [
+                {
+                  fieldName: "报警分区名称：",
+                  value: element.properties.name,
+                },
+                {
+                  fieldName: "报警点：",
+                  value:
+                    element.properties.channelStartNum +
+                    "-" +
+                    element.properties.channelEndNum,
+                },
+                {
+                  fieldName: "报警时间",
+                  value: element.properties.waringTime,
+                },
+              ];
+              marker = new maptalks.ui.UIMarker(e.coordinate, {
+                draggable: false,
+                single: false,
+                content: el,
+                dx: -0,
+                dy: -100,
+              });
+              marker.addTo(_this.maptalksMap).show();
+              _this.lastClickedPoint = e.target;
+            }
+          });
+        }, 200)
+      );
     },
 
     async addRoadThreeLayer() {
@@ -690,7 +724,7 @@ export default {
       _this.maptalksMap.animateTo(
         {
           // center: [87.617733, 43.792818],
-          center: (this.center && this.center.split(','))  || [116.38821589024599, 39.97533303800978],
+          center: this.MapCenter || [116.38821589024599, 39.97533303800978],
           zoom: 8.5,
           pitch: 0,
           bearing: 0,
@@ -703,7 +737,7 @@ export default {
         _this.maptalksMap.animateTo(
           {
             // center: [84.65767573322091, 41.00901531447968],
-            center: (this.center && this.center.split(','))  || [116.38821589024599, 39.97533303800978],
+            center: this.MapCenter || [116.38821589024599, 39.97533303800978],
             zoom: 13,
             pitch: 60,
             bearing: 32,
@@ -715,7 +749,6 @@ export default {
       }, 2000);
 
       _this.initAddLayers();
-
 
       _this.rotateMap();
     },
@@ -737,17 +770,12 @@ export default {
         if (i + 1 >= coordinates.length) {
           break;
         }
-        const pair = [
-          coordinates[i],
-          coordinates[i + 1]
-        ];
+        const pair = [coordinates[i], coordinates[i + 1]];
 
         result.push(pair);
       }
-      return result
-    }
-
-
+      return result;
+    },
   },
   destroyed() {
     if (window.animationFrameID1 !== null) {

@@ -1,144 +1,97 @@
- 
-// 定义一些常量
-const x_PI = 3.14159265358979324 * 3000.0 / 180.0
-const PI = 3.1415926535897932384626
-const a = 6378245.0
-const ee = 0.00669342162296594323
- 
-/**
- * 百度坐标系 (BD-09) 与 火星坐标系 (GCJ-02)的转换 / 即百度转谷歌、高德
- * @param { Number } bd_lon
- * @param { Number } bd_lat
- */
-export function bd09togcj02 (bd_lon, bd_lat) {
-  var x_pi = 3.14159265358979324 * 3000.0 / 180.0
-  var x = bd_lon - 0.0065
-  var y = bd_lat - 0.006
-  var z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * x_pi)
-  var theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * x_pi)
-  var gg_lng = z * Math.cos(theta)
-  var gg_lat = z * Math.sin(theta)
-  return [gg_lng, gg_lat]
-}
- 
-/**
- * 火星坐标系 (GCJ-02) 与百度坐标系 (BD-09) 的转换 / 即谷歌、高德 转 百度
- * @param { Number } lng
- * @param { Number } lat
- */
-export function gcj02tobd09 (lng, lat) {
-  var z = Math.sqrt(lng * lng + lat * lat) + 0.00002 * Math.sin(lat * x_PI)
-  var theta = Math.atan2(lat, lng) + 0.000003 * Math.cos(lng * x_PI)
-  var bd_lng = z * Math.cos(theta) + 0.0065
-  var bd_lat = z * Math.sin(theta) + 0.006
-  return [bd_lng, bd_lat]
-}
- 
-/**
- * WGS84坐标系转火星坐标系GCj02 / 即WGS84 转谷歌、高德
- * @param { Number } lng 
- * @param { Number } lat 
- */
-export function wgs84togcj02 (lng, lat) {
-  if (outOfChina(lng, lat)) {
-    return [lng, lat]
-  }
-  else {
-    var dlat = transformlat(lng - 105.0, lat - 35.0)
-    var dlng = transformlng(lng - 105.0, lat - 35.0)
-    var radlat = lat / 180.0 * PI
-    var magic = Math.sin(radlat)
-    magic = 1 - ee * magic * magic
-    var sqrtmagic = Math.sqrt(magic)
-    dlat = (dlat * 180.0) / ((a * (1 - ee)) / (magic * sqrtmagic) * PI)
-    dlng = (dlng * 180.0) / (a / sqrtmagic * Math.cos(radlat) * PI)
-    const mglat = lat + dlat
-    const mglng = lng + dlng
-    return [mglng, mglat]
-  }
-}
- 
-/**
- * GCJ02（火星坐标系） 转换为 WGS84 / 即谷歌高德转WGS84
- * @param { Number } lng 
- * @param { Number } lat 
- */
-export function gcj02towgs84 (lng, lat) {
-  if (outOfChina(lng, lat)) {
-    return [lng, lat]
-  }
-  else {
-    var dlat = transformlat(lng - 105.0, lat - 35.0)
-    var dlng = transformlng(lng - 105.0, lat - 35.0)
-    var radlat = lat / 180.0 * PI
-    var magic = Math.sin(radlat)
-    magic = 1 - ee * magic * magic
-    var sqrtmagic = Math.sqrt(magic)
-    dlat = (dlat * 180.0) / ((a * (1 - ee)) / (magic * sqrtmagic) * PI)
-    dlng = (dlng * 180.0) / (a / sqrtmagic * Math.cos(radlat) * PI)
-    const mglat = lat + dlat
-    const mglng = lng + dlng
-    return [lng * 2 - mglng, lat * 2 - mglat]
+export function wgs84togcj02([lng, lat]) {
+  // 定义一些常量
+  var PI = 3.1415926535897932384626;
+  var a = 6378245.0;
+  var ee = 0.00669342162296594323;
+
+  var lat = +lat;
+  var lng = +lng;
+  // 判断是否在国内，不在国内则不做偏移
+  if (!(lng > 73.66 && lng < 135.05 && lat > 3.86 && lat < 53.55)) {
+    return [lng, lat];
+  } else {
+    // 转换lat
+    var dlatplng = lng - 105.0,
+      dlatplat = lat - 35.0;
+    var dlat =
+      -100.0 +
+      2.0 * dlatplng +
+      3.0 * dlatplat +
+      0.2 * dlatplat * dlatplat +
+      0.1 * dlatplng * dlatplat +
+      0.2 * Math.sqrt(Math.abs(dlatplng));
+    dlat +=
+      ((20.0 * Math.sin(6.0 * dlatplng * PI) +
+        20.0 * Math.sin(2.0 * dlatplng * PI)) *
+        2.0) /
+      3.0;
+    dlat +=
+      ((20.0 * Math.sin(dlatplat * PI) +
+        40.0 * Math.sin((dlatplat / 3.0) * PI)) *
+        2.0) /
+      3.0;
+    dlat +=
+      ((160.0 * Math.sin((dlatplat / 12.0) * PI) +
+        320 * Math.sin((dlatplat * PI) / 30.0)) *
+        2.0) /
+      3.0;
+
+    // 转换lng
+    var dlngplng = lng - 105.0,
+      dlngplat = lat - 35.0;
+    var dlng =
+      300.0 +
+      dlngplng +
+      2.0 * dlngplat +
+      0.1 * dlngplng * dlngplng +
+      0.1 * dlngplng * dlngplat +
+      0.1 * Math.sqrt(Math.abs(dlngplng));
+    dlng +=
+      ((20.0 * Math.sin(6.0 * dlngplng * PI) +
+        20.0 * Math.sin(2.0 * dlngplng * PI)) *
+        2.0) /
+      3.0;
+    dlng +=
+      ((20.0 * Math.sin(dlngplng * PI) +
+        40.0 * Math.sin((dlngplng / 3.0) * PI)) *
+        2.0) /
+      3.0;
+    dlng +=
+      ((150.0 * Math.sin((dlngplng / 12.0) * PI) +
+        300.0 * Math.sin((dlngplng / 30.0) * PI)) *
+        2.0) /
+      3.0;
+
+    var radlat = (lat / 180.0) * PI;
+    var magic = Math.sin(radlat);
+    magic = 1 - ee * magic * magic;
+    var sqrtmagic = Math.sqrt(magic);
+    dlat = (dlat * 180.0) / (((a * (1 - ee)) / (magic * sqrtmagic)) * PI);
+    dlng = (dlng * 180.0) / ((a / sqrtmagic) * Math.cos(radlat) * PI);
+    var mglat = lat + dlat;
+    var mglng = lng + dlng;
+
+    return [mglng, mglat];
   }
 }
- 
-/**
- * 百度坐标系转wgs84坐标系
- * @param {*} lng 
- * @param {*} lat 
- */
-export function bd09towgs84 (lng, lat) {
-  // 百度坐标系先转为火星坐标系
-  const gcj02 = bd09togcj02(lng, lat)
-  // 火星坐标系转wgs84坐标系
-  const result = gcj02towgs84(gcj02[0], gcj02[1])
-  return result
+
+// 引入proj4js库
+import proj4 from "proj4";
+// 定义WGS84和EPSG:3857的投影字符串
+const wgs84 = "+proj=longlat +datum=WGS84 +no_defs";
+const epsg3857 =
+  "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs";
+// 创建proj4的转换函数
+const transform = proj4(wgs84, epsg3857);
+// 定义WGS84坐标
+
+const lng = 120.12345;
+const lat = 30.6789;
+
+export function wgs84toepsg3857([lng, lat]) {
+  const [x, y] = transform.forward([lng, lat]);
+  console.log(`WGS84坐标(${lng}, ${lat}) 转换为 EPSG:3857坐标 (${x}, ${y})`);
+  return [x, y];
 }
- 
-/**
- * wgs84坐标系转百度坐标系
- * @param {*} lng 
- * @param {*} lat 
- */
-export function wgs84tobd09 (lng, lat) {
-  // wgs84先转为火星坐标系
-  const gcj02 = wgs84togcj02(lng, lat)
-  // 火星坐标系转百度坐标系
-  const result = gcj02tobd09(gcj02[0], gcj02[1])
-  return result
-}
- 
-/**
- * 经度转换
- * @param { Number } lng 
- * @param { Number } lat 
- */
-function transformlat (lng, lat) {
-  var ret = -100.0 + 2.0 * lng + 3.0 * lat + 0.2 * lat * lat + 0.1 * lng * lat + 0.2 * Math.sqrt(Math.abs(lng))
-  ret += (20.0 * Math.sin(6.0 * lng * PI) + 20.0 * Math.sin(2.0 * lng * PI)) * 2.0 / 3.0
-  ret += (20.0 * Math.sin(lat * PI) + 40.0 * Math.sin(lat / 3.0 * PI)) * 2.0 / 3.0
-  ret += (160.0 * Math.sin(lat / 12.0 * PI) + 320 * Math.sin(lat * PI / 30.0)) * 2.0 / 3.0
-  return ret
-}
- 
-/**
- * 纬度转换
- * @param { Number } lng 
- * @param { Number } lat 
- */
-function transformlng (lng, lat) {
-  var ret = 300.0 + lng + 2.0 * lat + 0.1 * lng * lng + 0.1 * lng * lat + 0.1 * Math.sqrt(Math.abs(lng))
-  ret += (20.0 * Math.sin(6.0 * lng * PI) + 20.0 * Math.sin(2.0 * lng * PI)) * 2.0 / 3.0
-  ret += (20.0 * Math.sin(lng * PI) + 40.0 * Math.sin(lng / 3.0 * PI)) * 2.0 / 3.0
-  ret += (150.0 * Math.sin(lng / 12.0 * PI) + 300.0 * Math.sin(lng / 30.0 * PI)) * 2.0 / 3.0
-  return ret
-}
- 
-/**
- * 判断是否在国内，不在国内则不做偏移
- * @param {*} lng 
- * @param {*} lat 
- */
-function outOfChina (lng, lat) {
-  return (lng < 72.004 || lng > 137.8347) || ((lat < 0.8293 || lat > 55.8271) || false)
-}
+
+// 将WGS84坐标转换为EPSG:3857坐标

@@ -14,7 +14,7 @@ module.exports = {
       '/api': {
         target: `http://192.168.124.6:3000`,
         changeOrigin: true,
-      }
+      },
     },
     // Various Dev Server settings
     host: 'dev.xjoycity.com', // can be overwritten by process.env.HOST
