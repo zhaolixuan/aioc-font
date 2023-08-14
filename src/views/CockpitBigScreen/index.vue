@@ -7,7 +7,7 @@
       <Header :infor="topData" />
     </div>
     <div class="left_wrap">
-      <BusinessIncome :infor="BusinessIncome"></BusinessIncome>
+      <BusinessIncome :infor="BusinessIncome" @handelrOpenShi="handelrOpenShi"></BusinessIncome>
       <TrueTopTen></TrueTopTen>
       <NotGoodNetWork :infor="topFiveData"></NotGoodNetWork>
     </div>
@@ -20,7 +20,7 @@
       <CenterDataView :infor="centerData" :num="centerNumData" @handlerHostClick="handlerHostClick"></CenterDataView>
     </div>
     <div class="footer">
-      <Footer :footData="footData" @handelgive="handelgive" />
+      <Footer :alarmList="alarmList" @handleAlarm="handleAlarm" />
     </div>
 
     <el-dialog title="实时波峰图" :visible.sync="RealTimeDialog" width="50%">
@@ -104,18 +104,39 @@ export default {
       RealTimeDialog: false,
       centerData: null,
       centerNumData: 0,
-      footData: [],
+      alarmList: [],
       sysStatusList: [],
       time: null,
       lpopTime: null,
+      serveTime: null,
       curHostData: {}
     };
   },
   mounted() {
     this.getData();
-
+    this.getTimeData()
   },
   methods: {
+    handelrOpenShi(bool) {
+      if (bool) {
+        // 开启
+        this.getTimeData()
+      } else {
+        // 关闭
+        this.clearTime()
+      }
+    },
+    clearTime() {
+      clearInterval(this.lpopTime)
+      clearInterval(this.time)
+      clearInterval(this.serveTime)
+
+    },
+    getTimeData() {
+      this.getlpopRedisData()
+      this.getList()
+      this.getServe()
+    },
     handlerHostClick(data) {
       if (this.curHostData.hostId == data.hostId) return
       this.curHostData = data
@@ -130,12 +151,9 @@ export default {
     },
     getlpopRedisData() {
       if (this.lpopTime) clearInterval(this.lpopTime)
-      // this.lpopTime = setInterval(() => {
-      api.realTimeData({ step: 1 })
-        .then((res) => {
+      api.realTimeData({ step: 1 }).then((res) => {
+        if (Object.keys(res.data).length) {
           let data = JSON.parse(res.data[this.curHostData.hostId][0])
-          console.log('realTimeData',data);
-          // let data = eval(res.data.removedElement);
           data.forEach((item, index) => {
             let xdata = []
             for (let index = 0; index < item.sensor.length; index++) {
@@ -145,8 +163,87 @@ export default {
             this.BusinessIncome.value2[index].name = item.channel
             this.BusinessIncome.value2[index].data = item.sensor
           })
+        }
+        this.lpopTime = setInterval(() => {
+          api.realTimeData({ step: 1 }).then((res1) => {
+            if (Object.keys(res1.data).length) {
+              let data = JSON.parse(res1.data[this.curHostData.hostId][0])
+              data.forEach((item, index) => {
+                let xdata = []
+                for (let index = 0; index < item.sensor.length; index++) {
+                  xdata.push(index)
+                }
+                this.BusinessIncome.name = xdata
+                this.BusinessIncome.value2[index].name = item.channel
+                this.BusinessIncome.value2[index].data = item.sensor
+              })
+            }
+
+          })
+        }, 1000);
+      })
+    },
+    // 报警记录接口
+    getList() {
+      if (this.time) clearInterval(this.time)
+      let params = {
+        pageNum: 1,
+        pageSize: 1000
+      };
+      api.alarmList(params).then(res => {
+        this.alarmList = res.rows || [{}];
+        res.rows.forEach(element => {
+          if (element.status != 1) {
+            this.$refs.map.handelgive(element);
+          }
+        });
+        this.time = setInterval(() => {
+          api.alarmList(params).then(response => {
+            this.alarmList = response.rows || [{}];
+            response.rows.forEach(element => {
+              if (element.status != 1) {
+                this.$refs.map.handelgive(element);
+              }
+            });
+          });
+        }, 3000);
+      })
+
+    },
+    handleAlarm(data) {
+      this.$confirm('此告警以处理完成?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        api.updateAlarm({ alarmId: data.alarmId, status: 1 }).then(res => {
+          if (res && res.code == 200) {
+            data.status = 1
+            this.$message({
+              type: 'success',
+              message: '处理成功!'
+            });
+          }
         })
-      // }, 1000);
+
+      }).catch(() => {
+      });
+    },
+    getServe() {
+      // 获取服务信息
+      if (this.serveTime) clearInterval(this.lpopTime)
+
+      api.getServer().then((res) => {
+        this.ljData = res.data;
+        this.serveTime = setInterval(() => {
+          api
+            .getServer()
+            .then((res1) => {
+              this.ljData = res1.data;
+            })
+        }, 10000);
+      });
+
     },
     getData() {
       //主机
@@ -155,8 +252,6 @@ export default {
         this.curHostData = res.rows[0]
         this.getlpopRedisData()
       })
-
-
       // 警告统计接口
       api.alarmStatisticsList().then((res) => {
         this.topFiveData.name = res.rows.map((i) => i.status == 1 ? '已处理' : '未处理');
@@ -165,17 +260,6 @@ export default {
           this.centerNumData += i.total;
         });
       });
-      // 通道管理接口
-      // api.channelList().then((res) => {
-      //   this.centerData = res.rows;
-      // });
-      // 报警记录接口
-      api.alarmList({}).then((res) => {
-        res.rows.forEach((i) => {
-          this.footData.push(i);
-        });
-      });
-
       // 查询系统状态列表
       api.listSysStatus().then((res) => {
         res.rows.forEach((i) => {
@@ -183,36 +267,10 @@ export default {
         });
       });
 
-      // 获取服务信息
-      api.getServer().then((res) => {
-        this.ljData = res.data;
-        this.time = setInterval(() => {
-          api
-            .getServer()
-            .then((res) => {
-              this.ljData = res.data;
-            })
-            .catch((error) => {
-              clearInterval(this.time);
-            });
-        }, 5000);
-      });
-
-      // 通道管理接口
-      // api.zoneList().then(res => {
-      //   console.log(1, res);
-
-      // })
-
-      // 查询传感器列表
-      // api.sensorList().then(res => {
-      //   console.log(2, res);
-      // })
     },
   },
   destroyed() {
-    clearInterval(this.time);
-    clearInterval(this.lpopTime);
+    this.clearTime()
 
   },
 };

@@ -13,7 +13,7 @@ export default {
       type: "none"
     },
     formatter(params) {
-      return `${params[0].marker}${params[0].axisValue}:${params[0].data}`;
+      return `${params[0].marker}${params[0].axisValue}:${params[0].data}条`;
     }
   },
   xAxis: {
@@ -45,7 +45,7 @@ export default {
       itemStyle: {
         normal: {
           color: function(params) {
-            var colors = ["red", "orange", "yellow", "green"];
+            var colors = ["green", "red"];
             return colors[params.dataIndex % colors.length];
           },
           // color: '#000',

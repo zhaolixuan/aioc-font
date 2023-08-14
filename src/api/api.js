@@ -58,10 +58,11 @@ export default {
   },
 
   // 报警记录接口
-  alarmList() {
+  alarmList(params) {
     return request({
       url: "/bussiness/alarm/list",
-      method: "get"
+      method: "get",
+      params
     });
   },
   // 通道管理接口

@@ -2,6 +2,7 @@
   <div class="BusinessIncome_wrap">
     <div class="card_wrap">
       <norm title="光路质量" :icon="1" />
+      <el-button size="small" class="warningBtn" @click="handelrOpenShi">{{ openShishi ? '关闭实时监控': '开启实时监控' }}</el-button>
     </div>
     <div class="scroll">
       <div ref="canvasChart" style="height:2rem;width:100%"></div>
@@ -23,7 +24,8 @@ export default {
   },
   data() {
     return {
-      defaultOptions
+      defaultOptions,
+      openShishi:true
     }
   },
   mounted() {
@@ -44,7 +46,13 @@ export default {
       }
     }
   },
-  methods: {},
+  methods: {
+    handelrOpenShi(){
+      this.openShishi = !this.openShishi
+      this.$emit('handelrOpenShi', this.openShishi )
+      
+    }
+  },
   computed: {
     computedOptions() {
       let option = this.defaultOptions
@@ -64,6 +72,13 @@ export default {
 
   .card_wrap {
     margin-bottom: .12rem;
+    position: relative;
+
+.warningBtn {
+  position: absolute;
+  right: 15%;
+  top: 0.1rem;
+}
   }
 }
 </style>

@@ -54,6 +54,7 @@ export default {
         document.documentElement.clientHeight,
       ], //屏幕大小
       MapCenter: null,
+      optionSelectAlarmType:[]
     };
   },
   components: {
@@ -70,13 +71,14 @@ export default {
         this.srceenSize.screenHeight = document.documentElement.clientHeight; //窗口高度
       })();
     };
+    this.setOptionAlarms()
     this.$nextTick(() => {
       this.initMapTalksMap();
     });
   },
   watch: {
     center(n) {
-      console.log("!!!!!!!!!!!", n);
+      // console.log("!!!!!!!!!!!", n);
       let center = n.split(",");
       if (this.maptalksMap) {
         this.MapCenter = wgs84togcj02(center);
@@ -105,7 +107,7 @@ export default {
   methods: {
     handelgive(data = {}) {
       let arr = obtainZone(
-        { startPosition: 0, endPosition: 100 },
+        data,
         this.zoneList
       );
       arr.forEach((i) => {
@@ -254,17 +256,25 @@ export default {
       // })
 
       api.aideDeviceList().then((res) => {
-        this.addMaker(res.rows);
+        this.addMaker(res.rows,'waishe');
       });
+
+
+      api.hostManageList().then(res => {
+        this.addMaker(res.rows,'zhuji');
+      })
+
+
     },
-    addMaker(data) {
+    addMaker(data,type) {
       var _this = this;
       var el;
       var marker;
       if (data.length > 0) {
         data.forEach((item, index) => {
           if (item !== undefined) {
-            var lnglat = item.latitude.split("|");
+            var lnglat = item.latitude && item.latitude.split("|");
+            if (!lnglat) return
             // if (index == 0) {
             //   lnglat = [116.38821589024599, 39.97533303800978]
             // } else if (index == 2) {
@@ -272,14 +282,15 @@ export default {
             // } else {
             //   lnglat = [116.38778960137059, 39.978345549062944]
             // }
-            console.log(lnglat, wgs84togcj02(lnglat));
+            // console.log(lnglat, wgs84togcj02(lnglat));
             var point = new maptalks.Marker(wgs84togcj02(lnglat), {
               id: item.aideDeviceId,
               properties: {
                 altitude: 50,
                 name: item.hostName,
                 labelName: item.hostName,
-
+                region:item.region||'',
+                hostId:item.hostId||'',
                 channelName: item.channelName || "",
                 channelZoneName: item.channelZoneName || "0",
                 // swwl: item.salesamountMaterial,
@@ -289,7 +300,7 @@ export default {
               },
               symbol: [
                 {
-                  markerFile: require(`../../assets/image/zhuji.png`),
+                  markerFile: require(`../../assets/image/${type}.png`),
                   markerWidth: 20 / 1.5,
                   markerHeight: 30 / 1.5,
                   markerDx: 0,
@@ -312,7 +323,19 @@ export default {
                       _this.isShow = true;
                       _this.myTitleName = element.properties.name;
                       _this.myType = element.properties.type;
-                      _this.myDataList = [
+                      if (type == 'zhuji') {
+                        _this.myDataList = [
+                        {
+                          fieldName: "主机ID",
+                          value: element.properties.hostId,
+                        },
+                        {
+                          fieldName: "所属地区",
+                          value: element.properties.region,
+                        },
+                      ];
+                      }else{
+                        _this.myDataList = [
                         {
                           fieldName: "所属通道",
                           value: element.properties.channelName,
@@ -326,6 +349,8 @@ export default {
                           value: element.properties.ip,
                         },
                       ];
+                      }
+                     
                       marker = new maptalks.ui.UIMarker(
                         e.target.getCoordinates(),
                         {
@@ -464,7 +489,7 @@ export default {
                         single: false,
                         content: el,
                         dx: -0,
-                        dy: -100,
+                        dy: -90,
                       });
                       marker.addTo(_this.maptalksMap).show();
                       _this.lastClickedPoint = e.target;
@@ -486,7 +511,8 @@ export default {
       let el, marker;
       let line = this.centerLinesLayer.getGeometryById(id);
 
-      line.properties.waringTime = data.waringTime;
+      line.properties.warningTime = data.warningTime;
+      line.properties.alarmType = _this.getAlarmLabel(data.alarmType) ;
       line.setSymbol({ lineColor: "red", lineWidth: 5 });
       line.on(
         "mouseenter",
@@ -499,7 +525,7 @@ export default {
               _this.myType = element.properties.type;
               _this.myDataList = [
                 {
-                  fieldName: "报警分区名称：",
+                  fieldName: "报警分区：",
                   value: element.properties.name,
                 },
                 {
@@ -510,8 +536,8 @@ export default {
                     element.properties.channelEndNum,
                 },
                 {
-                  fieldName: "报警时间",
-                  value: element.properties.waringTime,
+                  fieldName: "报警类型",
+                  value: element.properties.alarmType,
                 },
               ];
               marker = new maptalks.ui.UIMarker(e.coordinate, {
@@ -519,7 +545,7 @@ export default {
                 single: false,
                 content: el,
                 dx: -0,
-                dy: -100,
+                dy: -90,
               });
               marker.addTo(_this.maptalksMap).show();
               _this.lastClickedPoint = e.target;
@@ -528,7 +554,7 @@ export default {
         }, 200)
       );
     },
-
+   
     async addRoadThreeLayer() {
       var _this = this;
       var threeLayer = new ThreeLayer("threeLayerRoad", {
@@ -775,6 +801,21 @@ export default {
         result.push(pair);
       }
       return result;
+    },
+    getAlarmLabel(data) {
+      // alert(data);
+      for (let a = 0; a < this.optionSelectAlarmType.length; a++) {
+        if (data == this.optionSelectAlarmType[a].alarmValue) {
+
+          return this.optionSelectAlarmType[a].alarmLabel;
+          // this.zones = this.channelList[a].subTreeNodes;
+        }
+      };
+    },
+    setOptionAlarms() {
+      api.optionsAlarmType().then(response => {
+        this.optionSelectAlarmType = response.data;
+      });
     },
   },
   destroyed() {

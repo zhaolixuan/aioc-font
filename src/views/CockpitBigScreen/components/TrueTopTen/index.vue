@@ -2,7 +2,7 @@
   <div class="TrueTooTen_wrap">
     <div class="card_wrap">
       <norm title="实时监控预警" :icon="2" />
-      <el-button class="warningBtn" @click="handelrWarning">实时监控列表</el-button>
+      <el-button size="small" class="warningBtn" @click="handelrWarning">实时监控列表</el-button>
     </div>
     <div class="echartsBox">
       <Video :videoInfo="videoInfo" id="default"></Video>
@@ -19,11 +19,20 @@
         <el-col :span="18">
           <Video v-if="warningType" :videoInfo="bigvideoInfo" id="bigVideo"></Video>
           <div class="keybox">
-            <img @click="handleKey('TILT_UP')" src="@/assets/image/up.png" alt="">
+            <div>
+              <img @click="handleKey('UP_LEFT')" src="@/assets/image/zuoshang.png" alt="">
+              <img @click="handleKey('TILT_UP')" src="@/assets/image/up.png" alt="">
+              <img @click="handleKey('UP_RIGHT')" src="@/assets/image/youshang.png" alt="">
+            </div>
             <div>
               <img @click="handleKey('PAN_LEFT')" src="@/assets/image/left.png" alt="">
-              <img @click="handleKey('TILT_DOWN')" src="@/assets/image/down.png" alt="">
+              <p></p>
               <img @click="handleKey('PAN_RIGHT')" src="@/assets/image/right.png" alt="">
+            </div>
+            <div>
+              <img @click="handleKey('DOWN_LEFT')" src="@/assets/image/zuoxia.png" alt="">
+              <img @click="handleKey('TILT_DOWN')" src="@/assets/image/down.png" alt="">
+              <img @click="handleKey('DOWN_RIGHT')" src="@/assets/image/youxia.png" alt="">
             </div>
             <el-button @click="handelSnap" type="primary" :disabled="snapLoding ? true : false">{{ snapLoding ? snapLoding
               : '抓拍' }}</el-button>
@@ -240,7 +249,7 @@ export default {
     .warningBtn {
       position: absolute;
       right: 15%;
-      top: 0.18rem;
+      top: 0.1rem;
     }
   }
 
@@ -266,6 +275,11 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  p {
+    width: 50px;
+    margin: 5px;
+  }
 
   img {
     width: 50px;

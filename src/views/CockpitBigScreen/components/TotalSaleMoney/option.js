@@ -44,14 +44,14 @@ export default {
       valueAnimation: true,
       formatter: '{value}%',
       color: 'auto',
-      fontSize: window.innerWidth / 1082 * 14,
+      fontSize: window.innerWidth / 1082 * 12,
       offsetCenter:["0%",'35%']
 
     },
     title: {
       valueAnimation: true,
       color: 'auto',
-      fontSize: window.innerWidth / 1082 * 12,
+      fontSize: window.innerWidth / 1082 * 10,
       offsetCenter:["-0%",'70%']
     },
     data: [

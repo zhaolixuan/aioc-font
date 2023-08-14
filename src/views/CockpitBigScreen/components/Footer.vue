@@ -77,8 +77,8 @@
           <dict-tag :options="dict.type.sys_data_status" :value="scope.row.channelZoneId"/>
         </template>
       </el-table-column> -->
-      <el-table-column label="分区名称" align="center" prop="channelZoneName" />
-      <el-table-column label="警告编号" align="center" prop="alarmId" />
+      <!-- <el-table-column label="分区名称" align="center" prop="channelZoneName" /> -->
+      <!-- <el-table-column label="警告编号" align="center" prop="alarmId" /> -->
       <!-- <el-table-column label="警告地区" align="center" prop="region" /> -->
       <el-table-column label="警告类型" align="center" prop="alarmType">
         <template slot-scope="scope">
@@ -91,11 +91,12 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="位置(米)" align="center" prop="alarmPosition" />
+      <el-table-column label="起始位置" align="center" prop="startPosition" />
+      <el-table-column label="结束位置" align="center" prop="endPosition" />
       <!-- <el-table-column label="所在经纬度" align="center" prop="latitude" />
       <el-table-column label="传感数值" align="center" prop="sensorValue" />
       <el-table-column label="报警编码" align="center" prop="alarmCode" /> -->
-      <el-table-column label="报警数值" align="center" prop="alarmValue" />
+      <!-- <el-table-column label="报警数值" align="center" prop="alarmValue" /> -->
       <el-table-column label="警告时间" align="center" prop="warningTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.warningTime, '{y}-{m}-{d}') }}</span>
@@ -121,9 +122,7 @@ import { setRedisData, getRedisData, lpopRedisData } from "@/utils/redis";
 
 import api from "@/api/api";
 export default {
-  props: {
-
-  },
+  props: ['alarmList'],
   data() {
     return {
       // 查询参数
@@ -151,7 +150,7 @@ export default {
       },
       optionAlarmCategory2: [],
       optionSelectAlarmType: [],
-      alarmList: [],
+      // alarmList: [],
       pipeLineList: [],
       channelList: [],
       zones: [],
@@ -164,14 +163,10 @@ export default {
 
   },
   mounted() {
-    this.queryParams.hostId = null;
-    this.queryParams.channelId = null;
-    this.queryParams.channelZoneId = null;
+   
     this.getOptionData();
-    this.getList()
   },
   destroyed() {
-    clearInterval(this.time)
   },
   methods: {
     /** 重置按钮操作 */
@@ -182,37 +177,19 @@ export default {
       this.queryParams.channelId = null;
       this.queryParams.channelZoneId = null;
       // this.resetForm("queryForm");
-      this.handleQuery();
+      // this.handleQuery();
       // this.getOptionData();
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
       // this.getOptionData();
-      this.getList();
+      // this.getList();
     },
     getOptionData() {
       this.loadPipleLineInfo()
       this.setOptionAlarms()
     },
-    /** 查询报警记录列表 */
-    getList() {
-      if (this.time) clearInterval(this.time)
-      // this.time = setInterval(() => {
-      this.queryParams.params = {};
-      api.alarmList(this.queryParams).then(response => {
-        console.log(response.rows );
-        this.alarmList = response.rows || [{}];
-        response.rows.forEach(element => {
-          if (element.status != 1) {
-            this.$emit("handelgive", element);
-          }
-        });
-      });
-      // }, 3000);
 
-
-
-    },
     selectChannel(data) {
       for (let a = 0; a < this.pipeLineList.length; a++) {
         if (data == this.pipeLineList[a].id) {
@@ -243,12 +220,14 @@ export default {
       });
       api.optionsAlarmCategory().then(response => {
         this.optionAlarmCategory2 = response.data;
+        console.log(this.optionAlarmCategory2);
         // alert("****"+ this.optionAlarmCategory2);
       });
 
     },
     //根据类型值获取警告类型名称
     getAlarmLabel(data) {
+
       // alert(data);
       for (let a = 0; a < this.optionSelectAlarmType.length; a++) {
         if (data == this.optionSelectAlarmType[a].alarmValue) {
@@ -294,13 +273,7 @@ export default {
     },
 
     handleAlarm(data) {
-      api.updateAlarm({ alarmId: data.alarmId, status: 1 }).then(res => {
-        if (res && res.code == 200) {
-          data.status = 1
-
-        }
-      })
-      // this.$emit("handelgive", data);
+      this.$emit('handleAlarm', data)
     },
   },
 };
@@ -359,7 +332,7 @@ export default {
     padding: 0 0.1rem;
 
     .el-table__body-wrapper {
-      height: 2rem;
+      height: 1.8rem;
       overflow: hidden;
       overflow-y: auto;
     }
