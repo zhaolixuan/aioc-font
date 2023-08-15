@@ -7,17 +7,28 @@
       <Header :infor="topData" />
     </div>
     <div class="left_wrap">
-      <BusinessIncome :infor="BusinessIncome" @handelrOpenShi="handelrOpenShi"></BusinessIncome>
+      <BusinessIncome
+        :infor="BusinessIncome"
+        @handelrOpenShi="handelrOpenShi"
+      ></BusinessIncome>
       <TrueTopTen></TrueTopTen>
       <NotGoodNetWork :infor="topFiveData"></NotGoodNetWork>
     </div>
     <div class="right_wrap">
-      <TotalSaleMoney :infor="ljData" :flag="flag" @changeFlag="changeFlag"></TotalSaleMoney>
+      <TotalSaleMoney
+        :infor="ljData"
+        :flag="flag"
+        @changeFlag="changeFlag"
+      ></TotalSaleMoney>
       <ShopNumber :infor="sysStatusList"></ShopNumber>
       <GoodsTypeZB></GoodsTypeZB>
     </div>
     <div class="center">
-      <CenterDataView :infor="centerData" :num="centerNumData" @handlerHostClick="handlerHostClick"></CenterDataView>
+      <CenterDataView
+        :infor="centerData"
+        :num="centerNumData"
+        @handlerHostClick="handlerHostClick"
+      ></CenterDataView>
     </div>
     <div class="footer">
       <Footer :alarmList="alarmList" @handleAlarm="handleAlarm" />
@@ -27,7 +38,9 @@
       <real-time-peak-graph></real-time-peak-graph>
 
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="RealTimeDialog = false">关闭</el-button>
+        <el-button type="primary" @click="RealTimeDialog = false"
+          >关闭</el-button
+        >
       </span>
     </el-dialog>
   </div>
@@ -48,6 +61,7 @@ import RealTimePeakGraph from "./components/RealTimePeakGraph";
 import Map from "../Map/index.vue";
 import { parseTime } from "@/utils/mounttai";
 import { setRedisData, getRedisData, lpopRedisData } from "@/utils/redis";
+import { obtainZone } from "@/utils/pointiInZone";
 
 export default {
   name: "CockpitBigScreen",
@@ -86,7 +100,11 @@ export default {
         ],
         value: [101, 100, 130, 15, 16, 17, 18, 19, 10, 22, 122],
       },
-      BusinessIncome: { name: [], value: [], value2: [{ name: '', type: 'line', data: [] }] },
+      BusinessIncome: {
+        name: [],
+        value: [],
+        value2: [{ name: "", type: "line", data: [] }],
+      },
       EnterpriseNumber: {},
       content: "",
       topTenData: {
@@ -109,38 +127,38 @@ export default {
       time: null,
       lpopTime: null,
       serveTime: null,
-      curHostData: {}
+      curHostData: {},
+      zoneList:[]
     };
   },
   mounted() {
     this.getData();
-    this.getTimeData()
+    this.getTimeData();
   },
   methods: {
     handelrOpenShi(bool) {
       if (bool) {
         // 开启
-        this.getTimeData()
+        this.getTimeData();
       } else {
         // 关闭
-        this.clearTime()
+        this.clearTime();
       }
     },
     clearTime() {
-      clearInterval(this.lpopTime)
-      clearInterval(this.time)
-      clearInterval(this.serveTime)
-
+      clearInterval(this.lpopTime);
+      clearInterval(this.time);
+      clearInterval(this.serveTime);
     },
     getTimeData() {
-      this.getlpopRedisData()
-      this.getList()
-      this.getServe()
+      this.getlpopRedisData();
+      this.getList();
+      this.getServe();
     },
     handlerHostClick(data) {
-      if (this.curHostData.hostId == data.hostId) return
-      this.curHostData = data
-      this.getlpopRedisData()
+      if (this.curHostData.hostId == data.hostId) return;
+      this.curHostData = data;
+      this.getlpopRedisData();
     },
     // foot点击处理时间
     handelgive(data) {
@@ -150,115 +168,117 @@ export default {
       this.flag = val;
     },
     getlpopRedisData() {
-      if (this.lpopTime) clearInterval(this.lpopTime)
+      if (this.lpopTime) clearInterval(this.lpopTime);
       api.realTimeData({ step: 1 }).then((res) => {
         if (Object.keys(res.data).length) {
-          let data = JSON.parse(res.data[this.curHostData.hostId][0])
+          let data = JSON.parse(res.data[this.curHostData.hostId][0]);
           data.forEach((item, index) => {
-            let xdata = []
+            let xdata = [];
             for (let index = 0; index < item.sensor.length; index++) {
-              xdata.push(index)
+              xdata.push(index);
             }
-            this.BusinessIncome.name = xdata
-            this.BusinessIncome.value2[index].name = item.channel
-            this.BusinessIncome.value2[index].data = item.sensor
-          })
+            this.BusinessIncome.name = xdata;
+            this.BusinessIncome.value2[index].name = item.channel;
+            this.BusinessIncome.value2[index].data = item.sensor;
+          });
         }
         this.lpopTime = setInterval(() => {
           api.realTimeData({ step: 1 }).then((res1) => {
             if (Object.keys(res1.data).length) {
-              let data = JSON.parse(res1.data[this.curHostData.hostId][0])
+              let data = JSON.parse(res1.data[this.curHostData.hostId][0]);
               data.forEach((item, index) => {
-                let xdata = []
+                let xdata = [];
                 for (let index = 0; index < item.sensor.length; index++) {
-                  xdata.push(index)
+                  xdata.push(index);
                 }
-                this.BusinessIncome.name = xdata
-                this.BusinessIncome.value2[index].name = item.channel
-                this.BusinessIncome.value2[index].data = item.sensor
-              })
+                this.BusinessIncome.name = xdata;
+                this.BusinessIncome.value2[index].name = item.channel;
+                this.BusinessIncome.value2[index].data = item.sensor;
+              });
             }
-
-          })
+          });
         }, 1000);
-      })
+      });
     },
     // 报警记录接口
     getList() {
-      if (this.time) clearInterval(this.time)
+      if (this.time) clearInterval(this.time);
       let params = {
         pageNum: 1,
-        pageSize: 1000
+        pageSize: 1000,
       };
-      api.alarmList(params).then(res => {
-        this.alarmList = res.rows || [{}];
-        res.rows.forEach(element => {
+      api.alarmList(params).then((res) => {
+        res.rows.forEach((element) => {
+          element.fenquName =  obtainZone(element, this.zoneList).map(i=>i.name).join(',')
           if (element.status != 1) {
             this.$refs.map.handelgive(element);
           }
         });
+        this.alarmList = res.rows || [{}];
+        this.centerNumData = res.rows.length
         this.time = setInterval(() => {
-          api.alarmList(params).then(response => {
-            this.alarmList = response.rows || [{}];
-            response.rows.forEach(element => {
+          api.alarmList(params).then((response) => {
+            response.rows.forEach((element) => {
+          element.fenquName =  obtainZone(element, this.zoneList).map(i=>i.name).join(',')
               if (element.status != 1) {
                 this.$refs.map.handelgive(element);
               }
             });
+            this.alarmList = response.rows || [{}];
+            this.centerNumData = response.rows.length
           });
         }, 3000);
-      })
-
+      });
     },
     handleAlarm(data) {
-      this.$confirm('此告警以处理完成?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        api.updateAlarm({ alarmId: data.alarmId, status: 1 }).then(res => {
-          if (res && res.code == 200) {
-            data.status = 1
-            this.$message({
-              type: 'success',
-              message: '处理成功!'
-            });
-          }
+      this.$confirm("此告警以处理完成?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          api.updateAlarm({ alarmId: data.alarmId, status: 1 }).then((res) => {
+            if (res && res.code == 200) {
+              data.status = 1;
+              this.$message({
+                type: "success",
+                message: "处理成功!",
+              });
+            }
+          });
         })
-
-      }).catch(() => {
-      });
+        .catch(() => {});
     },
     getServe() {
       // 获取服务信息
-      if (this.serveTime) clearInterval(this.lpopTime)
+      if (this.serveTime) clearInterval(this.lpopTime);
 
       api.getServer().then((res) => {
         this.ljData = res.data;
         this.serveTime = setInterval(() => {
-          api
-            .getServer()
-            .then((res1) => {
-              this.ljData = res1.data;
-            })
+          api.getServer().then((res1) => {
+            this.ljData = res1.data;
+          });
         }, 10000);
       });
-
     },
     getData() {
-      //主机
-      api.hostManageList().then(res => {
-        this.centerData = res.rows;
-        this.curHostData = res.rows[0]
-        this.getlpopRedisData()
+      // 分区
+      api.zoneList().then(res=>{
+        this.zoneList = res.rows;
       })
+      //主机
+      api.hostManageList().then((res) => {
+        this.centerData = res.rows;
+        this.curHostData = res.rows[0];
+        this.getlpopRedisData();
+      });
       // 警告统计接口
       api.alarmStatisticsList().then((res) => {
-        this.topFiveData.name = res.rows.map((i) => i.status == 1 ? '已处理' : '未处理');
+        this.topFiveData.name = res.rows.map((i) =>
+          i.status == 1 ? "已处理" : "未处理"
+        );
         this.topFiveData.value = res.rows.map((i) => i.total);
-        res.rows.forEach((i) => {
-          this.centerNumData += i.total;
-        });
       });
       // 查询系统状态列表
       api.listSysStatus().then((res) => {
@@ -266,12 +286,10 @@ export default {
           this.sysStatusList.push(i);
         });
       });
-
     },
   },
   destroyed() {
-    this.clearTime()
-
+    this.clearTime();
   },
 };
 </script>

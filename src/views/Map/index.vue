@@ -31,7 +31,7 @@ import { MapboxglLayer } from "maptalks.mapboxgl";
 import roads from "./data/roads.json";
 import InformationPanel from "./Panel/InformationPanel";
 import { obtainZone } from "@/utils/pointiInZone";
-import { wgs84togcj02,wgs84toepsg3857 } from "@/utils/map";
+import { wgs84togcj02, wgs84toepsg3857 } from "@/utils/map";
 
 export default {
   name: "MainMap",
@@ -54,7 +54,7 @@ export default {
         document.documentElement.clientHeight,
       ], //屏幕大小
       MapCenter: null,
-      optionSelectAlarmType:[]
+      optionSelectAlarmType: [],
     };
   },
   components: {
@@ -71,7 +71,7 @@ export default {
         this.srceenSize.screenHeight = document.documentElement.clientHeight; //窗口高度
       })();
     };
-    this.setOptionAlarms()
+    this.setOptionAlarms();
     this.$nextTick(() => {
       this.initMapTalksMap();
     });
@@ -106,10 +106,7 @@ export default {
   },
   methods: {
     handelgive(data = {}) {
-      let arr = obtainZone(
-        data,
-        this.zoneList
-      );
+      let arr = obtainZone(data, this.zoneList);
       arr.forEach((i) => {
         this.getliner(i.id, data);
       });
@@ -256,17 +253,14 @@ export default {
       // })
 
       api.aideDeviceList().then((res) => {
-        this.addMaker(res.rows,'waishe');
+        this.addMaker(res.rows, "waishe");
       });
 
-
-      api.hostManageList().then(res => {
-        this.addMaker(res.rows,'zhuji');
-      })
-
-
+      api.hostManageList().then((res) => {
+        this.addMaker(res.rows, "zhuji");
+      });
     },
-    addMaker(data,type) {
+    addMaker(data, type) {
       var _this = this;
       var el;
       var marker;
@@ -274,7 +268,7 @@ export default {
         data.forEach((item, index) => {
           if (item !== undefined) {
             var lnglat = item.latitude && item.latitude.split("|");
-            if (!lnglat) return
+            if (!lnglat) return;
             // if (index == 0) {
             //   lnglat = [116.38821589024599, 39.97533303800978]
             // } else if (index == 2) {
@@ -289,8 +283,8 @@ export default {
                 altitude: 50,
                 name: item.hostName,
                 labelName: item.hostName,
-                region:item.region||'',
-                hostId:item.hostId||'',
+                region: item.region || "",
+                hostId: item.hostId || "",
                 channelName: item.channelName || "",
                 channelZoneName: item.channelZoneName || "0",
                 // swwl: item.salesamountMaterial,
@@ -323,34 +317,34 @@ export default {
                       _this.isShow = true;
                       _this.myTitleName = element.properties.name;
                       _this.myType = element.properties.type;
-                      if (type == 'zhuji') {
+                      if (type == "zhuji") {
                         _this.myDataList = [
-                        {
-                          fieldName: "主机ID",
-                          value: element.properties.hostId,
-                        },
-                        {
-                          fieldName: "所属地区",
-                          value: element.properties.region,
-                        },
-                      ];
-                      }else{
+                          {
+                            fieldName: "主机ID",
+                            value: element.properties.hostId,
+                          },
+                          {
+                            fieldName: "所属地区",
+                            value: element.properties.region,
+                          },
+                        ];
+                      } else {
                         _this.myDataList = [
-                        {
-                          fieldName: "所属通道",
-                          value: element.properties.channelName,
-                        },
-                        {
-                          fieldName: "所属分区",
-                          value: element.properties.channelZoneName,
-                        },
-                        {
-                          fieldName: "ip地址",
-                          value: element.properties.ip,
-                        },
-                      ];
+                          {
+                            fieldName: "所属通道",
+                            value: element.properties.channelName,
+                          },
+                          {
+                            fieldName: "所属分区",
+                            value: element.properties.channelZoneName,
+                          },
+                          {
+                            fieldName: "ip地址",
+                            value: element.properties.ip,
+                          },
+                        ];
                       }
-                     
+
                       marker = new maptalks.ui.UIMarker(
                         e.target.getCoordinates(),
                         {
@@ -426,7 +420,9 @@ export default {
             let pointData = [];
             resData.forEach((j) => {
               let resData_item = wgs84togcj02(j.split("|"));
-              pointData.push([resData_item[0] * 1, resData_item[1] * 1]);
+              if (resData_item.length) {
+                pointData.push([resData_item[0] * 1, resData_item[1] * 1]);
+              }
             });
             let line = new maptalks.LineString(pointData, {
               id: item.channelZoneId,
@@ -512,7 +508,7 @@ export default {
       let line = this.centerLinesLayer.getGeometryById(id);
 
       line.properties.warningTime = data.warningTime;
-      line.properties.alarmType = _this.getAlarmLabel(data.alarmType) ;
+      line.properties.alarmType = _this.getAlarmLabel(data.alarmType);
       line.setSymbol({ lineColor: "red", lineWidth: 5 });
       line.on(
         "mouseenter",
@@ -554,7 +550,7 @@ export default {
         }, 200)
       );
     },
-   
+
     async addRoadThreeLayer() {
       var _this = this;
       var threeLayer = new ThreeLayer("threeLayerRoad", {
@@ -806,14 +802,13 @@ export default {
       // alert(data);
       for (let a = 0; a < this.optionSelectAlarmType.length; a++) {
         if (data == this.optionSelectAlarmType[a].alarmValue) {
-
           return this.optionSelectAlarmType[a].alarmLabel;
           // this.zones = this.channelList[a].subTreeNodes;
         }
-      };
+      }
     },
     setOptionAlarms() {
-      api.optionsAlarmType().then(response => {
+      api.optionsAlarmType().then((response) => {
         this.optionSelectAlarmType = response.data;
       });
     },

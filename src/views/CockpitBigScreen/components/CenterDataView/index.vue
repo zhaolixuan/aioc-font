@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="thorough">
-      <div v-for="(i, index) in infor" :key="i.hostId" class="thorough_item">
+      <div v-for="(i) in infor" :key="i.hostId" class="thorough_item">
         <span @click="handlerHostClick(i)">{{i.hostName}}：{{ i.hostNo }}</span>
         <!-- <p class="line" :style="`background-color:${index == 0 ? 'yellow' : 'blue'} ;`"></p> -->
         <!-- <p class="name">{{ i.hostName }}</p> -->
@@ -30,18 +30,7 @@ export default {
     return {
       showTable: false,
       id: 1,
-      thoroughList: [
-        {
-          name: "霍尔果斯",
-          color: "blue",
-          index: 0,
-        },
-        {
-          name: "乌鲁木齐",
-          color: "yellow",
-          index: 1,
-        },
-      ],
+      
     };
   },
   created() {

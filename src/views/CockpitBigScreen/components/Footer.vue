@@ -65,7 +65,7 @@
           <dict-tag :options="dict.type.sys_data_status" :value="scope.row.hostId"/>
         </template>
       </el-table-column> -->
-      <el-table-column label="主机名称" align="center" prop="hostName" />
+      <el-table-column label="主机名称" align="center" prop="hostName"  />
       <!-- <el-table-column label="通道id" align="center" prop="channelId">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_data_status" :value="scope.row.channelId"/>
@@ -77,37 +77,37 @@
           <dict-tag :options="dict.type.sys_data_status" :value="scope.row.channelZoneId"/>
         </template>
       </el-table-column> -->
-      <!-- <el-table-column label="分区名称" align="center" prop="channelZoneName" /> -->
+      <el-table-column label="分区名称" align="center" prop="fenquName" />
       <!-- <el-table-column label="警告编号" align="center" prop="alarmId" /> -->
       <!-- <el-table-column label="警告地区" align="center" prop="region" /> -->
-      <el-table-column label="警告类型" align="center" prop="alarmType">
+      <el-table-column label="警告类型" align="center" prop="alarmType" width="100">
         <template slot-scope="scope">
           <el-tag type="info">{{ getAlarmLabel(scope.row.alarmType) }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="告警分类" align="center" prop="alarmCategory">
+      <el-table-column label="告警分类" align="center" prop="alarmCategory" width="100">
         <template slot-scope="scope">
           <el-tag type="info" v-if="scope.row.alarmCategory">{{ getAlarmCategoryLabel(scope.row.alarmCategory) }}</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="起始位置" align="center" prop="startPosition" />
-      <el-table-column label="结束位置" align="center" prop="endPosition" />
+      <el-table-column label="起始位置" align="center" prop="startPosition" width="100" />
+      <el-table-column label="结束位置" align="center" prop="endPosition" width="100"/>
       <!-- <el-table-column label="所在经纬度" align="center" prop="latitude" />
       <el-table-column label="传感数值" align="center" prop="sensorValue" />
       <el-table-column label="报警编码" align="center" prop="alarmCode" /> -->
       <!-- <el-table-column label="报警数值" align="center" prop="alarmValue" /> -->
       <el-table-column label="警告时间" align="center" prop="warningTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.warningTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.warningTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="处理状态" align="center" prop="status">
+      <el-table-column label="处理状态" align="center" prop="status" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.status == '1' ? '已处理' : '未处理' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="100">
         <template slot-scope="scope">
           <el-button size="mini" type="text" v-if="scope.row.status != 1" icon="el-icon-edit"
             @click="handleAlarm(scope.row)">处理</el-button>
