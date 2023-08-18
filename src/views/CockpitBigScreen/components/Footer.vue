@@ -1,6 +1,5 @@
 <template>
   <div class="footer_wrap">
-
     <!-- <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" class="demo-form-inline" >
       <el-form-item label="主机名称" prop="hostId">
         <el-select v-model="queryParams.hostId" placeholder="请选择主机名称" @change="selectChannel" >
@@ -71,7 +70,7 @@
           <dict-tag :options="dict.type.sys_data_status" :value="scope.row.channelId"/>
         </template>
       </el-table-column> -->
-      <el-table-column label="通道名称" align="center" prop="channelName" />
+      <el-table-column label="通道名称" align="center" prop="channelName"  />
       <!-- <el-table-column label="通道分区id" align="center" prop="channelZoneId">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_data_status" :value="scope.row.channelZoneId"/>
@@ -80,38 +79,73 @@
       <el-table-column label="分区名称" align="center" prop="fenquName" />
       <!-- <el-table-column label="警告编号" align="center" prop="alarmId" /> -->
       <!-- <el-table-column label="警告地区" align="center" prop="region" /> -->
-      <el-table-column label="警告类型" align="center" prop="alarmType" width="100">
+      <el-table-column
+        label="警告类型"
+        align="center"
+        prop="alarmType"
+      >
         <template slot-scope="scope">
           <el-tag type="info">{{ getAlarmLabel(scope.row.alarmType) }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="告警分类" align="center" prop="alarmCategory" width="100">
+      <el-table-column
+        label="告警分类"
+        align="center"
+        prop="alarmCategory"
+      >
         <template slot-scope="scope">
-          <el-tag type="info" v-if="scope.row.alarmCategory">{{ getAlarmCategoryLabel(scope.row.alarmCategory) }}</el-tag>
+          <el-tag type="info" v-if="scope.row.alarmCategory">{{
+            getAlarmCategoryLabel(scope.row.alarmCategory)
+          }}</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="起始位置" align="center" prop="startPosition" width="100" />
-      <el-table-column label="结束位置" align="center" prop="endPosition" width="100"/>
+      <el-table-column
+        label="起始位置"
+        align="center"
+        prop="startPosition"
+      />
+      <el-table-column
+        label="结束位置"
+        align="center"
+        prop="endPosition"
+      />
       <!-- <el-table-column label="所在经纬度" align="center" prop="latitude" />
       <el-table-column label="传感数值" align="center" prop="sensorValue" />
       <el-table-column label="报警编码" align="center" prop="alarmCode" /> -->
       <!-- <el-table-column label="报警数值" align="center" prop="alarmValue" /> -->
-      <el-table-column label="警告时间" align="center" prop="warningTime" width="180">
+      <el-table-column
+        label="警告时间"
+        align="center"
+        prop="warningTime"
+        width="180"
+      >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.warningTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          <span>{{
+            parseTime(scope.row.warningTime, "{y}-{m}-{d} {h}:{i}:{s}")
+          }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="处理状态" align="center" prop="status" width="100">
+      <el-table-column label="处理状态" align="center" prop="status" >
         <template slot-scope="scope">
-          <span>{{ scope.row.status == '1' ? '已处理' : '未处理' }}</span>
+          <span>{{ scope.row.status == "1" ? "已处理" : "未处理" }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="100">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+        width="100"
+      >
         <template slot-scope="scope">
-          <el-button size="mini" type="text" v-if="scope.row.status != 1" icon="el-icon-edit"
-            @click="handleAlarm(scope.row)">处理</el-button>
-
+          <el-button
+            size="mini"
+            type="text"
+            v-if="scope.row.status != 1"
+            icon="el-icon-edit"
+            @click="handleAlarm(scope.row)"
+            >处理</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -122,7 +156,7 @@ import { setRedisData, getRedisData, lpopRedisData } from "@/utils/redis";
 
 import api from "@/api/api";
 export default {
-  props: ['alarmList'],
+  props: ["alarmList"],
   data() {
     return {
       // 查询参数
@@ -159,15 +193,11 @@ export default {
       time: null,
     };
   },
-  watch: {
-
-  },
+  watch: {},
   mounted() {
-   
     this.getOptionData();
   },
-  destroyed() {
-  },
+  destroyed() {},
   methods: {
     /** 重置按钮操作 */
     resetQuery() {
@@ -186,8 +216,8 @@ export default {
       // this.getList();
     },
     getOptionData() {
-      this.loadPipleLineInfo()
-      this.setOptionAlarms()
+      this.loadPipleLineInfo();
+      this.setOptionAlarms();
     },
 
     selectChannel(data) {
@@ -195,14 +225,14 @@ export default {
         if (data == this.pipeLineList[a].id) {
           this.channelList = this.pipeLineList[a].subTreeNodes;
         }
-      };
+      }
     },
     selectZone(data) {
       for (let a = 0; a < this.channelList.length; a++) {
         if (data == this.channelList[a].id) {
           this.zones = this.channelList[a].subTreeNodes;
         }
-      };
+      }
     },
     setChannelId(data) {
       this.$set(this.queryParams, this.queryParams.channelZoneId, data);
@@ -210,32 +240,29 @@ export default {
 
     loadPipleLineInfo() {
       //给下拉框赋值，主机、通道、分区等信息
-      api.listPipleLine().then(response => {
+      api.listPipleLine().then((response) => {
         this.pipeLineList = response.data;
       });
     },
     setOptionAlarms() {
-      api.optionsAlarmType().then(response => {
+      api.optionsAlarmType().then((response) => {
         this.optionSelectAlarmType = response.data;
       });
-      api.optionsAlarmCategory().then(response => {
+      api.optionsAlarmCategory().then((response) => {
         this.optionAlarmCategory2 = response.data;
         console.log(this.optionAlarmCategory2);
         // alert("****"+ this.optionAlarmCategory2);
       });
-
     },
     //根据类型值获取警告类型名称
     getAlarmLabel(data) {
-
       // alert(data);
       for (let a = 0; a < this.optionSelectAlarmType.length; a++) {
         if (data == this.optionSelectAlarmType[a].alarmValue) {
-
           return this.optionSelectAlarmType[a].alarmLabel;
           // this.zones = this.channelList[a].subTreeNodes;
         }
-      };
+      }
     },
     //根据告警分类获取告警标签
     getAlarmCategoryLabel(data) {
@@ -246,34 +273,32 @@ export default {
       // alert(optionAlarmCategory2);
       for (let a = 0; a < this.optionAlarmCategory2.length; a++) {
         if (data == this.optionAlarmCategory2[a].alarmValue) {
-
           return this.optionAlarmCategory2[a].alarmLabel;
           // this.zones = this.channelList[a].subTreeNodes;
         }
-      };
+      }
     },
     setOptionALarmCategory(data, flag) {
       //如果警告类型为告警则初始化告警分类下拉框
       if (data == 3) {
-        optionsAlarmCategory().then(response => {
+        optionsAlarmCategory().then((response) => {
           if (flag) {
             this.optionAlarmCategory1 = response.data;
           } else {
             this.isAble = false;
             this.optionAlarmCategory = response.data;
-          };
+          }
         });
       } else {
         if (!flag) {
           this.queryParams.alarmCategory = "";
           this.isAble = true;
         }
-      };
-
+      }
     },
 
     handleAlarm(data) {
-      this.$emit('handleAlarm', data)
+      this.$emit("handleAlarm", data);
     },
   },
 };
@@ -333,8 +358,25 @@ export default {
 
     .el-table__body-wrapper {
       height: 1.8rem;
-      overflow: hidden;
-      overflow-y: auto;
+      overflow: auto;
+      // overflow-y: auto;
+    }
+    /* 横向滚动条样式 */
+    .el-table__body-wrapper::-webkit-scrollbar {
+      width: 5px; /* 设置滚动条宽度 */
+      height: 3px; 
+    }
+
+    .el-table__body-wrapper::-webkit-scrollbar-track {
+      background-color: transparent; /* 设置滚动条背景颜色 */
+    }
+
+    .el-table__body-wrapper::-webkit-scrollbar-thumb {
+      background-color: #e2feff; /* 设置滚动条滑块颜色 */
+    }
+
+    .el-table__body-wrapper::-webkit-scrollbar-thumb:hover {
+      background-color: #555; /* 设置滚动条滑块在鼠标悬停时的颜色 */
     }
   }
 }

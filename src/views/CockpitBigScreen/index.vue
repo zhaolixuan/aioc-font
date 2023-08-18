@@ -171,7 +171,7 @@ export default {
       if (this.lpopTime) clearInterval(this.lpopTime);
       api.realTimeData({ step: 1 }).then((res) => {
         if (Object.keys(res.data).length) {
-          let data = JSON.parse(res.data[this.curHostData.hostId][0]);
+          let data = JSON.parse(res.data[this.curHostData.hostNo][0]);
           data.forEach((item, index) => {
             let xdata = [];
             for (let index = 0; index < item.sensor.length; index++) {
@@ -185,7 +185,7 @@ export default {
         this.lpopTime = setInterval(() => {
           api.realTimeData({ step: 1 }).then((res1) => {
             if (Object.keys(res1.data).length) {
-              let data = JSON.parse(res1.data[this.curHostData.hostId][0]);
+              let data = JSON.parse(res1.data[this.curHostData.hostNo][0]);
               data.forEach((item, index) => {
                 let xdata = [];
                 for (let index = 0; index < item.sensor.length; index++) {
