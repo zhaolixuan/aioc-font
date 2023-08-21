@@ -267,7 +267,14 @@ export default {
       if (data.length > 0) {
         data.forEach((item, index) => {
           if (item !== undefined) {
-            var lnglat = item.latitude && item.latitude.split("|");
+            
+            var lnglat 
+            if (type == 'zhuji') {
+             lnglat = item.latiscope && item.latiscope.split("|");
+              
+            }else if(type == 'waishe'){
+              lnglat = item.latitude && item.latitude.split("|");
+            }
             if (!lnglat) return;
             // if (index == 0) {
             //   lnglat = [116.38821589024599, 39.97533303800978]
