@@ -1,4 +1,5 @@
 export function wgs84togcj02([lng, lat]) {
+  // return [lng, lat]
   // 定义一些常量
   var PI = 3.1415926535897932384626;
   var a = 6378245.0;
@@ -74,6 +75,24 @@ export function wgs84togcj02([lng, lat]) {
     return [mglng, mglat];
   }
 }
+
+
+let x_pi = 3.14159265358979324 * 3000.0 / 180.0;
+export function ba_gd([bd_lon,bd_lat]){
+     let  x = Number(bd_lon- 0.0065) 
+     let y = Number( bd_lat- 0.006)
+     let z = Number(Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * x_pi))
+     let theta = Number(Math.atan2(y, x) - 0.000003 * Math.cos(x * x_pi))
+     const gd_lon  = Number(z * Math.cos(theta))
+     const gd_lat  = Number(z * Math.sin(theta))
+     console.log(bd_lon);
+     console.log(bd_lat);
+     return [gd_lon,gd_lat]
+}
+
+
+
+
 
 // 引入proj4js库
 import proj4 from "proj4";

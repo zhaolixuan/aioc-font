@@ -1,7 +1,7 @@
 <template>
   <div class="LeaderCockpit">
     <div class="mask_img"><img src="./assets/mask_bg.png" /></div>
-    <Map ref="map" class="map" :center="curHostData.latscope"></Map>
+    <Map ref="map" class="map" :mapCenter="mapCenter"></Map>
     <div class="section"></div>
     <div class="header">
       <Header :infor="topData" />
@@ -128,7 +128,8 @@ export default {
       lpopTime: null,
       serveTime: null,
       curHostData: {},
-      zoneList:[]
+      zoneList: [],
+      mapCenter:''
     };
   },
   mounted() {
@@ -158,6 +159,8 @@ export default {
     handlerHostClick(data) {
       if (this.curHostData.hostId == data.hostId) return;
       this.curHostData = data;
+      this.mapCenter = data.latiscope
+      console.log('this.mapCenter',this.mapCenter);
       this.getlpopRedisData();
     },
     // foot点击处理时间
@@ -171,30 +174,34 @@ export default {
       if (this.lpopTime) clearInterval(this.lpopTime);
       api.realTimeData({ step: 1 }).then((res) => {
         if (Object.keys(res.data).length) {
-          let data = JSON.parse(res.data[this.curHostData.hostNo][0]);
-          data.forEach((item, index) => {
-            let xdata = [];
-            for (let index = 0; index < item.sensor.length; index++) {
-              xdata.push(index);
-            }
-            this.BusinessIncome.name = xdata;
-            this.BusinessIncome.value2[index].name = item.channel;
-            this.BusinessIncome.value2[index].data = item.sensor;
-          });
+          if (res.data[this.curHostData.hostNo]) {
+            let data = JSON.parse(res.data[this.curHostData.hostNo][0]);
+            data.forEach((item, index) => {
+              let xdata = [];
+              for (let index = 0; index < item.sensor.length; index++) {
+                xdata.push(index);
+              }
+              this.BusinessIncome.name = xdata;
+              this.BusinessIncome.value2[index].name = item.channel;
+              this.BusinessIncome.value2[index].data = item.sensor;
+            });
+          }
         }
         this.lpopTime = setInterval(() => {
           api.realTimeData({ step: 1 }).then((res1) => {
             if (Object.keys(res1.data).length) {
-              let data = JSON.parse(res1.data[this.curHostData.hostNo][0]);
-              data.forEach((item, index) => {
-                let xdata = [];
-                for (let index = 0; index < item.sensor.length; index++) {
-                  xdata.push(index);
-                }
-                this.BusinessIncome.name = xdata;
-                this.BusinessIncome.value2[index].name = item.channel;
-                this.BusinessIncome.value2[index].data = item.sensor;
-              });
+              if (res1.data[this.curHostData.hostNo]) {
+                let data = JSON.parse(res1.data[this.curHostData.hostNo][0]);
+                data.forEach((item, index) => {
+                  let xdata = [];
+                  for (let index = 0; index < item.sensor.length; index++) {
+                    xdata.push(index);
+                  }
+                  this.BusinessIncome.name = xdata;
+                  this.BusinessIncome.value2[index].name = item.channel;
+                  this.BusinessIncome.value2[index].data = item.sensor;
+                });
+              }
             }
           });
         }, 1000);
@@ -209,23 +216,27 @@ export default {
       };
       api.alarmList(params).then((res) => {
         res.rows.forEach((element) => {
-          element.fenquName =  obtainZone(element, this.zoneList).map(i=>i.name).join(',')
+          element.fenquName = obtainZone(element, this.zoneList)
+            .map((i) => i.name)
+            .join(",");
           if (element.status != 1) {
             this.$refs.map.handelgive(element);
           }
         });
         this.alarmList = res.rows || [{}];
-        this.centerNumData = res.rows.length
+        this.centerNumData = res.rows.length;
         this.time = setInterval(() => {
           api.alarmList(params).then((response) => {
             response.rows.forEach((element) => {
-          element.fenquName =  obtainZone(element, this.zoneList).map(i=>i.name).join(',')
+              element.fenquName = obtainZone(element, this.zoneList)
+                .map((i) => i.name)
+                .join(",");
               if (element.status != 1) {
                 this.$refs.map.handelgive(element);
               }
             });
             this.alarmList = response.rows || [{}];
-            this.centerNumData = response.rows.length
+            this.centerNumData = response.rows.length;
           });
         }, 3000);
       });
@@ -264,13 +275,15 @@ export default {
     },
     getData() {
       // 分区
-      api.zoneList().then(res=>{
+      api.zoneList().then((res) => {
         this.zoneList = res.rows;
-      })
+      });
       //主机
       api.hostManageList().then((res) => {
         this.centerData = res.rows;
         this.curHostData = res.rows[0];
+        this.mapCenter = this.curHostData.latiscope
+        console.log('get分区',this.mapCenter);
         this.getlpopRedisData();
       });
       // 警告统计接口

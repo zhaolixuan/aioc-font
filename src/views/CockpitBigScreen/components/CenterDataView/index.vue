@@ -7,8 +7,10 @@
       </div>
     </div>
     <div class="thorough">
-      <div v-for="(i) in infor" :key="i.hostId" class="thorough_item">
-        <span @click="handlerHostClick(i)">{{i.hostName}}：{{ i.hostNo }}</span>
+      <div v-for="i in infor" :key="i.hostId" class="thorough_item">
+        <span :class="curHost == i.hostId?'cative':''" @click="handlerHostClick(i)"
+          >{{ i.hostName }}：{{ i.hostNo }}</span
+        >
         <!-- <p class="line" :style="`background-color:${index == 0 ? 'yellow' : 'blue'} ;`"></p> -->
         <!-- <p class="name">{{ i.hostName }}</p> -->
       </div>
@@ -30,24 +32,24 @@ export default {
     return {
       showTable: false,
       id: 1,
-      
+      curHost: null,
     };
   },
-  created() {
-
-  },
+  created() {},
   watch: {
     infor: {
       deep: true,
-      handler() {
-
-      },
+      handler(n) {},
     },
   },
+  mounted() {
+    this.curHost = this.infor[0].hostId;
+  },
   methods: {
-    handlerHostClick(data){
-      this.$emit('handlerHostClick',data)
-    }
+    handlerHostClick(data) {
+      this.curHost = data.hostId;
+      this.$emit("handlerHostClick", data);
+    },
   },
 };
 </script>
@@ -178,9 +180,10 @@ export default {
     .thorough_item {
       display: flex;
       align-items: center;
-      font-size: .14rem;
-cursor: pointer;
-      span {
+      font-size: 0.14rem;
+      cursor: pointer;
+      color: #fff;
+      .cative {
         color: #a8e7f6;
         // width: 0.7rem;
       }
@@ -191,9 +194,10 @@ cursor: pointer;
 
       .line {
         height: 3px;
-        width: .5rem;
-        margin-right: .1rem;
+        width: 0.5rem;
+        margin-right: 0.1rem;
       }
     }
   }
-}</style>
+}
+</style>

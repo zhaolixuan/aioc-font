@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Leader from '@/views/CockpitBigScreen/index'
 import Login from '@/views/login/index'
+import map from '@/views/gdmap/index'
 
 Vue.use(Router)
 
@@ -9,7 +10,7 @@ const router = new Router({
     // mode: 'history',
     routes: [
         {
-            path: '/',
+            path: '/index',
             name: 'Leader',
             component: Leader
         },
@@ -17,6 +18,11 @@ const router = new Router({
             path: '/login',
             name: 'Login',
             component: Login
+        },
+        {
+            path: '/',
+            name: 'map',
+            component: map
         },
 
         

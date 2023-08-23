@@ -50,7 +50,6 @@ export default {
   name: "informationPanel",
   props: {
     titleName: [String],
-    type: [String], //street,other
     dataList: [Array],
   },
   components: {},

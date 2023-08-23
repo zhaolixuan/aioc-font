@@ -35,7 +35,7 @@ import { wgs84togcj02, wgs84toepsg3857 } from "@/utils/map";
 
 export default {
   name: "MainMap",
-
+  props:['mapCenter'],
   data() {
     return {
       rotateObj: null, // 地图旋转
@@ -77,9 +77,10 @@ export default {
     });
   },
   watch: {
-    center(n) {
-      // console.log("!!!!!!!!!!!", n);
-      let center = n.split(",");
+    mapCenter(data) {
+      if (!data) return;
+      console.log("!!!!!!!!!!!", data);
+      let center = data.split("|");
       if (this.maptalksMap) {
         this.MapCenter = wgs84togcj02(center);
         // console.log(' this.MapCenter', this.MapCenter);
@@ -87,9 +88,9 @@ export default {
           {
             // center: [87.617733, 43.792818],
             center: this.MapCenter,
-            zoom: 8.5,
-            pitch: 0,
-            bearing: 0,
+            zoom: 13,
+            pitch: 60,
+            bearing: 32,
           },
           {
             duration: 2000,
@@ -267,12 +268,10 @@ export default {
       if (data.length > 0) {
         data.forEach((item, index) => {
           if (item !== undefined) {
-            
-            var lnglat 
-            if (type == 'zhuji') {
-             lnglat = item.latiscope && item.latiscope.split("|");
-              
-            }else if(type == 'waishe'){
+            var lnglat;
+            if (type == "zhuji") {
+              lnglat = item.latiscope && item.latiscope.split("|");
+            } else if (type == "waishe") {
               lnglat = item.latitude && item.latitude.split("|");
             }
             if (!lnglat) return;
@@ -515,6 +514,8 @@ export default {
       let line = this.centerLinesLayer.getGeometryById(id);
 
       line.properties.warningTime = data.warningTime;
+      line.properties.channelStartNum = data.startPosition;
+      line.properties.channelEndNum = data.endPosition;
       line.properties.alarmType = _this.getAlarmLabel(data.alarmType);
       line.setSymbol({ lineColor: "red", lineWidth: 5 });
       line.on(
