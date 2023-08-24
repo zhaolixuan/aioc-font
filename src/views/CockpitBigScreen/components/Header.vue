@@ -3,8 +3,12 @@
     <div class="address">
       </div>
     <div class="infor" style="padding-left: 5%; box-sizing: border-box">
-      <p class="item_infor"></p>
-      <p class="item_infor"></p>
+      <p class="item_infor">
+        <el-button size="small" class="warningBtn" @click="handelrOpenAnfang">{{ openAnfang ? '一键安防': '一键撤防' }}</el-button>
+      </p>
+      <p class="item_infor">
+        <el-button size="small" class="warningBtn" @click="handelrOpenShi">{{ openShishi ? '关闭实时监控': '开启实时监控' }}</el-button>
+      </p>
     </div>
     <p class="title">周界预警监测系统</p>
     <div class="infor right">
@@ -42,6 +46,8 @@ export default {
       currentData: "",
       currentTime: "",
       time: null,
+      openShishi:true,
+      openAnfang:true
     };
   },
   created() {},
@@ -60,6 +66,14 @@ export default {
     }, 1000);
   },
   methods: {
+    handelrOpenShi(){
+      this.openShishi = !this.openShishi
+      this.$emit('handelrOpenShi', this.openShishi )
+    },
+    handelrOpenAnfang(){
+      this.openAnfang = !this.openAnfang
+      this.$emit('handelrOpenAnfang', this.openAnfang )
+    },
     handleLogin(command) {
       this.loginOut()
     },

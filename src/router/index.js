@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Leader from '@/views/CockpitBigScreen/index'
 import Login from '@/views/login/index'
-import map from '@/views/gdmap/index'
 
 Vue.use(Router)
 

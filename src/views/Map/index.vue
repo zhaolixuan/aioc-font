@@ -17,7 +17,7 @@ import api from "@/api/api";
 import AMapLoader from "@amap/amap-jsapi-loader";
 import { debounce, throttle } from "loadsh";
 import { ba_gd, wgs84togcj02 } from "@/utils/map";
-import InformationPanel from "@/views/Map/Panel/InformationPanel";
+import InformationPanel from "./Panel/InformationPanel";
 import { obtainZone } from "@/utils/pointiInZone";
 
 window._AMapSecurityConfig = {
@@ -50,7 +50,7 @@ export default {
       myDataList: [],
       infoWindow: null,
       optionSelectAlarmType: null,
-      zoneList:null
+      zoneList:[]
     };
   },
   watch: {
@@ -93,7 +93,7 @@ export default {
       }).then((AMap) => {
         this.map = new AMap.Map("map", {
           zoom: this.zoom,
-          center: this.mapCenter.split('|'),
+          center: this.mapCenter && this.mapCenter.split('|'),
           mapStyle: "amap://styles/darkblue",
           showIndoorMap: false,
         });
@@ -291,18 +291,18 @@ export default {
         _this.myDataList = [
           {
             fieldName: "报警分区：",
-            value: element.properties.name,
+            value: properties.name,
           },
           {
             fieldName: "报警点：",
             value:
-              element.properties.channelStartNum +
+              properties.channelStartNum +
               "-" +
-              element.properties.channelEndNum,
+              properties.channelEndNum,
           },
           {
             fieldName: "报警类型",
-            value: element.properties.alarmType,
+            value: properties.alarmType,
           },
         ];
         _this.infoWindow.open(_this.map, [e.lnglat.lng, e.lnglat.lat]);

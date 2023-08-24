@@ -4,43 +4,29 @@
     <Map ref="map" class="map" :mapCenter="mapCenter"></Map>
     <div class="section"></div>
     <div class="header">
-      <Header :infor="topData" />
+      <Header :infor="topData" @handelrOpenShi="handelrOpenShi" @handelrOpenAnfang="handelrOpenAnfang" />
     </div>
     <div class="left_wrap">
-      <BusinessIncome
-        :infor="BusinessIncome"
-        @handelrOpenShi="handelrOpenShi"
-      ></BusinessIncome>
+      <BusinessIncome :infor="BusinessIncome" @handelrCheck="handelrCheck" :buttonShow="true"></BusinessIncome>
       <TrueTopTen></TrueTopTen>
       <NotGoodNetWork :infor="topFiveData"></NotGoodNetWork>
     </div>
     <div class="right_wrap">
-      <TotalSaleMoney
-        :infor="ljData"
-        :flag="flag"
-        @changeFlag="changeFlag"
-      ></TotalSaleMoney>
+      <TotalSaleMoney :infor="ljData" :flag="flag" @changeFlag="changeFlag"></TotalSaleMoney>
       <ShopNumber :infor="sysStatusList"></ShopNumber>
       <GoodsTypeZB></GoodsTypeZB>
     </div>
     <div class="center">
-      <CenterDataView
-        :infor="centerData"
-        :num="centerNumData"
-        @handlerHostClick="handlerHostClick"
-      ></CenterDataView>
+      <CenterDataView :infor="centerData" :num="centerNumData" @handlerHostClick="handlerHostClick" :curHostData="curHostData"></CenterDataView>
     </div>
     <div class="footer">
       <Footer :alarmList="alarmList" @handleAlarm="handleAlarm" />
     </div>
 
     <el-dialog title="实时波峰图" :visible.sync="RealTimeDialog" width="50%">
-      <real-time-peak-graph></real-time-peak-graph>
-
+      <BusinessIncome :infor="BusinessIncome" :buttonShow="false"></BusinessIncome>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="RealTimeDialog = false"
-          >关闭</el-button
-        >
+        <el-button type="primary" @click="RealTimeDialog = false">关闭</el-button>
       </span>
     </el-dialog>
   </div>
@@ -134,6 +120,10 @@ export default {
     this.getTimeData();
   },
   methods: {
+    // 左上角波纹图放大
+    handelrCheck() {
+      this.RealTimeDialog = true
+    },
     handelrOpenShi(bool) {
       if (bool) {
         // 开启
@@ -143,10 +133,20 @@ export default {
         this.clearTime();
       }
     },
+    handelrOpenAnfang(bool) {
+      if (bool) {
+        // 开启安防 取消所有报警
+      } else {
+        // 关闭安防 开启报警
+      }
+    },
+
     clearTime() {
       clearInterval(this.lpopTime);
+
       clearInterval(this.time);
       clearInterval(this.serveTime);
+      this.lpopTime = this.time = this.serveTime = null
     },
     getTimeData() {
       this.getlpopRedisData();
@@ -220,7 +220,8 @@ export default {
             this.$refs.map.handelgive(element);
           }
         });
-        this.alarmList = res.rows.map((i) => i.status != 1);
+        this.alarmList = res.rows.filter((i) => i.status != 1);
+        
         this.centerNumData = this.alarmList.length;
         this.time = setInterval(() => {
           api.alarmList(params).then((response) => {
@@ -232,7 +233,7 @@ export default {
                 this.$refs.map.handelgive(element);
               }
             });
-            this.alarmList = response.rows.map((i) => i.status != 1);
+            this.alarmList = response.rows.filter((i) => i.status != 1);
             this.centerNumData = this.alarmList.length;
           });
         }, 3000);
@@ -255,11 +256,11 @@ export default {
             }
           });
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     getServe() {
       // 获取服务信息
-      if (this.serveTime) clearInterval(this.lpopTime);
+      if (this.serveTime) clearInterval(this.serveTime);
 
       api.getServer().then((res) => {
         this.ljData = res.data;
@@ -280,8 +281,6 @@ export default {
         this.centerData = res.rows;
         this.curHostData = res.rows[0];
         this.mapCenter = this.curHostData.latiscope;
-        console.log("get分区", this.mapCenter);
-        this.getlpopRedisData();
       });
       // 警告统计接口
       api.alarmStatisticsList().then((res) => {
@@ -624,5 +623,19 @@ export default {
 
 .title_box_2 {
   margin-left: 75%;
+}
+
+/deep/ .el-dialog__header {
+  display: flex;
+}
+
+.el-dialog__footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

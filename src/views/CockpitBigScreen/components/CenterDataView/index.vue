@@ -8,11 +8,8 @@
     </div>
     <div class="thorough">
       <div v-for="i in infor" :key="i.hostId" class="thorough_item">
-        <span
-          :class="curHost == i.hostId ? 'cative' : ''"
-          @click="handlerHostClick(i)"
-          >{{ i.hostName }}：{{ i.hostNo }}</span
-        >
+        <span :class="curHost == i.hostId ? 'cative' : ''" @click="handlerHostClick(i)">{{ i.hostName }}：{{ i.hostNo
+        }}</span>
         <!-- <p class="line" :style="`background-color:${index == 0 ? 'yellow' : 'blue'} ;`"></p> -->
         <!-- <p class="name">{{ i.hostName }}</p> -->
       </div>
@@ -29,6 +26,9 @@ export default {
     num: {
       type: Number,
     },
+    curHostData: {
+      type: Object
+    }
   },
   data() {
     return {
@@ -37,16 +37,18 @@ export default {
       curHost: null,
     };
   },
-  created() {},
+  created() { },
   watch: {
     infor: {
       deep: true,
-      handler(n) {},
+      handler(n) { },
     },
+    curHostData(n){
+      this.curHost  = n.hostId
+    }
   },
   mounted() {
-    console.log(this.infor);
-    this.curHost = this.infor && this.infor[0].hostId;
+   
   },
   methods: {
     handlerHostClick(data) {
@@ -186,6 +188,7 @@ export default {
       font-size: 0.14rem;
       cursor: pointer;
       color: #fff;
+
       .cative {
         color: #a8e7f6;
         // width: 0.7rem;
