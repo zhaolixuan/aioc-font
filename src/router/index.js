@@ -10,7 +10,7 @@ const router = new Router({
     // mode: 'history',
     routes: [
         {
-            path: '/index',
+            path: '/',
             name: 'Leader',
             component: Leader
         },
@@ -19,11 +19,11 @@ const router = new Router({
             name: 'Login',
             component: Login
         },
-        {
-            path: '/',
-            name: 'map',
-            component: map
-        },
+        // {
+        //     path: '/',
+        //     name: 'map',
+        //     component: map
+        // },
 
         
 

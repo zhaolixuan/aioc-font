@@ -85,8 +85,6 @@ export function ba_gd([bd_lon,bd_lat]){
      let theta = Number(Math.atan2(y, x) - 0.000003 * Math.cos(x * x_pi))
      const gd_lon  = Number(z * Math.cos(theta))
      const gd_lat  = Number(z * Math.sin(theta))
-     console.log(bd_lon);
-     console.log(bd_lat);
      return [gd_lon,gd_lat]
 }
 
@@ -109,7 +107,6 @@ const lat = 30.6789;
 
 export function wgs84toepsg3857([lng, lat]) {
   const [x, y] = transform.forward([lng, lat]);
-  console.log(`WGS84坐标(${lng}, ${lat}) 转换为 EPSG:3857坐标 (${x}, ${y})`);
   return [x, y];
 }
 

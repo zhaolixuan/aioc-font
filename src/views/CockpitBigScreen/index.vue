@@ -57,10 +57,7 @@ import TotalSaleMoney from "./components/TotalSaleMoney";
 import GoodsTypeZB from "./components/GoodsTypeZB";
 import ShopNumber from "./components/ShopNumber";
 import RealTimePeakGraph from "./components/RealTimePeakGraph";
-
 import Map from "../Map/index.vue";
-import { parseTime } from "@/utils/mounttai";
-import { setRedisData, getRedisData, lpopRedisData } from "@/utils/redis";
 import { obtainZone } from "@/utils/pointiInZone";
 
 export default {
@@ -129,7 +126,7 @@ export default {
       serveTime: null,
       curHostData: {},
       zoneList: [],
-      mapCenter:''
+      mapCenter: "",
     };
   },
   mounted() {
@@ -160,7 +157,6 @@ export default {
       if (this.curHostData.hostId == data.hostId) return;
       this.curHostData = data;
       this.mapCenter = data.latiscope
-      console.log('this.mapCenter',this.mapCenter);
       this.getlpopRedisData();
     },
     // foot点击处理时间
@@ -215,6 +211,7 @@ export default {
         pageSize: 1000,
       };
       api.alarmList(params).then((res) => {
+        if (!res.rows.length) return
         res.rows.forEach((element) => {
           element.fenquName = obtainZone(element, this.zoneList)
             .map((i) => i.name)
@@ -223,8 +220,8 @@ export default {
             this.$refs.map.handelgive(element);
           }
         });
-        this.alarmList = res.rows || [{}];
-        this.centerNumData = res.rows.length;
+        this.alarmList = res.rows.map((i) => i.status != 1);
+        this.centerNumData = this.alarmList.length;
         this.time = setInterval(() => {
           api.alarmList(params).then((response) => {
             response.rows.forEach((element) => {
@@ -235,8 +232,8 @@ export default {
                 this.$refs.map.handelgive(element);
               }
             });
-            this.alarmList = response.rows || [{}];
-            this.centerNumData = response.rows.length;
+            this.alarmList = response.rows.map((i) => i.status != 1);
+            this.centerNumData = this.alarmList.length;
           });
         }, 3000);
       });
@@ -250,7 +247,7 @@ export default {
         .then(() => {
           api.updateAlarm({ alarmId: data.alarmId, status: 1 }).then((res) => {
             if (res && res.code == 200) {
-              data.status = 1;
+              this.getList();
               this.$message({
                 type: "success",
                 message: "处理成功!",
@@ -282,8 +279,8 @@ export default {
       api.hostManageList().then((res) => {
         this.centerData = res.rows;
         this.curHostData = res.rows[0];
-        this.mapCenter = this.curHostData.latiscope
-        console.log('get分区',this.mapCenter);
+        this.mapCenter = this.curHostData.latiscope;
+        console.log("get分区", this.mapCenter);
         this.getlpopRedisData();
       });
       // 警告统计接口

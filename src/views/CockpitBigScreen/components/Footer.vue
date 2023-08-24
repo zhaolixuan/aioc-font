@@ -1,84 +1,13 @@
 <template>
   <div class="footer_wrap">
-    <!-- <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" class="demo-form-inline" >
-      <el-form-item label="主机名称" prop="hostId">
-        <el-select v-model="queryParams.hostId" placeholder="请选择主机名称" @change="selectChannel" >
-          <el-option
-            v-for="(host,index) in pipeLineList"
-            :key="host.id"
-            :label="host.name"
-            :value="host.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="通道名称" prop="channelId">
-        <el-select v-model="queryParams.channelId" placeholder="请选择通道名称" @change="selectZone" >
-          <el-option
-            v-for="(channel,index) in channelList"
-            :key="channel.id"
-            :label="channel.name"
-            :value="channel.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="分区名称" prop="channelZoneId">
-        <el-select v-model="queryParams.channelZoneId" placeholder="请选择分区名称" @change="setChannelId">
-          <el-option
-            v-for="(zone,index) in zones"
-            :key="zone.id"
-            :label="zone.name"
-            :value="zone.id"
-          />
-        </el-select>
-      </el-form-item>
-     <el-form-item label="警告类型" prop="alarmType">
-        <el-select v-model="queryParams.alarmType" placeholder="请选择警告类型" @change="setOptionALarmCategory($event,false)" >
-          <el-option
-            v-for="(item,index) in optionSelectAlarmType"
-            :key="item.alarmValue"
-            :label="item.alarmLabel"
-            :value="item.alarmValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="告警分类" prop="alarmCategory">
-          <el-select v-model="queryParams.alarmCategory" placeholder="请输入告警分类"  clearable  :disabled="isAble">
-          <el-option
-            v-for="(item,index) in optionAlarmCategory"
-            :key="item.alarmValue"
-            :label="item.alarmLabel"
-            :value="item.alarmValue"
-          />
-        </el-select>
-        </el-form-item>
-
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form> -->
-
+ 
     <el-table :data="alarmList">
-      <!-- <el-table-column label="主机id" align="center" prop="hostId">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_data_status" :value="scope.row.hostId"/>
-        </template>
-      </el-table-column> -->
+   
       <el-table-column label="主机名称" align="center" prop="hostName"  />
-      <!-- <el-table-column label="通道id" align="center" prop="channelId">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_data_status" :value="scope.row.channelId"/>
-        </template>
-      </el-table-column> -->
+     
       <el-table-column label="通道名称" align="center" prop="channelName"  />
-      <!-- <el-table-column label="通道分区id" align="center" prop="channelZoneId">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_data_status" :value="scope.row.channelZoneId"/>
-        </template>
-      </el-table-column> -->
+     
       <el-table-column label="分区名称" align="center" prop="fenquName" />
-      <!-- <el-table-column label="警告编号" align="center" prop="alarmId" /> -->
-      <!-- <el-table-column label="警告地区" align="center" prop="region" /> -->
       <el-table-column
         label="警告类型"
         align="center"
@@ -110,10 +39,6 @@
         align="center"
         prop="endPosition"
       />
-      <!-- <el-table-column label="所在经纬度" align="center" prop="latitude" />
-      <el-table-column label="传感数值" align="center" prop="sensorValue" />
-      <el-table-column label="报警编码" align="center" prop="alarmCode" /> -->
-      <!-- <el-table-column label="报警数值" align="center" prop="alarmValue" /> -->
       <el-table-column
         label="警告时间"
         align="center"

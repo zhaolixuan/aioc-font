@@ -8,7 +8,9 @@
     </div>
     <div class="thorough">
       <div v-for="i in infor" :key="i.hostId" class="thorough_item">
-        <span :class="curHost == i.hostId?'cative':''" @click="handlerHostClick(i)"
+        <span
+          :class="curHost == i.hostId ? 'cative' : ''"
+          @click="handlerHostClick(i)"
           >{{ i.hostName }}：{{ i.hostNo }}</span
         >
         <!-- <p class="line" :style="`background-color:${index == 0 ? 'yellow' : 'blue'} ;`"></p> -->
@@ -43,7 +45,8 @@ export default {
     },
   },
   mounted() {
-    this.curHost = this.infor[0].hostId;
+    console.log(this.infor);
+    this.curHost = this.infor && this.infor[0].hostId;
   },
   methods: {
     handlerHostClick(data) {
