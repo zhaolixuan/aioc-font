@@ -16,7 +16,7 @@
 	.page .el-dialog,
 	.el-pager li {
 	  background: none;
-	  border: 1px solid #0257a8;
+	  /* border: 1px solid #0257a8; */
 	  min-width: 0.42rem;
 	  font-weight: normal;
 	  border-left: none;
@@ -28,7 +28,7 @@
 	.page .el-pagination .btn-next,
 	.el-pagination .btn-prev {
 	  background: none;
-	  border: 1px solid #0257a8;
+	  /* border: 1px solid #0257a8; */
 	  color: #fff;
 	}
 	.page .el-pagination button:disabled {

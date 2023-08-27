@@ -60,7 +60,7 @@
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
-        width="100"
+        width="200"
       >
         <template slot-scope="scope">
           <el-button
@@ -70,6 +70,13 @@
             icon="el-icon-edit"
             @click="handleAlarm(scope.row)"
             >处理</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="handlerboxin(scope.row)"
+            >查看波形图</el-button
           >
         </template>
       </el-table-column>
@@ -225,6 +232,10 @@ export default {
     handleAlarm(data) {
       this.$emit("handleAlarm", data);
     },
+    handlerboxin(data) {
+      this.$emit("handlerboxin", data);
+    },
+    
   },
 };
 </script>

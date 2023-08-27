@@ -4,7 +4,7 @@
       </div>
     <div class="infor" style="padding-left: 5%; box-sizing: border-box">
       <p class="item_infor">
-        <el-button size="small" class="warningBtn" @click="handelrOpenAnfang">{{ openAnfang ? '一键安防': '一键撤防' }}</el-button>
+        <el-button size="small" class="warningBtn" @click="handelrOpenAnfang">{{ openAnfang ? '一键撤防': '一键布防' }}</el-button>
       </p>
       <p class="item_infor">
         <el-button size="small" class="warningBtn" @click="handelrOpenShi">{{ openShishi ? '关闭实时监控': '开启实时监控' }}</el-button>

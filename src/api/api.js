@@ -79,6 +79,15 @@ export default {
       method: "get"
     });
   },
+  alarmRealTimeData(query) {
+    return request({
+      url: "/bussiness/alarmRealTimeData/list",
+      method: "get",
+      params: query
+    });
+  },
+
+
   // 外设管理接口
   aideDeviceList() {
     return request({
@@ -212,9 +221,23 @@ export default {
       method: 'get',
       params: params
     })
-  }
- 
+  },
 
+
+
+  systemconfig() {
+    return request({
+      url: 'system/config/103',
+      method: 'get',
+    })
+  },
+
+  systemconfig() {
+    return request({
+      url: 'system/config/103',
+      method: 'get',
+    })
+  },
 
 
 

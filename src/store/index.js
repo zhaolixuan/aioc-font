@@ -12,33 +12,36 @@ export default new vuex.Store({
     activeTitle: '智慧运营管理中心',
     dialogVisible: false,
     isVisibleFirst: false,
-    isVisibleSecond: false
-
+    isVisibleSecond: false,
+    businessIncometTitle:'',
   },
- 
+  
   mutations: { // 更改state状态
-    setActiveKey (state, value) {
+    setBusinessIncometTitle(state, value) {
+      state.businessIncometTitle = value
+    },
+    setActiveKey(state, value) {
       state.activeKey = value
     },
-    setActiveName (state, value) {
+    setActiveName(state, value) {
       state.activeName = value
     },
-    setDialogVisible (state, value) {
+    setDialogVisible(state, value) {
       state.dialogVisible = value
     },
-    setTitle (state, value) {
+    setTitle(state, value) {
       state.title = value
     },
-    setActiveTitle (state, value) {
+    setActiveTitle(state, value) {
       state.activeTitle = value
     },
-    setIndex(state,value){
+    setIndex(state, value) {
       state.index = value;
     },
-    isVisibleFirst(state,value){
+    isVisibleFirst(state, value) {
       state.isVisibleFirst = value;
     },
-    isVisibleSecond(state,value){
+    isVisibleSecond(state, value) {
       state.isVisibleSecond = value;
     }
   },

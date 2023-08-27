@@ -206,6 +206,7 @@ export default {
       });
     },
     addline() {
+      this.lines = []
       var _this = this;
       api.zoneList().then((res) => {
         if (!res.rows.length) return;

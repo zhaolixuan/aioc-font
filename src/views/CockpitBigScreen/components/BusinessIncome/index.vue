@@ -1,7 +1,7 @@
 <template>
   <div class="BusinessIncome_wrap">
     <div class="card_wrap">
-      <norm title="光路质量" :icon="1" />
+      <norm :title="businessIncometTitle" :icon="1" />
       <el-button v-if="buttonShow" size="small" class="warningBtn" @click="handelrCheck">查看大图</el-button>
     </div>
     <div class="scroll">
@@ -24,6 +24,20 @@ export default {
     buttonShow: {
       type: Boolean,
       default: true
+    }
+  },
+  computed:{
+    businessIncometTitle () {
+      return this.$store.state.businessIncometTitle || ''
+    },
+    computedOptions() {
+      let option = this.defaultOptions
+      option.series = this.infor.value2
+      option.xAxis.data = this.infor.name
+      if (option.xAxis.data.length == 1) {
+        option.xAxis.data.push('')
+      }
+      return option
     }
   },
   data() {
@@ -54,18 +68,6 @@ export default {
       this.$emit('handelrCheck')
     },
   },
-  computed: {
-
-    computedOptions() {
-      let option = this.defaultOptions
-      option.series = this.infor.value2
-      option.xAxis.data = this.infor.name
-      if (option.xAxis.data.length == 1) {
-        option.xAxis.data.push('')
-      }
-      return option
-    }
-  }
 }
 </script>
 <style lang="less" scoped>
