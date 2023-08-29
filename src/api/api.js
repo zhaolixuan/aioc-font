@@ -241,6 +241,15 @@ export default {
 
 
 
+  getInfo() {
+    return request({
+      url: '/getInfo',
+      method: 'get',
+    })
+  },
+
+
+  
 
 
 };

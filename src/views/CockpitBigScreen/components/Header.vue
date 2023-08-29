@@ -1,13 +1,16 @@
 <template>
   <div class="header_wrap">
-    <div class="address">
-      </div>
+    <div class="address"></div>
     <div class="infor" style="padding-left: 5%; box-sizing: border-box">
       <p class="item_infor">
-        <el-button size="small" class="warningBtn" @click="handelrOpenAnfang">{{ openAnfang ? '一键撤防': '一键布防' }}</el-button>
+        <el-button size="small" class="warningBtn" @click="handelrOpenAnfang">{{
+          openAnfang ? "一键撤防" : "一键布防"
+        }}</el-button>
       </p>
       <p class="item_infor">
-        <el-button size="small" class="warningBtn" @click="handelrOpenShi">{{ openShishi ? '关闭实时监控': '开启实时监控' }}</el-button>
+        <el-button size="small" class="warningBtn" @click="handelrOpenShi">{{
+          openShishi ? "关闭实时监控" : "开启实时监控"
+        }}</el-button>
       </p>
     </div>
     <p class="title">周界预警监测系统</p>
@@ -16,7 +19,7 @@
 
       <el-dropdown @command="handleLogin" class="title_dropdown">
         <p class="item_infor">
-          admin
+          {{ urseName }}
           <img src="../assets/quit.svg" alt="" />
         </p>
         <el-dropdown-menu slot="dropdown" class="op-dropdown">
@@ -27,7 +30,7 @@
   </div>
 </template>
 <script>
-  import { removeToken } from '@/utils/token-util'
+import { removeToken } from "@/utils/token-util";
 
 export default {
   name: "Header",
@@ -46,9 +49,14 @@ export default {
       currentData: "",
       currentTime: "",
       time: null,
-      openShishi:true,
-      openAnfang:true
+      openShishi: true,
+      openAnfang: true,
     };
+  },
+  computed: {
+    urseName() {
+      return this.$store.state.activeName || "";
+    },
   },
   created() {},
   watch: {
@@ -66,20 +74,20 @@ export default {
     }, 1000);
   },
   methods: {
-    handelrOpenShi(){
-      this.openShishi = !this.openShishi
-      this.$emit('handelrOpenShi', this.openShishi )
+    handelrOpenShi() {
+      this.openShishi = !this.openShishi;
+      this.$emit("handelrOpenShi", this.openShishi);
     },
-    handelrOpenAnfang(){
-      this.openAnfang = !this.openAnfang
-      this.$emit('handelrOpenAnfang', this.openAnfang )
+    handelrOpenAnfang() {
+      this.openAnfang = !this.openAnfang;
+      this.$emit("handelrOpenAnfang", this.openAnfang);
     },
     handleLogin(command) {
-      this.loginOut()
+      this.loginOut();
     },
-    loginOut(){
-      removeToken()
-      this.$router.push({ path: '/login' })
+    loginOut() {
+      removeToken();
+      this.$router.push({ path: "/login" });
     },
     navDate() {
       let now = new Date();
@@ -158,8 +166,8 @@ export default {
   .infor {
     display: inline-block;
     width: 36%;
-    height: .5rem;
-    margin-top: .2rem;
+    height: 0.5rem;
+    margin-top: 0.2rem;
     line-height: 0;
     font-size: 0rem;
     text-align: left;
@@ -195,7 +203,7 @@ export default {
     }
   }
 }
-.title_dropdown{
+.title_dropdown {
   display: flex;
   align-items: center;
 }

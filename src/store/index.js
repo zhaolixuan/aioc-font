@@ -1,15 +1,14 @@
 import Vue from 'vue'
 import vuex from 'vuex'
-
+import api from '@/api/api'
+import { log } from 'three'
 Vue.use(vuex)
 
 export default new vuex.Store({
   state: {
     index: 0,
     activeKey: -1, // 顶部导航选中项
-    activeName: '智慧运营管理中心',
-    title: '智慧运营管理中心',
-    activeTitle: '智慧运营管理中心',
+    activeName: '',
     dialogVisible: false,
     isVisibleFirst: false,
     isVisibleSecond: false,
@@ -46,6 +45,12 @@ export default new vuex.Store({
     }
   },
   actions: { // 异步请求
-
+    getUserInfo({ commit }){
+      api.getInfo().then(res=>{
+        if (res.code == 200) {
+          commit('setActiveName',res.user.userName)
+        }
+      })
+    }
   }
 })

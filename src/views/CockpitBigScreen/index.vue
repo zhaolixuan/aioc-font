@@ -130,8 +130,16 @@ export default {
     this.getData();
     this.getTimeData();
     this.gettitle()
+    this.getUserInfo()
   },
   methods: {
+    getUserInfo(){
+      api.getInfo().then(res=>{
+        if (res.code == 200) {
+          this.$store.commit('setActiveName',res.user.userName)
+        }
+      })
+    },
     gettitle() {
       api.systemconfig().then(res => {
         this.$store.commit('setBusinessIncometTitle', res.data.configValue || '')
