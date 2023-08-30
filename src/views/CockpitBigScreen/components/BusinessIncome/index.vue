@@ -81,7 +81,11 @@ export default {
     .warningBtn {
       position: absolute;
       right: 15%;
-      top: 0.1rem;
+      top: 0.15rem;
+      border: none;
+      color: #fff;
+      background: transparent;
+      cursor: pointer;
     }
   }
 }

@@ -77,7 +77,7 @@ export default {
     align-items: center;
     justify-content: center;
     .video {
-        background: #eee;
+        // background: #eee;
     }
     .videoPlayer {
         width: 100%;

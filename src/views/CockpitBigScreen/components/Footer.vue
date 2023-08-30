@@ -297,23 +297,7 @@ export default {
       overflow: auto;
       // overflow-y: auto;
     }
-    /* 横向滚动条样式 */
-    .el-table__body-wrapper::-webkit-scrollbar {
-      width: 5px; /* 设置滚动条宽度 */
-      height: 3px; 
-    }
-
-    .el-table__body-wrapper::-webkit-scrollbar-track {
-      background-color: transparent; /* 设置滚动条背景颜色 */
-    }
-
-    .el-table__body-wrapper::-webkit-scrollbar-thumb {
-      background-color: #e2feff; /* 设置滚动条滑块颜色 */
-    }
-
-    .el-table__body-wrapper::-webkit-scrollbar-thumb:hover {
-      background-color: #555; /* 设置滚动条滑块在鼠标悬停时的颜色 */
-    }
+    
   }
 }
 </style>

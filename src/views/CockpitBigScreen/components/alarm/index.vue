@@ -4,30 +4,30 @@
       <!-- <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px"> -->
       <el-form-item label="主机名称" prop="hostId">
         <el-select v-model="queryParams.hostId" placeholder="请选择主机名称" @change="selectChannel">
-          <el-option v-for="(host, index) in pipeLineList" :key="host.id" :label="host.name" :value="host.id" />
+          <el-option v-for="(host) in pipeLineList" :key="host.id" :label="host.name" :value="host.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="通道名称" prop="channelId">
         <el-select v-model="queryParams.channelId" placeholder="请选择通道名称" @change="selectZone">
-          <el-option v-for="(channel, index) in channelList" :key="channel.id" :label="channel.name"
+          <el-option v-for="(channel) in channelList" :key="channel.id" :label="channel.name"
             :value="channel.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="分区名称" prop="channelZoneId">
         <el-select v-model="queryParams.channelZoneId" placeholder="请选择分区名称" @change="setChannelId">
-          <el-option v-for="(zone, index) in zones" :key="zone.id" :label="zone.name" :value="zone.id" />
+          <el-option v-for="(zone) in zones" :key="zone.id" :label="zone.name" :value="zone.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="警告类型" prop="alarmType">
         <el-select v-model="queryParams.alarmType" placeholder="请选择警告类型" @change="setOptionALarmCategory($event, false)">
-          <el-option v-for="(item, index) in optionSelectAlarmType" :key="item.alarmValue" :label="item.alarmLabel"
+          <el-option v-for="(item) in optionSelectAlarmType" :key="item.alarmValue" :label="item.alarmLabel"
             :value="item.alarmValue" />
         </el-select>
       </el-form-item>
       <el-form-item label="告警分类" prop="alarmCategory">
         <el-select v-model="queryParams.alarmCategory" placeholder="请选择告警分类" ref="alarmCategory" clearable
           :disabled="isAble">
-          <el-option v-for="(item, index) in optionAlarmCategory" :key="item.alarmValue" :label="item.alarmLabel"
+          <el-option v-for="(item) in optionAlarmCategory" :key="item.alarmValue" :label="item.alarmLabel"
             :value="item.alarmValue" />
         </el-select>
       </el-form-item>
@@ -213,7 +213,7 @@ export default {
       let query = {
         pageNum: 1,
         pageSize: 1,
-        createTime: data.createTime
+        guid: data.guid
       }
       api.alarmRealTimeData(query).then(res => {
         if (res.rows && res.rows[0]) {

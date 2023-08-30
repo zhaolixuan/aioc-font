@@ -3,14 +3,22 @@
     <div class="address"></div>
     <div class="infor" style="padding-left: 5%; box-sizing: border-box">
       <p class="item_infor">
-        <el-button size="small" class="warningBtn" @click="handelrOpenAnfang">{{
-          openAnfang ? "一键撤防" : "一键布防"
-        }}</el-button>
+        <el-button
+          size="small"
+          type="text"
+          :class="openAnfang ? 'active warningBtn' : 'warningBtn'"
+          @click="handelrOpenAnfang"
+          >{{ openAnfang ? "一键撤防" : "一键布防" }}</el-button
+        >
       </p>
       <p class="item_infor">
-        <el-button size="small" class="warningBtn" @click="handelrOpenShi">{{
-          openShishi ? "关闭实时监控" : "开启实时监控"
-        }}</el-button>
+        <el-button
+          size="small"
+          type="text"
+          :class="openShishi ? 'active warningBtn' : 'warningBtn'"
+          @click="handelrOpenShi"
+          >{{ openShishi ? "关闭实时监控" : "开启实时监控" }}</el-button
+        >
       </p>
     </div>
     <p class="title">周界预警监测系统</p>
@@ -200,6 +208,16 @@ export default {
     .unit {
       font-size: 0.14rem;
       color: #fff;
+    }
+    .warningBtn {
+      border: 1px solid #ccc;
+      color: #fff;
+      padding: 10px 18px;
+    }
+    .active {
+      border: 1px solid #36a2da;
+      color: #fff;
+      background: rgba(54, 162, 218, 0.5);
     }
   }
 }

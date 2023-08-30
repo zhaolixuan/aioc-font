@@ -303,7 +303,7 @@ export default {
       let query = {
         pageNum: 1,
         pageSize: 1,
-        createTime: data.createTime
+        guid: data.guid
       }
       api.alarmRealTimeData(query).then(res => {
         if (res.rows && res.rows[0]) {

@@ -5,15 +5,22 @@
     </div>
     <div class="dark_table">
       <el-table :data="infor">
-        <el-table-column label="模块名称" align="center" prop="moduleName" />
-        <el-table-column label="状态" align="center" prop="status">
+        <el-table-column   width="auto" label="模块名称" align="center" prop="moduleName" />
+        <el-table-column    width="46" label="状态" align="center" prop="status">
           <template slot-scope="scope">
-            {{!scope.row.status ? '异常' : '正常' }}
+            {{ !scope.row.status == "1" ? "异常" : "正常" }}
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+        <el-table-column
+          label="创建时间"
+          align="center"
+          prop="createTime"
+          width="auto" 
+        >
           <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+            <span>{{
+              parseTime(scope.row.createTime, "{y}-{m}-{d} {h}:{i}:{s}")
+            }}</span>
           </template>
         </el-table-column>
         <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -35,35 +42,28 @@
         </template>
       </el-table-column> -->
       </el-table>
-
     </div>
   </div>
 </template>
 <script>
-import api from '@/api/api'
-import norm from '../norm'
+import api from "@/api/api";
+import norm from "../norm";
 export default {
-  name: 'ShopNumber',
+  name: "ShopNumber",
   components: { norm },
   props: {
     infor: {
-      type: Array
-    }
+      type: Array,
+    },
   },
   data() {
-    return {
-
-    }
+    return {};
   },
-  created() {
-
-  },
-
+  created() {},
 
   watch: {},
-  methods: {
-  }
-}
+  methods: {},
+};
 </script>
 <style>
 .el-table,
@@ -104,7 +104,7 @@ export default {
 }
 
 .el-table tr td .cell {
-  font-size: .14rem;
+  font-size: 0.14rem;
 }
 
 .el-table--scrollable-x .el-table__body-wrapper {
@@ -116,7 +116,7 @@ export default {
   height: 25%;
 
   .card_wrap {
-    margin-top: -.25rem;
+    margin-top: -0.25rem;
     position: relative;
 
     .tab_wrap {
@@ -130,27 +130,27 @@ export default {
 
       p {
         cursor: pointer;
-        width: .8rem;
+        width: 0.8rem;
         height: 0.3rem;
         line-height: 0.3rem;
         display: inline-block;
         font-size: 0.12rem;
-        background: url('../../assets/tab.png') no-repeat;
+        background: url("../../assets/tab.png") no-repeat;
         background-size: 100% 100%;
-        color: #75BDF4;
+        color: #75bdf4;
         text-align: center;
       }
 
       .left {
-        background: url('../../assets/active_tab.png') no-repeat;
+        background: url("../../assets/active_tab.png") no-repeat;
         background-size: 100% 100%;
-        color: #FFFFFF;
+        color: #ffffff;
       }
 
       .right {
-        background: url('../../assets/active_tab.png') no-repeat;
+        background: url("../../assets/active_tab.png") no-repeat;
         background-size: 100% 100%;
-        color: #FFFFFF;
+        color: #ffffff;
       }
     }
   }
@@ -158,6 +158,12 @@ export default {
   .dark_table {
     margin-top: 0.2rem;
     // margin-left: -15%;
+    /deep/ .el-table__body-wrapper {
+      width: 100%;
+      height: 1.6rem;
+      overflow: auto;
+      overflow-x: hidden !important;
+    }
   }
 
   .btn {
@@ -165,4 +171,5 @@ export default {
     border: 1px solid #ddd;
     background: #171616;
   }
-}</style>
+}
+</style>
