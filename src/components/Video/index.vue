@@ -47,10 +47,23 @@ export default {
                 }
             }
             if (flv.isSupported()) {
-                this.player = flv.createPlayer({
-                    type: 'flv', // 媒体类型，默认是 flv,
-                    url: url, // 流地址
-                })
+                if (!this.player) {
+                    this.player = flv.createPlayer({
+                        type: 'flv', // 媒体类型，默认是 flv,
+                        url: url, // 流地址
+                    })
+                } else {
+                    this.player.pause()
+                    this.player.unload()
+                    this.player.detachMediaElement()
+                    this.player.destroy()
+                    this.player = null
+                    this.player = flv.createPlayer({
+                        type: 'flv', // 媒体类型，默认是 flv,
+                        url: url, // 流地址
+                    })
+                }
+
             }
             this.player.attachMediaElement(videoElement)
             this.player.load()
@@ -76,9 +89,11 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+
     .video {
         // background: #eee;
     }
+
     .videoPlayer {
         width: 100%;
         height: 100%;
