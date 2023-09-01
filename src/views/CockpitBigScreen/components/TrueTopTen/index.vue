@@ -2,92 +2,39 @@
   <div class="TrueTooTen_wrap">
     <div class="card_wrap">
       <norm title="实时监控预警" :icon="2" />
-      <el-button size="small" class="warningBtn" @click="handelrWarning"
-        >实时监控列表</el-button
-      >
+      <el-button size="small" class="warningBtn" @click="handelrWarning">实时监控列表</el-button>
     </div>
     <div class="echartsBox">
       <Video :videoInfo="videoInfo" id="default"></Video>
     </div>
-    <el-dialog
-      title="实时监控列表"
-      :visible.sync="warningType"
-      :append-to-body="true"
-      width="70%"
-    >
+    <el-dialog title="实时监控列表" :visible.sync="warningType" :append-to-body="true" width="70%">
       <el-row>
         <el-col :span="6">
           <div class="treeBox">
-            <el-tree
-              ref="tree"
-              :data="treeData"
-              :props="defaultProps"
-              node-key="id"
-              default-expand-all
-              @node-click="handleNodeClick"
-            ></el-tree>
+            <el-tree ref="tree" :data="treeData" :props="defaultProps" node-key="id" default-expand-all
+              @node-click="handleNodeClick"></el-tree>
           </div>
         </el-col>
         <el-col :span="18">
-          <Video
-            v-if="warningType"
-            :videoInfo="bigvideoInfo"
-            id="bigVideo"
-          ></Video>
+          <Video v-if="warningType" :videoInfo="bigvideoInfo" id="bigVideo"></Video>
           <div class="keybox">
             <div>
-              <img
-                @click="handleKey('UP_LEFT')"
-                src="@/assets/image/zuoshang.png"
-                alt=""
-              />
-              <img
-                @click="handleKey('TILT_UP')"
-                src="@/assets/image/up.png"
-                alt=""
-              />
-              <img
-                @click="handleKey('UP_RIGHT')"
-                src="@/assets/image/youshang.png"
-                alt=""
-              />
+              <img @click="handleKey('UP_LEFT')" src="@/assets/image/zuoshang.png" alt="" />
+              <img @click="handleKey('TILT_UP')" src="@/assets/image/up.png" alt="" />
+              <img @click="handleKey('UP_RIGHT')" src="@/assets/image/youshang.png" alt="" />
             </div>
             <div>
-              <img
-                @click="handleKey('PAN_LEFT')"
-                src="@/assets/image/left.png"
-                alt=""
-              />
+              <img @click="handleKey('PAN_LEFT')" src="@/assets/image/left.png" alt="" />
               <p></p>
-              <img
-                @click="handleKey('PAN_RIGHT')"
-                src="@/assets/image/right.png"
-                alt=""
-              />
+              <img @click="handleKey('PAN_RIGHT')" src="@/assets/image/right.png" alt="" />
             </div>
             <div>
-              <img
-                @click="handleKey('DOWN_LEFT')"
-                src="@/assets/image/zuoxia.png"
-                alt=""
-              />
-              <img
-                @click="handleKey('TILT_DOWN')"
-                src="@/assets/image/down.png"
-                alt=""
-              />
-              <img
-                @click="handleKey('DOWN_RIGHT')"
-                src="@/assets/image/youxia.png"
-                alt=""
-              />
+              <img @click="handleKey('DOWN_LEFT')" src="@/assets/image/zuoxia.png" alt="" />
+              <img @click="handleKey('TILT_DOWN')" src="@/assets/image/down.png" alt="" />
+              <img @click="handleKey('DOWN_RIGHT')" src="@/assets/image/youxia.png" alt="" />
             </div>
-            <el-button
-              @click="handelSnap"
-              type="primary"
-              :disabled="snapLoding ? true : false"
-              >{{ snapLoding ? snapLoding : "抓拍" }}</el-button
-            >
+            <el-button @click="handelSnap" type="primary" :disabled="snapLoding ? true : false">{{ snapLoding ? snapLoding
+              : "抓拍" }}</el-button>
           </div>
         </el-col>
       </el-row>
@@ -155,11 +102,20 @@ export default {
       )
         return;
 
-      this.stopRtmp().then(() => {
+      this.stopRtmp()
+
+      setTimeout(() => {
         this.curVideoData = node.exObject;
         // 获取摄像头信息 开始推流
-        this.getVideoUrl();
-      });
+        let params = {
+          id: this.curVideoData.aideDeviceId,
+          ipc: this.curVideoData.ip,
+        };
+        api.startTranscode(params).then((res) => {
+          this.bigvideoInfo = res.data;
+        });
+      }, 1000)
+
     },
     // 结束推流
     async stopRtmp() {
@@ -167,7 +123,7 @@ export default {
         api
           .stopRtmp({
             id: this.curVideoData.aideDeviceId,
-            tasker: this.curVideoData.tasker,
+            tasker: this.bigvideoInfo.tasker,
           })
           .then((res) => {
             resovr(res);
@@ -199,9 +155,8 @@ export default {
         id: this.curVideoData.aideDeviceId,
         ipc: this.curVideoData.ip,
       };
-      console.log(params);
       api.startTranscode(params).then((res) => {
-        console.log(res);
+        console.log('startTranscode', res);
         if (res.code == 200) {
           this.videoInfo = res.data;
         }
@@ -219,9 +174,9 @@ export default {
           this.bigvideoInfo = res.data;
         });
       } else {
-        api.startTranscode(params).then((res) => {
-          this.videoInfo = res.data;
-        });
+        // api.startTranscode(params).then((res) => {
+        //   this.videoInfo = res.data;
+        // });
       }
       this.warningType = !this.warningType;
     },
@@ -230,9 +185,9 @@ export default {
     },
     handelSnap() {
       let data = {
-        id: "",
-        ipc: "",
-        alarmId: "",
+        id: this.curVideoData.id,
+        ipc: this.curVideoData.ipc,
+        alarmId: this.curVideoData.alarmId,
       };
       api
         .catchPic(data)
