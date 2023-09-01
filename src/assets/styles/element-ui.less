@@ -47,12 +47,6 @@
 }
 
 // to fixed https://github.com/ElemeFE/element/issues/2461
-.el-dialog {
-  transform: none;
-  left: 0;
-  position: relative;
-  margin: 0 auto;
-}
 
 // refine element ui upload
 .upload-container {
@@ -69,7 +63,7 @@
 // dropdown
 .el-dropdown-menu {
   a {
-    display: block
+    display: block;
   }
 }
 
@@ -92,7 +86,6 @@
 }
 
 .el-dialog {
-  background: #000;
   .el-dialog__header {
     display: flex;
   }
@@ -106,8 +99,8 @@
     display: flex;
     justify-content: flex-end;
   }
-  .el-table__row{
-    .cell{
+  .el-table__row {
+    .cell {
       color: #000;
     }
   }
@@ -116,7 +109,7 @@
 /* 横向滚动条样式 */
 .el-table__body-wrapper::-webkit-scrollbar {
   width: 5px; /* 设置滚动条宽度 */
-  height: 3px; 
+  height: 3px;
 }
 
 .el-table__body-wrapper::-webkit-scrollbar-track {
@@ -129,4 +122,30 @@
 
 .el-table__body-wrapper::-webkit-scrollbar-thumb:hover {
   background-color: #555; /* 设置滚动条滑块在鼠标悬停时的颜色 */
+}
+
+.el-dialog {
+  position: relative;
+  left: 50%;
+  top: 50%;
+  margin: 0 !important;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 7, 45, 0.3) !important;
+  backdrop-filter: blur(8px);
+  .el-dialog__header {
+    background-image: url(../image/dialog_headerBg.png) !important;
+    background-repeat: no-repeat !important;
+    background-size: 150% 100%;
+    background-position-x: -20px;
+    background-color: transparent;
+    .el-dialog__title {
+      color: #fff !important;
+    }
+    .el-dialog__headerbtn {
+      color: #fff !important;
+    }
+  }
+  .el-dialog__footer {
+    background: transparent !important;
+  }
 }

@@ -324,6 +324,10 @@ export default {
   max-height: 45vh;
   overflow: hidden;
   overflow-y: auto;
+  .el-tree{
+    background: transparent;
+    color: #fff;
+  }
 }
 
 .keybox {
