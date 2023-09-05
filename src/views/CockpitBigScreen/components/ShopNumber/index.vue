@@ -14,12 +14,12 @@
         <el-table-column
           label="创建时间"
           align="center"
-          prop="createTime"
+          prop="updateTime"
           width="auto" 
         >
           <template slot-scope="scope">
             <span>{{
-              parseTime(scope.row.createTime, "{y}-{m}-{d} {h}:{i}:{s}")
+              parseTime(scope.row.updateTime, "{y}-{m}-{d} {h}:{i}:{s}")
             }}</span>
           </template>
         </el-table-column>
