@@ -12,7 +12,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="创建时间"
+          label="更新时间"
           align="center"
           prop="updateTime"
           width="auto" 
