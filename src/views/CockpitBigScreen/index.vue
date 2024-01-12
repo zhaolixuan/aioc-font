@@ -155,6 +155,7 @@ export default {
     // 左上角波纹图放大
     handelrCheck() {
       this.RealTimeDialog = true
+      this.dialogBusinessIncome = this.BusinessIncome
     },
     handelrOpenShi(bool) {
       if (bool) {
@@ -300,12 +301,17 @@ export default {
       this.RealTimeDialog = true
     },
     getboxingData(data) {
-      let query = {
-        pageNum: 1,
-        pageSize: 1,
-        guid: data.guid
+      this.dialogBusinessIncome = {
+        name: [],
+        value: [],
+        value2: [{ name: "", type: "line", data: [] }],
       }
-      api.alarmRealTimeData(query).then(res => {
+      // let query = {
+      //   pageNum: 1,
+      //   pageSize: 1,
+      //   guid: data.guid
+      // }
+      api.guid(data.guid).then(res => {
         if (res.rows && res.rows[0]) {
           let item = res.rows[0]
           let xdata = [];
@@ -316,6 +322,7 @@ export default {
           this.dialogBusinessIncome.name = xdata;
           this.dialogBusinessIncome.value2[0].name = item.channelNo;
           this.dialogBusinessIncome.value2[0].data = sevsor;
+
         }
       })
     },

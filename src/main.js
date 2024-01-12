@@ -28,7 +28,9 @@ Vue.prototype.addDateRange = addDateRange
 Vue.prototype.selectDictLabel = selectDictLabel
 Vue.prototype.selectDictLabels = selectDictLabels
 Vue.prototype.handleTree = handleTree
-Vue.prototype.sysName = '周界预警监控系统'
+// Vue.prototype.sysName = '周界预警监控系统'
+Vue.prototype.sysName = '光纤侦听监测系统'
+
 
 
 Vue.component('DictTag', DictTag)

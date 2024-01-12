@@ -21,7 +21,7 @@
         >
       </p>
     </div>
-    <p class="title">周界预警监测系统</p>
+    <p class="title">{{ sysName }}</p>
     <div class="infor right">
       <p class="item_infor">{{ currentData + "  " + currentTime }}</p>
 

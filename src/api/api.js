@@ -88,6 +88,14 @@ export default {
   },
 
 
+  guid(id) {
+    return request({
+      url: `/alarmRealTimeData/guid/${id}`,
+      method: "get",
+    });
+  },
+ 
+
   // 外设管理接口
   aideDeviceList() {
     return request({
