@@ -90,7 +90,7 @@ export default {
 
   guid(id) {
     return request({
-      url: `/alarmRealTimeData/guid/${id}`,
+      url: `/bussiness/alarmRealTimeData/guid/${id}`,
       method: "get",
     });
   },
