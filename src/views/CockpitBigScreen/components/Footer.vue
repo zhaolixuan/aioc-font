@@ -2,7 +2,7 @@
   <div class="footer_wrap">
  
     <el-table :data="alarmList">
-   
+      <el-table-column label="序号" align="center" type="index"  />
       <el-table-column label="主机名称" align="center" prop="hostName"  />
      
       <el-table-column label="通道名称" align="center" prop="channelName"  />

@@ -276,7 +276,6 @@ export default {
         pageSize: 1000,
       };
       api.alarmList(params).then((res) => {
-        if (!res.rows.length) return;
         this.$refs.map.addline();
         res.rows.forEach((element) => {
           element.fenquName = obtainZone(element, this.zoneList)
@@ -287,7 +286,8 @@ export default {
           }
         });
 
-        this.alarmList = res.rows.filter((i) => i.status != 1);
+        // this.alarmList = res.rows.filter((i) => i.status != 1);
+        this.alarmList = res.rows
 
         if (this.alarmList.length > this.centerNumData && this.anfangbool) {
           this.startplay();
