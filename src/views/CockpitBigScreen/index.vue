@@ -217,6 +217,7 @@ export default {
     getTimeData() {
       this.getlpopRedisData();
       this.getList();
+      this.getAlarmStatisticsList();
       this.getServe();
     },
     handlerHostClick(data) {
@@ -286,11 +287,13 @@ export default {
           }
         });
 
-        // this.alarmList = res.rows.filter((i) => i.status != 1);
-        this.alarmList = res.rows
+        this.alarmList = res.rows.filter((i) => i.status != 1);
 
-        if (this.alarmList.length > this.centerNumData && this.anfangbool) {
-          this.startplay();
+        try {
+          if (this.alarmList.length > this.centerNumData && this.anfangbool) {
+            this.startplay();
+          }
+        } catch (error) {
         }
 
         this.centerNumData = this.alarmList.length;
@@ -319,7 +322,9 @@ export default {
         .then(() => {
           api.updateAlarm({ alarmId: data.alarmId, status: 1 }).then((res) => {
             if (res && res.code == 200) {
+              
               this.getList();
+              this.getAlarmStatisticsList()
               this.$message({
                 type: "success",
                 message: "处理成功!",
@@ -383,12 +388,7 @@ export default {
         this.mapCenter = this.curHostData.latiscope;
       });
       // 警告统计接口
-      api.alarmStatisticsList().then((res) => {
-        this.topFiveData.name = res.rows.map((i) =>
-          i.status == 1 ? "已处理" : "未处理"
-        );
-        this.topFiveData.value = res.rows.map((i) => i.total);
-      });
+     this.getAlarmStatisticsList()
       // 查询系统状态列表
       api.listSysStatus().then((res) => {
         res.rows.forEach((i) => {
@@ -396,6 +396,14 @@ export default {
         });
       });
     },
+    getAlarmStatisticsList(){
+      api.alarmStatisticsList().then((res) => {
+        this.topFiveData.name = res.rows.map((i) =>
+          i.status == 1 ? "已处理" : "未处理"
+        );
+        this.topFiveData.value = res.rows.map((i) => i.total);
+      });
+    }
   },
   destroyed() {
     this.clearTime();

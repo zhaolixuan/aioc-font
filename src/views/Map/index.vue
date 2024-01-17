@@ -28,7 +28,7 @@ export default {
   props: {
     mapCenter: {
       type: String,
-      default: '116.38821589024599|39.97533303800978'
+      default: "116.38821589024599|39.97533303800978",
     },
     zoom: {
       type: Number,
@@ -50,7 +50,7 @@ export default {
       myDataList: [],
       infoWindow: null,
       optionSelectAlarmType: null,
-      zoneList:[]
+      zoneList: [],
     };
   },
   watch: {
@@ -93,7 +93,7 @@ export default {
       }).then((AMap) => {
         this.map = new AMap.Map("map", {
           zoom: this.zoom,
-          center: this.mapCenter && this.mapCenter.split('|'),
+          center: this.mapCenter && this.mapCenter.split("|"),
           mapStyle: "amap://styles/darkblue",
           showIndoorMap: false,
         });
@@ -206,7 +206,7 @@ export default {
       });
     },
     addline() {
-      this.lines = []
+      this.lines = [];
       var _this = this;
       api.zoneList().then((res) => {
         if (!res.rows.length) return;
@@ -283,31 +283,28 @@ export default {
             alarmType: this.getAlarmLabel(data.alarmType),
           },
         });
+        targetPolyline.polyline.on("mouseover", function (e) {
+          let properties = e.target.getExtData();
+          _this.isShow = true;
+          _this.myTitleName = properties.name;
+          _this.myDataList = [
+            {
+              fieldName: "报警分区：",
+              value: properties.name,
+            },
+            {
+              fieldName: "报警点：",
+              value:
+                properties.channelStartNum + "-" + properties.channelEndNum,
+            },
+            {
+              fieldName: "报警类型",
+              value: properties.alarmType,
+            },
+          ];
+          _this.infoWindow.open(_this.map, [e.lnglat.lng, e.lnglat.lat]);
+        });
       }
-
-      targetPolyline.polyline.on("mouseover", function (e) {
-        let properties = e.target.getExtData();
-        _this.isShow = true;
-        _this.myTitleName = properties.name;
-        _this.myDataList = [
-          {
-            fieldName: "报警分区：",
-            value: properties.name,
-          },
-          {
-            fieldName: "报警点：",
-            value:
-              properties.channelStartNum +
-              "-" +
-              properties.channelEndNum,
-          },
-          {
-            fieldName: "报警类型",
-            value: properties.alarmType,
-          },
-        ];
-        _this.infoWindow.open(_this.map, [e.lnglat.lng, e.lnglat.lat]);
-      });
     },
     getAlarmLabel(data) {
       // alert(data);
