@@ -5,60 +5,23 @@
       <el-button size="small" class="warningBtn" @click="handelrWarning">实时监控列表</el-button>
     </div>
     <div class="echartsBox">
+      <Wxmap ref="Wxmap" class="Wxmap" :mapCenter="wxMapCenter"></Wxmap>
       <!-- <Video :videoInfo="videoInfo" id="default"></Video> -->
     </div>
-    <el-dialog title="实时监控列表" :visible.sync="warningType" :append-to-body="true" width="70%">
-      <el-row>
-        <el-col :span="6">
-          <div class="treeBox">
-            <el-tree ref="tree" :data="treeData" :props="defaultProps" node-key="id" default-expand-all
-              @node-click="handleNodeClick"></el-tree>
-          </div>
-        </el-col>
-        <el-col :span="18">
-          <Video v-if="warningType" :videoInfo="bigvideoInfo" id="bigVideo"></Video>
-          <div class="keybox">
-            <div>
-              <img @click="handleKey('UP_LEFT')" src="@/assets/image/zuoshang.png" alt="" />
-              <img @click="handleKey('TILT_UP')" src="@/assets/image/up.png" alt="" />
-              <img @click="handleKey('UP_RIGHT')" src="@/assets/image/youshang.png" alt="" />
-            </div>
-            <div>
-              <img @click="handleKey('PAN_LEFT')" src="@/assets/image/left.png" alt="" />
-              <p></p>
-              <img @click="handleKey('PAN_RIGHT')" src="@/assets/image/right.png" alt="" />
-            </div>
-            <div>
-              <img @click="handleKey('DOWN_LEFT')" src="@/assets/image/zuoxia.png" alt="" />
-              <img @click="handleKey('TILT_DOWN')" src="@/assets/image/down.png" alt="" />
-              <img @click="handleKey('DOWN_RIGHT')" src="@/assets/image/youxia.png" alt="" />
-            </div>
-            <el-button @click="handelSnap" type="primary" :disabled="snapLoding ? true : false">{{ snapLoding ? snapLoding
-              : "抓拍" }}</el-button>
-          </div>
-        </el-col>
-      </el-row>
-
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="warningType = false">关闭</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 <script>
 import norm from "../norm";
 import defaultOptions from "./option.js";
 import api from "@/api/api";
-import Video from "@/components/Video";
+import Wxmap from "../../../Wxmap";
 import { handleDownload } from "@/utils/download";
 
 export default {
   name: "TrueTooTen",
-  components: { norm, Video },
+  components: { norm, Wxmap },
   props: {
-    infor: {
-      type: Object,
-    },
+   
   },
   data() {
     return {
@@ -74,6 +37,8 @@ export default {
         children: "subTreeNodes",
         label: "name",
       },
+      wxMapCenter: '117.6467359060|38.7525269150',
+
     };
   },
   mounted() {
@@ -272,6 +237,9 @@ export default {
     // background: url('../../assets/top10.png') no-repeat;
     // background-size: 2rem 100%;
     // margin-left: 10%;
+    .Wxmap{
+      height: 100%;
+    }
   }
 }
 

@@ -8,7 +8,8 @@
     </div>
     <div class="left_wrap">
       <BusinessIncome :infor="BusinessIncome" @handelrCheck="handelrCheck" :buttonShow="true"></BusinessIncome>
-      <TrueTopTen></TrueTopTen>
+      <!-- <TrueTopTen></TrueTopTen> -->
+      <Wxmap class="Wxmap"></Wxmap>
       <NotGoodNetWork :infor="topFiveData"></NotGoodNetWork>
     </div>
     <div class="right_wrap">
@@ -47,6 +48,8 @@ import GoodsTypeZB from "./components/GoodsTypeZB";
 import ShopNumber from "./components/ShopNumber";
 import RealTimePeakGraph from "./components/RealTimePeakGraph";
 import Map from "../Map/index.vue";
+import Wxmap from "./components/Wxmap";
+
 import { obtainZone } from "@/utils/pointiInZone";
 export default {
   name: "CockpitBigScreen",
@@ -56,6 +59,7 @@ export default {
     Footer,
     CenterDataView,
     Map,
+    Wxmap,
     TrueTopTen,
     NotGoodNetWork,
     TotalSaleMoney,
@@ -120,6 +124,7 @@ export default {
       curHostData: {},
       zoneList: [],
       mapCenter: "",
+      
       anfangbool: true,
       audioUrl: require("./assets/yujing.mp3"),
       BusinessIncometTitle: "",
@@ -493,6 +498,9 @@ export default {
 
 .map {
   position: absolute;
+}
+.Wxmap{
+  height: 25%;
 }
 
 ::-webkit-scrollbar {
