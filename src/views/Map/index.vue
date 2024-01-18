@@ -209,6 +209,7 @@ export default {
       this.lines = []
       var _this = this;
       api.zoneList().then((res) => {
+        console.log('res',res);
         if (!res.rows.length) return;
         this.zoneList = res.rows;
         res.rows.forEach((item) => {
@@ -281,6 +282,7 @@ export default {
             channelStartNum: data.startPosition,
             channelEndNum: data.endPosition,
             alarmType: this.getAlarmLabel(data.alarmType),
+            name:data.fenquName
           },
         });
       }

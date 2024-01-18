@@ -4,63 +4,32 @@
     <Map ref="map" class="map" :mapCenter="mapCenter"></Map>
     <div class="section"></div>
     <div class="header">
-      <Header
-        :infor="topData"
-        @handelrOpenShi="handelrOpenShi"
-        @handelrOpenAnfang="handelrOpenAnfang"
-      />
+      <Header :infor="topData" :sysName="sysName" @handelrOpenShi="handelrOpenShi" @handelrOpenAnfang="handelrOpenAnfang" />
     </div>
     <div class="left_wrap">
-      <BusinessIncome
-        :infor="BusinessIncome"
-        @handelrCheck="handelrCheck"
-        :buttonShow="true"
-      ></BusinessIncome>
+      <BusinessIncome :infor="BusinessIncome" @handelrCheck="handelrCheck" :buttonShow="true"></BusinessIncome>
       <TrueTopTen></TrueTopTen>
       <NotGoodNetWork :infor="topFiveData"></NotGoodNetWork>
     </div>
     <div class="right_wrap">
-      <TotalSaleMoney
-        :infor="ljData"
-        :flag="flag"
-        @changeFlag="changeFlag"
-      ></TotalSaleMoney>
+      <TotalSaleMoney :infor="ljData" :flag="flag" @changeFlag="changeFlag"></TotalSaleMoney>
       <ShopNumber :infor="sysStatusList"></ShopNumber>
       <GoodsTypeZB></GoodsTypeZB>
     </div>
     <div class="center">
-      <CenterDataView
-        :infor="centerData"
-        :num="centerNumData"
-        @handlerHostClick="handlerHostClick"
-        :curHostData="curHostData"
-      ></CenterDataView>
+      <CenterDataView :infor="centerData" :num="centerNumData" @handlerHostClick="handlerHostClick"
+        :curHostData="curHostData"></CenterDataView>
     </div>
     <div class="footer">
-      <Footer
-        :alarmList="alarmList"
-        @handleAlarm="handleAlarm"
-        @handlerboxin="handlerboxin"
-      />
+      <Footer :alarmList="alarmList" @handleAlarm="handleAlarm" @handlerboxin="handlerboxin" />
     </div>
 
-    <audio
-      id="audio"
-      controls="controls"
-      hidden
-      :src="audioUrl"
-      ref="audio"
-    ></audio>
+    <audio id="audio" controls="controls" hidden :src="audioUrl" ref="audio"></audio>
 
     <el-dialog title="实时波峰图" :visible.sync="RealTimeDialog" width="50%">
-      <BusinessIncome
-        :infor="dialogBusinessIncome"
-        :buttonShow="false"
-      ></BusinessIncome>
+      <BusinessIncome :infor="dialogBusinessIncome" :buttonShow="false"></BusinessIncome>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="RealTimeDialog = false"
-          >关闭</el-button
-        >
+        <el-button type="primary" @click="RealTimeDialog = false">关闭</el-button>
       </span>
     </el-dialog>
   </div>
@@ -154,7 +123,11 @@ export default {
       anfangbool: true,
       audioUrl: require("./assets/yujing.mp3"),
       BusinessIncometTitle: "",
+      sysName:''
     };
+  },
+  created(){
+    this.getSysName()
   },
   mounted() {
     this.getData();
@@ -163,6 +136,12 @@ export default {
     this.getUserInfo();
   },
   methods: {
+    getSysName() {
+      api.getSysName().then(res => {
+        this.sysName = res.msg
+
+      })
+    },
     getUserInfo() {
       api.getInfo().then((res) => {
         if (res.code == 200) {
@@ -327,7 +306,7 @@ export default {
             }
           });
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     handlerboxin(data) {
       this.getboxingData(data);
@@ -339,11 +318,7 @@ export default {
         value: [],
         value2: [{ name: "", type: "line", data: [] }],
       };
-      // let query = {
-      //   pageNum: 1,
-      //   pageSize: 1,
-      //   guid: data.guid
-      // }
+
       api.guid(data.guid).then((res) => {
         if (res.data) {
           let item = res.data;

@@ -50,6 +50,9 @@ export default {
       type: Boolean,
       default: true,
     },
+    sysName:{
+      type: String,
+    }
   },
   data() {
     return {

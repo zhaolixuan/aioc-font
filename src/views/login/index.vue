@@ -62,6 +62,7 @@ export default {
         message: "",
         text_content: "",
         ws: null,
+        sysName:''
       },
       loginRules: {
         username: [
@@ -89,10 +90,16 @@ export default {
     }
   },
   created() {
+    this.getSysName()
     this.getCode();
     this.getCookie();
   },
   methods: {
+    getSysName() {
+      api.getSysName().then(res => {
+        this.sysName = res.msg
+      })
+    },
     getCode() {
       getCodeImg().then(res => {
         this.captchaEnabled = res.captchaEnabled === undefined ? true : res.captchaEnabled;
