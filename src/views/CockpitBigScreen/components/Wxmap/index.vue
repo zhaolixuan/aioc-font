@@ -18,6 +18,7 @@
       </el-select>
     </div>
     <div class="echartsBox">
+      
       <!-- <Wxmap ref="Wxmap" class="Wxmap" :mapCenter="wxMapCenter"></Wxmap> -->
       <!-- <Video :videoInfo="videoInfo" id="default"></Video> -->
     </div>
