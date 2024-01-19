@@ -257,8 +257,16 @@ export default {
   },
 
 
-  
+  getSysName() {
+    return request({
+      url: '/system/config/configKey/sysName',
+      method: 'get',
+    })
+  },
 
+
+  
+ 
 
 };
 

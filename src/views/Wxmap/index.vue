@@ -1,18 +1,13 @@
 <template>
-  <div style="height: 100%; width: 100%">
-    <div id="map"></div>
-    <div class="map-mask"></div>
+  <div>
+    <div id="wxmap"></div>
 
-    <information-panel
-      id="informationPanel"
-      v-show="isShow"
-      :titleName="myTitleName"
-      :dataList="myDataList"
-    ></information-panel>
+    <information-panel id="informationPanel" v-show="isShow" :titleName="myTitleName"
+      :dataList="myDataList"></information-panel>
   </div>
 </template>
    
-  <script>
+<script>
 import api from "@/api/api";
 import AMapLoader from "@amap/amap-jsapi-loader";
 import { debounce, throttle } from "loadsh";
@@ -24,15 +19,15 @@ window._AMapSecurityConfig = {
   securityJsCode: "83d32f3ed10df19e1715137b322f990b", //你的安全密钥
 };
 export default {
-  name: "Map",
+  name: "WxMap",
   props: {
     mapCenter: {
       type: String,
-      default: "116.38821589024599|39.97533303800978",
+      default: '117.6467359060|38.7525269150'
     },
     zoom: {
       type: Number,
-      default: 13,
+      default: 10,
     },
   },
   components: {
@@ -50,7 +45,7 @@ export default {
       myDataList: [],
       infoWindow: null,
       optionSelectAlarmType: null,
-      zoneList: [],
+      zoneList: []
     };
   },
   watch: {
@@ -67,18 +62,9 @@ export default {
   },
   async mounted() {
     this.initMap();
-    this.initData();
   },
   methods: {
-    handelgive(data = {}) {
-      let arr = obtainZone(data, this.zoneList);
-      arr.forEach((i) => {
-        this.getliner(i.id, data);
-      });
-    },
-    initData() {
-      this.setOptionAlarms();
-    },
+
     initMap() {
       let load = AMapLoader.load({
         key: "83d32f3ed10df19e1715137b322f990b", // 申请好的Web端开发者Key，首次调用 load 时必填
@@ -91,9 +77,9 @@ export default {
           "AMap.PlaceSearch",
         ], // 需要使用的的插件列表，如比例尺'AMap.Scale'等
       }).then((AMap) => {
-        this.map = new AMap.Map("map", {
+        this.map = new AMap.Map("wxmap", {
           zoom: this.zoom,
-          center: this.mapCenter && this.mapCenter.split("|"),
+          center: this.mapCenter && this.mapCenter.split('|'),
           mapStyle: "amap://styles/darkblue",
           showIndoorMap: false,
         });
@@ -115,32 +101,25 @@ export default {
           content: el,
           offset: new AMap.Pixel(0, -30),
         });
-
-        this.getMarkerData();
-        this.addline();
+        let data = [{
+          latiscope: '117.6467359060|38.7525269150',
+          aideDeviceId: 121,
+          hostName: 'hostName',
+          region: 'region',
+          channelName: 'channelName',
+          channelZoneName: 'channelZoneName',
+          ip: 'ip'
+        }]
+        this.addMaker(data, "zhuji");
       });
     },
-    getMarkerData() {
-      this.marker = [];
-      api.aideDeviceList().then((res) => {
-        this.addMaker(res.rows, "waishe");
-      });
 
-      api.hostManageList().then((res) => {
-        this.addMaker(res.rows, "zhuji");
-      });
-    },
     addMaker(data, type) {
       var _this = this;
 
       data.forEach((item, index) => {
         if (item !== undefined) {
-          var lnglat;
-          if (type == "zhuji") {
-            lnglat = item.latiscope && item.latiscope.split("|");
-          } else if (type == "waishe") {
-            lnglat = item.latitude && item.latitude.split("|");
-          }
+          let lnglat = item.latiscope && item.latiscope.split("|");
           if (!lnglat) return;
           const marker = new AMap.Marker({
             icon: this[`${type}icon`],
@@ -206,10 +185,10 @@ export default {
       });
     },
     addline() {
-      this.lines = [];
+      this.lines = []
       var _this = this;
       api.zoneList().then((res) => {
-        console.log('res',res);
+        console.log('res', res);
         if (!res.rows.length) return;
         this.zoneList = res.rows;
         res.rows.forEach((item) => {
@@ -282,31 +261,34 @@ export default {
             channelStartNum: data.startPosition,
             channelEndNum: data.endPosition,
             alarmType: this.getAlarmLabel(data.alarmType),
-            name:data.fenquName
+            name: data.fenquName
           },
         });
-        targetPolyline.polyline.on("mouseover", function (e) {
-          let properties = e.target.getExtData();
-          _this.isShow = true;
-          _this.myTitleName = properties.name;
-          _this.myDataList = [
-            {
-              fieldName: "报警分区：",
-              value: properties.name,
-            },
-            {
-              fieldName: "报警点：",
-              value:
-                properties.channelStartNum + "-" + properties.channelEndNum,
-            },
-            {
-              fieldName: "报警类型",
-              value: properties.alarmType,
-            },
-          ];
-          _this.infoWindow.open(_this.map, [e.lnglat.lng, e.lnglat.lat]);
-        });
       }
+
+      targetPolyline.polyline.on("mouseover", function (e) {
+        let properties = e.target.getExtData();
+        _this.isShow = true;
+        _this.myTitleName = properties.name;
+        _this.myDataList = [
+          {
+            fieldName: "报警分区：",
+            value: properties.name,
+          },
+          {
+            fieldName: "报警点：",
+            value:
+              properties.channelStartNum +
+              "-" +
+              properties.channelEndNum,
+          },
+          {
+            fieldName: "报警类型",
+            value: properties.alarmType,
+          },
+        ];
+        _this.infoWindow.open(_this.map, [e.lnglat.lng, e.lnglat.lat]);
+      });
     },
     getAlarmLabel(data) {
       // alert(data);
@@ -317,20 +299,17 @@ export default {
         }
       }
     },
-    setOptionAlarms() {
-      api.optionsAlarmType().then((response) => {
-        this.optionSelectAlarmType = response.data;
-      });
-    },
+
   },
 };
 </script>
    
-  <style scoped>
-#map {
+<style scoped>
+#wxmap {
   width: 100%;
   height: 100%;
 }
+
 .map-mask {
   height: 100%;
   width: 100%;

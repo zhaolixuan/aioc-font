@@ -210,16 +210,16 @@ export default {
       this.RealTimeDialog = true
     },
     getboxingData(data) {
-      let query = {
-        pageNum: 1,
-        pageSize: 1,
-        guid: data.guid
-      }
-      api.alarmRealTimeData(query).then(res => {
-        if (res.rows && res.rows[0]) {
-          let item = res.rows[0]
+       this.dialogBusinessIncome = {
+        name: [],
+        value: [],
+        value2: [{ name: "", type: "line", data: [] }],
+      };
+      api.guid(data.guid).then(res => {
+       if (res.data) {
+          let item = res.data;
           let xdata = [];
-          let sevsor = eval(item.sensor)
+          let sevsor = eval(item.sensor);
           for (let index = 0; index < sevsor.length; index++) {
             xdata.push(index);
           }
@@ -369,8 +369,9 @@ export default {
 
     },
     setOptionALarmCategory(data, flag) {
+      console.log(data,flag);
       //如果警告类型为告警则初始化告警分类下拉框
-      if (data == 3) {
+      if (data == 2) {
         api.optionsAlarmCategory().then(response => {
           if (flag) {
             this.isAbleForAdd = false;

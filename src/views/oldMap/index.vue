@@ -1,14 +1,7 @@
 <template>
   <div style="height: 100%; width: 100%">
     <div id="map" class="map"></div>
-    <div class="map-mask"></div>
-    <InformationPanel
-      id="informationPanel"
-      v-show="isShow"
-      :titleName="myTitleName"
-      :dataList="myDataList"
-      :type="myType"
-    ></InformationPanel>
+   
   </div>
 </template>
 
@@ -79,7 +72,6 @@ export default {
   watch: {
     mapCenter(data) {
       if (!data) return;
-      console.log("!!!!!!!!!!!", data);
       let center = data.split("|");
       if (this.maptalksMap) {
         this.MapCenter = wgs84togcj02(center);
