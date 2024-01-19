@@ -87,14 +87,12 @@ export default {
     });
   },
 
-
   guid(id) {
     return request({
       url: `/bussiness/alarmRealTimeData/guid/${id}`,
-      method: "get",
+      method: "get"
     });
   },
- 
 
   // 外设管理接口
   aideDeviceList() {
@@ -129,146 +127,216 @@ export default {
   // 查询警告类型列表,参数为字符串而不是一个对象。
   optionsAlarmType() {
     return request({
-      url: '/bussiness/alarmType/optionsAlarmType/biz_alarm_type',
-      method: 'get'
-    })
+      url: "/bussiness/alarmType/optionsAlarmType/biz_alarm_type",
+      method: "get"
+    });
   },
 
   optionsAlarmCategory() {
     return request({
-      url: '/bussiness/alarmType/optionsAlarmType/biz_alarm_type_3',
-      method: 'get'
-    })
+      url: "/bussiness/alarmType/optionsAlarmType/biz_alarm_type_3",
+      method: "get"
+    });
   },
   // 查询系统状态列表
   listSysStatus() {
     return request({
-      url: '/bussiness/sysStatus/list',
-      method: 'get',
-    })
+      url: "/bussiness/sysStatus/list",
+      method: "get"
+    });
   },
   // 获取服务信息
   getServer() {
     return request({
-      url: '/monitor/server',
-      method: 'get'
-    })
+      url: "/monitor/server",
+      method: "get"
+    });
   },
   // 查询传感器列表
   sensorList() {
     return request({
-      url: '/bussiness/sensor/list',
-      method: 'get'
-    })
+      url: "/bussiness/sensor/list",
+      method: "get"
+    });
   },
   // 查询管道线信息列表
   listPipleLine() {
     return request({
-      url: '/bussiness/hostToZoneLine/optionSelect',
-      method: 'get'
-    })
+      url: "/bussiness/hostToZoneLine/optionSelect",
+      method: "get"
+    });
   },
   // 开启推流
   startTranscode(params) {
     return request({
-      url: '/hikCamera/startTranscode',
-      method: 'get',
+      url: "/hikCamera/startTranscode",
+      method: "get",
       params
-    })
+    });
   },
   // 结束推流
   stopRtmp(params) {
     return request({
-      url: '/hikCamera/stopRtmp',
-      method: 'get',
+      url: "/hikCamera/stopRtmp",
+      method: "get",
       params
-    })
+    });
   },
-
 
   // 方向控制
   actionControl(params) {
     return request({
-      url: '/hikCamera/actionControl',
-      method: 'get',
+      url: "/hikCamera/actionControl",
+      method: "get",
       params
-    })
+    });
   },
 
   // 拍照
   catchPic(params) {
     return request({
-      url: '/gbcamera/catchPicForFlow',
-      method: 'get',
+      url: "/gbcamera/catchPicForFlow",
+      method: "get",
       params
-    })
+    });
   },
-
-
 
   // 摄像头列表
   cameraList(params) {
     return request({
-      url: '/bussiness/hostToZoneLine/camera',
-      method: 'get',
+      url: "/bussiness/hostToZoneLine/camera",
+      method: "get",
       params
-    })
+    });
   },
 
   updateAlarm(data) {
     return request({
-      url: '/bussiness/alarm',
-      method: 'put',
+      url: "/bussiness/alarm",
+      method: "put",
       data: data
-    })
+    });
   },
 
   realTimeData(params) {
     return request({
-      url: '/sensor/realTimeData',
-      method: 'get',
+      url: "/sensor/realTimeData",
+      method: "get",
       params: params
-    })
-  },
-
-
-
-  systemconfig() {
-    return request({
-      url: 'system/config/103',
-      method: 'get',
-    })
+    });
   },
 
   systemconfig() {
     return request({
-      url: 'system/config/103',
-      method: 'get',
-    })
+      url: "system/config/103",
+      method: "get"
+    });
   },
 
-
+  systemconfig() {
+    return request({
+      url: "system/config/103",
+      method: "get"
+    });
+  },
 
   getInfo() {
     return request({
-      url: '/getInfo',
-      method: 'get',
-    })
+      url: "/getInfo",
+      method: "get"
+    });
   },
-
 
   getSysName() {
     return request({
-      url: '/system/config/configKey/sysName',
-      method: 'get',
-    })
+      url: "/system/config/configKey/sysName",
+      method: "get"
+    });
   },
 
+  // 查询环境数据列表
+  listEceData(query) {
+    return request({
+      url: "/ece/eceData/list",
+      method: "get",
+      params: query
+    });
+  },
 
-  
- 
+  // 查询环境数据详细
+  getEceData(id) {
+    return request({
+      url: "/ece/eceData/" + id,
+      method: "get"
+    });
+  },
 
+  // 新增环境数据
+  addEceData(data) {
+    return request({
+      url: "/ece/eceData",
+      method: "post",
+      data: data
+    });
+  },
+
+  // 修改环境数据
+  updateEceData(data) {
+    return request({
+      url: "/ece/eceData",
+      method: "put",
+      data: data
+    });
+  },
+
+  // 删除环境数据
+  delEceData(id) {
+    return request({
+      url: "/ece/eceData/" + id,
+      method: "delete"
+    });
+  },
+
+  // 查询环境设备列表
+  listEceDevice(query) {
+    return request({
+      url: "/ece/eceDevice/list",
+      method: "get",
+      params: query
+    });
+  },
+
+  // 查询环境设备详细
+  getEceDevice(deviceCode) {
+    return request({
+      url: "/ece/eceDevice/" + deviceCode,
+      method: "get"
+    });
+  },
+
+  // 新增环境设备
+  addEceDevice(data) {
+    return request({
+      url: "/ece/eceDevice",
+      method: "post",
+      data: data
+    });
+  },
+
+  // 修改环境设备
+  updateEceDevice(data) {
+    return request({
+      url: "/ece/eceDevice",
+      method: "put",
+      data: data
+    });
+  },
+
+  // 删除环境设备
+  delEceDevice(deviceCode) {
+    return request({
+      url: "/ece/eceDevice/" + deviceCode,
+      method: "delete"
+    });
+  }
 };
-
-
-

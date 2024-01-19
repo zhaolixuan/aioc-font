@@ -1,8 +1,8 @@
 <template>
   <div class="TrueTooTen_wrap">
     <div class="card_wrap">
-      <norm title="实时监控预警" :icon="2" />
-      <el-button size="small" class="warningBtn" @click="handelrWarning">实时监控列表</el-button>
+      <norm title="GNSS系统位移数据" :icon="2" />
+      <!-- <el-button size="small" class="warningBtn" @click="handelrWarning">实时监控列表</el-button> -->
     </div>
     <div class="echartsBox">
       <!-- <Video :videoInfo="videoInfo" id="default"></Video> -->

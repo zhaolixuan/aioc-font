@@ -1,11 +1,24 @@
 <template>
   <div class="TrueTooTen_wrap">
     <div class="card_wrap">
-      <norm title="实时监控预警" :icon="2" />
-      <el-button size="small" class="warningBtn" @click="handelrWarning">实时监控列表</el-button>
+      <norm title="GNSS系统位移数据" :icon="2" />
+      <!-- <el-button size="small" class="warningBtn" @click="handelrWarning">实时监控列表</el-button> -->
+      <el-select
+        size="small"
+        class="warningBtn"
+        v-model="deviceList"
+        @change="handelDevice"
+      >
+        <el-option
+          v-for="host in deviceList"
+          :key="host.id"
+          :label="host.name"
+          :value="host.id"
+        />
+      </el-select>
     </div>
     <div class="echartsBox">
-      <Wxmap ref="Wxmap" class="Wxmap" :mapCenter="wxMapCenter"></Wxmap>
+      <!-- <Wxmap ref="Wxmap" class="Wxmap" :mapCenter="wxMapCenter"></Wxmap> -->
       <!-- <Video :videoInfo="videoInfo" id="default"></Video> -->
     </div>
   </div>
@@ -20,9 +33,7 @@ import { handleDownload } from "@/utils/download";
 export default {
   name: "TrueTooTen",
   components: { norm, Wxmap },
-  props: {
-   
-  },
+  props: {},
   data() {
     return {
       defaultOptions,
@@ -37,25 +48,41 @@ export default {
         children: "subTreeNodes",
         label: "name",
       },
-      wxMapCenter: '117.6467359060|38.7525269150',
-
+      wxMapCenter: "117.6467359060|38.7525269150",
+      deviceList: [],
+      deviceId: "",
     };
   },
   mounted() {
-    this.getvideoList();
-    this.getTreeData();
+    this.getDeviceList();
+    // this.getvideoList();
+    // this.getTreeData();
   },
   watch: {
     warningType(n) {
       if (n) {
         document.addEventListener("keydown", this.handleKeyPress);
       } else {
-        this.stopRtmp()
+        this.stopRtmp();
         document.removeEventListener("keydown", this.handleKeyPress);
       }
     },
+    deviceId(n) {
+      this.getDeviceInfo(n);
+    },
   },
   methods: {
+    getDeviceList() {
+      api.listEceDevice().then((res) => {
+        console.log("listEceDevice", res);
+        this.deviceList = res.rows;
+      });
+    },
+    getDeviceInfo(id) {
+      api.listEceData(id).then((res) => {
+        console.log(res);
+      });
+    },
     handleNodeClick(node) {
       // 在这里处理最后一级子节点被点击的事件
       if (node.subTreeNodes.length) return;
@@ -67,7 +94,7 @@ export default {
       )
         return;
 
-      this.stopRtmp()
+      this.stopRtmp();
 
       setTimeout(() => {
         this.curVideoData = node.exObject;
@@ -79,8 +106,7 @@ export default {
         api.startTranscode(params).then((res) => {
           this.bigvideoInfo = res.data;
         });
-      }, 1000)
-
+      }, 1000);
     },
     // 结束推流
     async stopRtmp() {
@@ -121,7 +147,7 @@ export default {
         ipc: this.curVideoData.ip,
       };
       api.startTranscode(params).then((res) => {
-        console.log('startTranscode', res);
+        console.log("startTranscode", res);
         if (res.code == 200) {
           this.videoInfo = res.data;
         }
@@ -222,7 +248,7 @@ export default {
 
     .warningBtn {
       position: absolute;
-      right: 15%;
+      right: 0%;
       top: 0.15rem;
       border: none;
       color: #fff;
@@ -237,7 +263,7 @@ export default {
     // background: url('../../assets/top10.png') no-repeat;
     // background-size: 2rem 100%;
     // margin-left: 10%;
-    .Wxmap{
+    .Wxmap {
       height: 100%;
     }
   }
@@ -247,7 +273,7 @@ export default {
   max-height: 45vh;
   overflow: hidden;
   overflow-y: auto;
-  .el-tree{
+  .el-tree {
     background: transparent;
     color: #fff;
   }

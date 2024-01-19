@@ -46,6 +46,7 @@ import { getCodeImg,login } from "@/api/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from '@/utils/jsencrypt'
 import { setToken } from '@/utils/auth'
+import api from "@/api/api";
 
 export default {
   name: "Login",
@@ -62,7 +63,6 @@ export default {
         message: "",
         text_content: "",
         ws: null,
-        sysName:''
       },
       loginRules: {
         username: [
@@ -78,7 +78,9 @@ export default {
       captchaEnabled: true,
       // 注册开关
       register: false,
-      redirect: undefined
+      redirect: undefined,
+      sysName:''
+
     };
   },
   watch: {
