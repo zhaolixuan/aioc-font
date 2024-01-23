@@ -34,11 +34,11 @@
         align="center"
         prop="startPosition"
       />
-      <el-table-column
+      <!-- <el-table-column
         label="结束位置"
         align="center"
         prop="endPosition"
-      />
+      /> -->
       <el-table-column
         label="报警值"
         align="center"
