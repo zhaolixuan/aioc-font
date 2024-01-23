@@ -4,7 +4,8 @@
     <Map ref="map" class="map" :mapCenter="mapCenter"></Map>
     <div class="section"></div>
     <div class="header">
-      <Header :infor="topData" :sysName="sysName" @handelrOpenShi="handelrOpenShi" @handelrOpenAnfang="handelrOpenAnfang" />
+      <Header :infor="topData" :sysName="sysName" @handelrOpenShi="handelrOpenShi"
+        @handelrOpenAnfang="handelrOpenAnfang" />
     </div>
     <div class="left_wrap">
       <BusinessIncome :infor="BusinessIncome" @handelrCheck="handelrCheck" :buttonShow="true"></BusinessIncome>
@@ -124,14 +125,14 @@ export default {
       curHostData: {},
       zoneList: [],
       mapCenter: "",
-      
+
       anfangbool: true,
       audioUrl: require("./assets/yujing.mp3"),
       BusinessIncometTitle: "",
-      sysName:''
+      sysName: ''
     };
   },
-  created(){
+  created() {
     this.getSysName()
   },
   mounted() {
@@ -225,7 +226,8 @@ export default {
             data.forEach((item, index) => {
               let xdata = [];
               for (let index = 0; index < item.sensor.length; index++) {
-                xdata.push(index);
+                let num = (index * this.curHostData.factor).toFixed(1)
+                xdata.push(num);
               }
               this.BusinessIncome.name = xdata;
               this.BusinessIncome.value2[index].name = item.channel;
@@ -241,7 +243,8 @@ export default {
                 data.forEach((item, index) => {
                   let xdata = [];
                   for (let index = 0; index < item.sensor.length; index++) {
-                    xdata.push(index);
+                    let num = (index * this.curHostData.factor).toFixed(1)
+                    xdata.push(num);
                   }
                   this.BusinessIncome.name = xdata;
                   this.BusinessIncome.value2[index].name = item.channel;
@@ -306,7 +309,7 @@ export default {
         .then(() => {
           api.updateAlarm({ alarmId: data.alarmId, status: 1 }).then((res) => {
             if (res && res.code == 200) {
-              
+
               this.getList();
               this.getAlarmStatisticsList()
               this.$message({
@@ -335,7 +338,8 @@ export default {
           let xdata = [];
           let sevsor = eval(item.sensor);
           for (let index = 0; index < sevsor.length; index++) {
-            xdata.push(index);
+            let num = (index * this.curHostData.factor).toFixed(1)
+            xdata.push(num);
           }
           this.dialogBusinessIncome.name = xdata;
           this.dialogBusinessIncome.value2[0].name = item.channelNo;
@@ -368,7 +372,7 @@ export default {
         this.mapCenter = this.curHostData.latiscope;
       });
       // 警告统计接口
-     this.getAlarmStatisticsList()
+      this.getAlarmStatisticsList()
       // 查询系统状态列表
       api.listSysStatus().then((res) => {
         res.rows.forEach((i) => {
@@ -376,7 +380,7 @@ export default {
         });
       });
     },
-    getAlarmStatisticsList(){
+    getAlarmStatisticsList() {
       api.alarmStatisticsList().then((res) => {
         this.topFiveData.name = res.rows.map((i) =>
           i.status == 1 ? "已处理" : "未处理"
@@ -507,7 +511,8 @@ export default {
 .map {
   position: absolute;
 }
-.Wxmap{
+
+.Wxmap {
   height: 25%;
 }
 

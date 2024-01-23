@@ -40,6 +40,12 @@
         prop="endPosition"
       />
       <el-table-column
+        label="报警值"
+        align="center"
+        prop="alarmValue"
+      />
+      
+      <el-table-column
         label="警告时间"
         align="center"
         prop="warningTime"

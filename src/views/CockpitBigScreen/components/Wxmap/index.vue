@@ -3,22 +3,17 @@
     <div class="card_wrap">
       <norm title="GNSS系统位移数据" :icon="2" />
       <!-- <el-button size="small" class="warningBtn" @click="handelrWarning">实时监控列表</el-button> -->
-      <el-select
-        size="small"
-        class="warningBtn"
-        v-model="deviceList"
-        @change="handelDevice"
-      >
-        <el-option
-          v-for="host in deviceList"
-          :key="host.id"
-          :label="host.name"
-          :value="host.id"
-        />
+      <el-select size="small" class="warningBtn" v-model="deviceId">
+        <el-option v-for="host in deviceList" :key="host.deviceAddr" :label="host.name" :value="host.deviceAddr" />
       </el-select>
     </div>
     <div class="echartsBox">
-      
+      <div class="eceRealtime">
+        <div class="eceRealtimeItem" v-for="i in eceRealtimeList" :key="i.id" :class="{'offlint':i.data == '离线'}">
+          <p>{{ i.registerName }}:</p><span >{{ i.data }}</span>
+        </div>
+      </div>
+
       <!-- <Wxmap ref="Wxmap" class="Wxmap" :mapCenter="wxMapCenter"></Wxmap> -->
       <!-- <Video :videoInfo="videoInfo" id="default"></Video> -->
     </div>
@@ -51,6 +46,7 @@ export default {
       },
       wxMapCenter: "117.6467359060|38.7525269150",
       deviceList: [],
+      eceRealtimeList: [],
       deviceId: "",
     };
   },
@@ -69,20 +65,44 @@ export default {
       }
     },
     deviceId(n) {
+      console.log('deviceId', n);
       this.getDeviceInfo(n);
     },
   },
   methods: {
     getDeviceList() {
       api.listEceDevice().then((res) => {
-        console.log("listEceDevice", res);
+        console.log('listEceDevice', res);
         this.deviceList = res.rows;
+        this.deviceList.forEach(i => {
+          i.name = `${i.deviceName}(${i.deviceStatus == 'normal' ? '在线' : '离线'})`
+        })
+        this.deviceId = this.deviceList.length ? this.deviceList[0].deviceAddr : ''
       });
     },
     getDeviceInfo(id) {
-      api.listEceData(id).then((res) => {
-        console.log(res);
-      });
+      let deviceStatus = this.deviceList.filter(i => i.deviceAddr == id)[0].deviceStatus
+
+      if (deviceStatus == 'normal') {
+        api.listEceRealtimeData({ deviceAddr: id }).then((res) => {
+          this.eceRealtimeList = res.rows
+          this.eceRealtimeList.forEach(i => {
+            i.registerName += i.unit ? `(${i.unit})` : ''
+          })
+        });
+      } else {
+        api.listEceRealtimeData().then(res=>{
+          this.eceRealtimeList = res.rows
+          this.eceRealtimeList.forEach(i => {
+            i.registerName += i.unit ? `(${i.unit})` : ''
+            i.data = '离线'
+          })
+
+        })
+
+      }
+
+
     },
     handleNodeClick(node) {
       // 在这里处理最后一级子节点被点击的事件
@@ -261,19 +281,69 @@ export default {
   .echartsBox {
     height: 2rem;
     width: 100%;
+
     // background: url('../../assets/top10.png') no-repeat;
     // background-size: 2rem 100%;
     // margin-left: 10%;
-    .Wxmap {
+
+    .eceRealtime {
+      display: flex;
+      flex-direction: column;
       height: 100%;
+      overflow: hidden;
+      overflow-y: auto;
+
+      .eceRealtimeItem {
+        display: flex;
+        align-items: center;
+        color: #fff;
+        color: rgb(4, 170, 41);
+        p {
+          font-size: 0.14rem;
+        }
+
+        span {
+          font-size: 0.14rem;
+          
+        }
+      }
+      .offlint{
+        color: #ccc;
+
+
+      }
     }
+
   }
+}
+
+/* 横向滚动条样式 */
+.eceRealtime::-webkit-scrollbar {
+  width: 5px;
+  /* 设置滚动条宽度 */
+  height: 3px;
+}
+
+.eceRealtime::-webkit-scrollbar-track {
+  background-color: transparent;
+  /* 设置滚动条背景颜色 */
+}
+
+.eceRealtime::-webkit-scrollbar-thumb {
+  background-color: #e2feff;
+  /* 设置滚动条滑块颜色 */
+}
+
+.eceRealtime::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+  /* 设置滚动条滑块在鼠标悬停时的颜色 */
 }
 
 .treeBox {
   max-height: 45vh;
   overflow: hidden;
   overflow-y: auto;
+
   .el-tree {
     background: transparent;
     color: #fff;

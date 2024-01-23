@@ -254,89 +254,90 @@ export default {
     });
   },
 
-  // 查询环境数据列表
-  listEceData(query) {
-    return request({
-      url: "/ece/eceData/list",
-      method: "get",
-      params: query
-    });
-  },
-
-  // 查询环境数据详细
-  getEceData(id) {
-    return request({
-      url: "/ece/eceData/" + id,
-      method: "get"
-    });
-  },
-
-  // 新增环境数据
-  addEceData(data) {
-    return request({
-      url: "/ece/eceData",
-      method: "post",
-      data: data
-    });
-  },
-
-  // 修改环境数据
-  updateEceData(data) {
-    return request({
-      url: "/ece/eceData",
-      method: "put",
-      data: data
-    });
-  },
-
-  // 删除环境数据
-  delEceData(id) {
-    return request({
-      url: "/ece/eceData/" + id,
-      method: "delete"
-    });
-  },
-
   // 查询环境设备列表
   listEceDevice(query) {
     return request({
-      url: "/ece/eceDevice/list",
-      method: "get",
+      url: '/bussiness/eceDevice/list',
+      method: 'get',
       params: query
-    });
-  },
+    })
+  }
 
   // 查询环境设备详细
-  getEceDevice(deviceCode) {
+  , getEceDevice(deviceAddr) {
     return request({
-      url: "/ece/eceDevice/" + deviceCode,
-      method: "get"
-    });
-  },
+      url: '/bussiness/eceDevice/' + deviceAddr,
+      method: 'get'
+    })
+  }
 
   // 新增环境设备
-  addEceDevice(data) {
+  , addEceDevice(data) {
     return request({
-      url: "/ece/eceDevice",
-      method: "post",
+      url: '/bussiness/eceDevice',
+      method: 'post',
       data: data
-    });
-  },
+    })
+  }
 
   // 修改环境设备
-  updateEceDevice(data) {
+  , updateEceDevice(data) {
     return request({
-      url: "/ece/eceDevice",
-      method: "put",
+      url: '/bussiness/eceDevice',
+      method: 'put',
       data: data
-    });
-  },
+    })
+  }
 
   // 删除环境设备
-  delEceDevice(deviceCode) {
+  , delEceDevice(deviceAddr) {
     return request({
-      url: "/ece/eceDevice/" + deviceCode,
-      method: "delete"
-    });
+      url: '/bussiness/eceDevice/' + deviceAddr,
+      method: 'delete'
+    })
+  },
+
+
+  // 查询环境设备实时数据列表
+  listEceRealtimeData(query) {
+    return request({
+      url: '/bussiness/eceRealtimeData/list',
+      method: 'get',
+      params: query
+    })
+  }
+
+  // 查询环境设备实时数据详细
+  , getEceRealtimeData(id) {
+    return request({
+      url: '/bussiness/eceRealtimeData/' + id,
+      method: 'get'
+    })
+  }
+
+  // 新增环境设备实时数据
+  , addEceRealtimeData(data) {
+    return request({
+      url: '/bussiness/eceRealtimeData',
+      method: 'post',
+      data: data
+    })
+  }
+
+  // 修改环境设备实时数据
+  , updateEceRealtimeData(data) {
+    return request({
+      url: '/bussiness/eceRealtimeData',
+      method: 'put',
+      data: data
+    })
+  }
+
+  // 删除环境设备实时数据
+  , delEceRealtimeData(id) {
+    return request({
+      url: '/bussiness/eceRealtimeData/' + id,
+      method: 'delete'
+    })
   }
 };
