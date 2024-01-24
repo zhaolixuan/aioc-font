@@ -28,9 +28,13 @@
           }}</el-tag>
         </template>
       </el-table-column>
-
       <el-table-column
-        label="起始位置"
+        label="地理位置"
+        align="center"
+        prop="alarmValue"
+      />
+      <el-table-column
+        label="光缆位置"
         align="center"
         prop="startPosition"
       />
@@ -39,11 +43,7 @@
         align="center"
         prop="endPosition"
       /> -->
-      <el-table-column
-        label="报警值"
-        align="center"
-        prop="alarmValue"
-      />
+      
       
       <el-table-column
         label="警告时间"
