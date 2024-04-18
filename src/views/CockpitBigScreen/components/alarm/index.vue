@@ -19,16 +19,16 @@
         </el-select>
       </el-form-item>
       <el-form-item label="警告类型" prop="alarmType">
-        <el-select v-model="queryParams.alarmType" placeholder="请选择警告类型" @change="setOptionALarmCategory($event, false)">
+        <el-select v-model="queryParams.alarmType" placeholder="请选择警告类型">
           <el-option v-for="(item) in optionSelectAlarmType" :key="item.alarmValue" :label="item.alarmLabel"
             :value="item.alarmValue" />
         </el-select>
       </el-form-item>
-      <el-form-item label="报警级别" prop="alarmCategory">
-        <el-select v-model="queryParams.alarmCategory" placeholder="请选择报警级别" ref="alarmCategory" clearable
-          :disabled="isAble">
-          <el-option v-for="(item) in optionAlarmCategory" :key="item.alarmValue" :label="item.alarmLabel"
-            :value="item.alarmValue" />
+      <el-form-item label="报警级别" prop="alarmLevel">
+        <el-select v-model="queryParams.alarmLevel" placeholder="请选择报警级别" ref="alarmLevel" clearable
+         >
+          <el-option v-for="(item) in optionAlarmLevel" :key="item.dictValue" :label="item.dictLabel"
+            :value="item.dictValue" />
         </el-select>
       </el-form-item>
 
@@ -154,6 +154,7 @@ export default {
       optionAlarmLevel: [],
       optionSelectAlarmType: [],
       optionAlarmCategory: [],
+      
       optionAlarmCategory1: [],
       // 是否删除时间范围
       daterangeCreateTime: [],
@@ -171,7 +172,7 @@ export default {
         channelZoneId: null,
         channelZoneName: null,
         alarmType: null,
-        alarmCategory: null,
+        alarmLevel: null,
         alarmPosition: null,
         latitude: null,
         sensorValue: null,
@@ -210,6 +211,7 @@ export default {
       this.getboxingData(row)
       this.RealTimeDialog = true
     },
+  
     getboxingData(data) {
        this.dialogBusinessIncome = {
         name: [],
@@ -233,7 +235,6 @@ export default {
     /** 查询报警记录列表 */
     getList() {
       this.loading = true;
-      this.queryParams.params = {};
       if (null != this.daterangeCreateTime && '' != this.daterangeCreateTime) {
         this.queryParams.params["beginCreateTime"] = this.daterangeCreateTime[0];
         this.queryParams.params["endCreateTime"] = this.daterangeCreateTime[1];
@@ -262,9 +263,9 @@ export default {
     //根据告警分类获取告警标签
     getAlarmCategoryLabel(data) {
       for (let a = 0; a < this.optionAlarmLevel.length; a++) {
-        if (data == this.optionAlarmLevel[a].alarmValue) {
+        if (data == this.optionAlarmLevel[a].dictValue) {
 
-          return this.optionAlarmLevel[a].alarmLabel;
+          return this.optionAlarmLevel[a].dictLabel;
           // this.zones = this.channelList[a].subTreeNodes;
         }
       };
@@ -286,7 +287,7 @@ export default {
         channelZoneId: null,
         channelZoneName: null,
         alarmType: null,
-        alarmCategory: null,
+        alarmLevel: null,
         alarmPosition: null,
         latitude: null,
         sensorValue: null,
@@ -370,7 +371,7 @@ export default {
 
     },
     setOptionALarmCategory(data, flag) {
-      console.log(data,flag);
+    
       //如果警告类型为告警则初始化告警分类下拉框
       if (data == 2) {
         api.optionsAlarmCategory().then(response => {
@@ -383,13 +384,7 @@ export default {
           };
         });
       } else {
-        if (flag) {
-          this.isAbleForAdd = true;
-          this.form.alarmCategory = "";
-        } else {
-          this.queryParams.alarmCategory = "";
-          this.isAble = true;
-        };
+       
       };
 
     },

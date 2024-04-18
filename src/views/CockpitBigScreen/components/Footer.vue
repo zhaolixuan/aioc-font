@@ -192,9 +192,6 @@ export default {
       });
       api.optionsAlarmLevel().then((response) => {
         this.optionAlarmLevel = response.data;
-        console.log(response,'1111');
-        console.log(this.optionAlarmLevel,"optionAlarmLevel");
-        // alert("****"+ this.optionAlarmCategory2);
       });
       
     },
@@ -209,12 +206,10 @@ export default {
       }
     },
     
-    //根据告警分类获取告警标签
     getAlarmCategoryLabel(data) {
       for (let a = 0; a < this.optionAlarmLevel.length; a++) {
-        if (data == this.optionAlarmLevel[a].alarmValue) {
-          return this.optionAlarmLevel[a].alarmLabel;
-          // this.zones = this.channelList[a].subTreeNodes;
+        if (data == this.optionAlarmLevel[a].dictValue) {
+          return this.optionAlarmLevel[a].dictLabel;
         }
       }
     },

@@ -134,7 +134,7 @@ export default {
 
   optionsAlarmLevel() {
     return request({
-      url: "/system/dict/type/sys_alarm_level",
+      url: "/system/dict/data/type/sys_alarm_level",
       method: "get"
     });
   },
