@@ -18,13 +18,13 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="告警分类"
+        label="报警级别"
         align="center"
-        prop="alarmCategory"
+        prop="alarmLevel"
       >
         <template slot-scope="scope">
-          <el-tag type="info" v-if="scope.row.alarmCategory">{{
-            getAlarmCategoryLabel(scope.row.alarmCategory)
+          <el-tag type="info" v-if="scope.row.alarmLevel">{{
+            getAlarmCategoryLabel(scope.row.alarmLevel)
           }}</el-tag>
         </template>
       </el-table-column>
@@ -128,6 +128,7 @@ export default {
       zones: [],
       isAble: true,
       optionAlarmCategory: [],
+      optionAlarmLevel: [],
       time: null,
     };
   },
@@ -188,9 +189,14 @@ export default {
       });
       api.optionsAlarmCategory().then((response) => {
         this.optionAlarmCategory2 = response.data;
-        console.log(this.optionAlarmCategory2);
+      });
+      api.optionsAlarmLevel().then((response) => {
+        this.optionAlarmLevel = response.data;
+        console.log(response,'1111');
+        console.log(this.optionAlarmLevel,"optionAlarmLevel");
         // alert("****"+ this.optionAlarmCategory2);
       });
+      
     },
     //根据类型值获取警告类型名称
     getAlarmLabel(data) {
@@ -202,16 +208,12 @@ export default {
         }
       }
     },
+    
     //根据告警分类获取告警标签
     getAlarmCategoryLabel(data) {
-      // if(data == null){
-      //   return ""
-      // }
-      // alert(data);
-      // alert(optionAlarmCategory2);
-      for (let a = 0; a < this.optionAlarmCategory2.length; a++) {
-        if (data == this.optionAlarmCategory2[a].alarmValue) {
-          return this.optionAlarmCategory2[a].alarmLabel;
+      for (let a = 0; a < this.optionAlarmLevel.length; a++) {
+        if (data == this.optionAlarmLevel[a].alarmValue) {
+          return this.optionAlarmLevel[a].alarmLabel;
           // this.zones = this.channelList[a].subTreeNodes;
         }
       }

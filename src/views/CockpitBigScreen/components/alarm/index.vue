@@ -24,8 +24,8 @@
             :value="item.alarmValue" />
         </el-select>
       </el-form-item>
-      <el-form-item label="告警分类" prop="alarmCategory">
-        <el-select v-model="queryParams.alarmCategory" placeholder="请选择告警分类" ref="alarmCategory" clearable
+      <el-form-item label="报警级别" prop="alarmCategory">
+        <el-select v-model="queryParams.alarmCategory" placeholder="请选择报警级别" ref="alarmCategory" clearable
           :disabled="isAble">
           <el-option v-for="(item) in optionAlarmCategory" :key="item.alarmValue" :label="item.alarmLabel"
             :value="item.alarmValue" />
@@ -71,9 +71,9 @@
           <el-tag type="info">{{ getAlarmLabel(scope.row.alarmType) }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="告警分类" align="center" prop="alarmCategory">
+      <el-table-column label="报警级别" align="center" prop="alarmLevel">
         <template slot-scope="scope">
-          <el-tag type="info" v-if="scope.row.alarmCategory">{{ getAlarmCategoryLabel(scope.row.alarmCategory) }}</el-tag>
+          <el-tag type="info" v-if="scope.row.alarmLevel">{{ getAlarmCategoryLabel(scope.row.alarmLevel) }}</el-tag>
         </template>
       </el-table-column>
 
@@ -151,6 +151,7 @@ export default {
       // 默认为添加功能，为true则表示修改窗口。
       flag: false,
       optionAlarmCategory2: [],
+      optionAlarmLevel: [],
       optionSelectAlarmType: [],
       optionAlarmCategory: [],
       optionAlarmCategory1: [],
@@ -260,15 +261,10 @@ export default {
     },
     //根据告警分类获取告警标签
     getAlarmCategoryLabel(data) {
-      // if(data == null){
-      //   return ""
-      // }
-      // alert(data);
-      // alert(optionAlarmCategory2);
-      for (let a = 0; a < this.optionAlarmCategory2.length; a++) {
-        if (data == this.optionAlarmCategory2[a].alarmValue) {
+      for (let a = 0; a < this.optionAlarmLevel.length; a++) {
+        if (data == this.optionAlarmLevel[a].alarmValue) {
 
-          return this.optionAlarmCategory2[a].alarmLabel;
+          return this.optionAlarmLevel[a].alarmLabel;
           // this.zones = this.channelList[a].subTreeNodes;
         }
       };
@@ -364,6 +360,11 @@ export default {
       });
       api.optionsAlarmCategory().then(response => {
         this.optionAlarmCategory2 = response.data;
+        // alert("****"+ this.optionAlarmCategory2);
+      });
+      api.optionsAlarmLevel().then((response) => {
+        this.optionAlarmLevel = response.data;
+       
         // alert("****"+ this.optionAlarmCategory2);
       });
 

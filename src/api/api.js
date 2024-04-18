@@ -132,6 +132,13 @@ export default {
     });
   },
 
+  optionsAlarmLevel() {
+    return request({
+      url: "/system/dict/type/sys_alarm_level",
+      method: "get"
+    });
+  },
+
   optionsAlarmCategory() {
     return request({
       url: "/bussiness/alarmType/optionsAlarmType/biz_alarm_type_3",
