@@ -31,7 +31,7 @@
     <el-dialog title="实时波峰图" :visible.sync="RealTimeDialog" width="50%">
       <BusinessIncome :infor="dialogBusinessIncome" :buttonShow="false"></BusinessIncome>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="RealTimeDialog = false">关闭</el-button>
+        <el-button type="primary" @click="closeRealTimeDialog">关闭</el-button>
       </span>
     </el-dialog>
   </div>
@@ -145,7 +145,6 @@ export default {
     getSysName() {
       api.getSysName().then(res => {
         this.sysName = res.msg
-
       })
     },
     getUserInfo() {
@@ -174,6 +173,11 @@ export default {
     handelrCheck() {
       this.RealTimeDialog = true;
       this.dialogBusinessIncome = this.BusinessIncome;
+    },
+    closeRealTimeDialog(){
+      this.RealTimeDialog = false
+      this.dialogBusinessIncome = null;
+      
     },
     handelrOpenShi(bool) {
       if (bool) {
@@ -219,6 +223,7 @@ export default {
     },
     getlpopRedisData() {
       if (this.lpopTime) clearInterval(this.lpopTime);
+      
       api.realTimeData({ step: 1 }).then((res) => {
         if (Object.keys(res.data).length) {
           if (res.data[this.curHostData.hostNo]) {
@@ -236,6 +241,12 @@ export default {
           }
         }
         this.lpopTime = setInterval(() => {
+        
+          this.BusinessIncome={
+            name: [],
+            value: [],
+            value2: [{ name: "", type: "line", data: [] }],
+          }
           setTimeout(() => {
             api.realTimeData({ step: 1 }).then((res1) => {
             if (Object.keys(res1.data).length) {
@@ -256,7 +267,7 @@ export default {
           });
           }, 0);
           
-        }, 1000);
+        }, 5000);
       });
     },
     // 报警记录接口
