@@ -54,11 +54,13 @@ export default {
     this.getData()
     this.title = this.tabList[0].title
     this.timer = setInterval(() => {
-      let tmpList = this.allTableData.map(item => item)
-      const shiftItems = tmpList.splice(0, 5)
-      tmpList = tmpList.concat(shiftItems)
-      this.allTableData = tmpList
-      this.tableData = this.allTableData.slice(0, 5)
+      setTimeout(() => {   
+        let tmpList = this.allTableData.map(item => item)
+        const shiftItems = tmpList.splice(0, 5)
+        tmpList = tmpList.concat(shiftItems)
+        this.allTableData = tmpList
+        this.tableData = this.allTableData.slice(0, 5)
+      },0)
     }, 3000)
   },
   destroyed() {

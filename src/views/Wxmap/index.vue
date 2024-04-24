@@ -52,7 +52,7 @@ export default {
     mapCenter: {
       deep: true,
       handler: function (data) {
-        console.log(data);
+        // console.log(data);
         if (!data) return;
         if (this.map) {
           this.map.panTo(data.split("|"), 500);
@@ -139,7 +139,7 @@ export default {
             .on(
               "mouseout",
               debounce(function () {
-                console.log("mack移除");
+                // console.log("mack移除");
                 _this.isShow = false;
                 _this.infoWindow.close();
               }),
@@ -188,7 +188,7 @@ export default {
       this.lines = []
       var _this = this;
       api.zoneList().then((res) => {
-        console.log('res', res);
+        // console.log('res', res);
         if (!res.rows.length) return;
         this.zoneList = res.rows;
         res.rows.forEach((item) => {
@@ -218,7 +218,7 @@ export default {
               .on(
                 "mouseout",
                 debounce(function () {
-                  console.log("line移除");
+                  // console.log("line移除");
                   _this.infoWindow.close();
                   _this.isShow = false;
                 }, 200)

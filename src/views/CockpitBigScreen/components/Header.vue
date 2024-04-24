@@ -81,7 +81,7 @@ export default {
   mounted() {
     this.navDate();
     this.time = setInterval(() => {
-      this.updateTime();
+      setTimeout(() => {   this.updateTime();},0)
     }, 1000);
   },
   methods: {

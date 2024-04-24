@@ -65,14 +65,14 @@ export default {
       }
     },
     deviceId(n) {
-      console.log('deviceId', n);
+      // console.log('deviceId', n);
       this.getDeviceInfo(n);
     },
   },
   methods: {
     getDeviceList() {
       api.listEceDevice().then((res) => {
-        console.log('listEceDevice', res);
+        // console.log('listEceDevice', res);
         this.deviceList = res.rows;
         this.deviceList.forEach(i => {
           i.name = `${i.deviceName}(${i.deviceStatus == 'normal' ? '在线' : '离线'})`
@@ -155,7 +155,7 @@ export default {
     getvideoList() {
       api.aideDeviceList().then((res) => {
         if (res && res.rows.length) {
-          console.log("aideDeviceList", res);
+          // console.log("aideDeviceList", res);
           this.curVideoData = res.rows[0];
           this.getVideoUrl();
         }
@@ -168,7 +168,7 @@ export default {
         ipc: this.curVideoData.ip,
       };
       api.startTranscode(params).then((res) => {
-        console.log("startTranscode", res);
+        // console.log("startTranscode", res);
         if (res.code == 200) {
           this.videoInfo = res.data;
         }
@@ -249,7 +249,7 @@ export default {
       api
         .actionControl(data)
         .then((response) => {
-          console.log(response.data);
+          // console.log(response.data);
         })
         .catch((error) => {
           console.error(error);

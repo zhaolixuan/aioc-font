@@ -7,7 +7,6 @@ if (process.env.NODE_ENV === 'development') {
 } else if (process.env.NODE_ENV === 'production') {
   axios.defaults.baseURL = window.location.origin
 }
-console.log(process.env.NODE_ENV);
 // axios.defaults.baseURL = '/'
 // axios.defaults.baseURL = 'http://dev.xjoycity.com:8080'
 // 请求超时时间

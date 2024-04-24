@@ -55,7 +55,7 @@ export default {
       let _$ = this
       let name = this.name
       let value = this.value
-      console.log(_$.option)
+      // console.log(_$.option)
       return {
         series: [{
           type: 'liquidFill',

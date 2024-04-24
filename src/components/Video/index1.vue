@@ -31,10 +31,10 @@ export default {
             deep: true,
             handler(newValue) {
                 if (newValue.rtmpUrl) {
-                    console.log('videoInfo',newValue);
+                    // console.log('videoInfo',newValue);
                     this.videoSrc = newValue.rtmpUrl;
                     this.playerOptions.sources[0].src = newValue.rtmpUrl
-                    console.log(this.playerOptions);
+                    // console.log(this.playerOptions);
                 }
             },
         },

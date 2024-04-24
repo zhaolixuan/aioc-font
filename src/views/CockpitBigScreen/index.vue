@@ -236,7 +236,8 @@ export default {
           }
         }
         this.lpopTime = setInterval(() => {
-          api.realTimeData({ step: 1 }).then((res1) => {
+          setTimeout(() => {
+            api.realTimeData({ step: 1 }).then((res1) => {
             if (Object.keys(res1.data).length) {
               if (res1.data[this.curHostData.hostNo]) {
                 let data = JSON.parse(res1.data[this.curHostData.hostNo][0]);
@@ -253,6 +254,8 @@ export default {
               }
             }
           });
+          }, 0);
+          
         }, 1000);
       });
     },
@@ -285,7 +288,8 @@ export default {
 
         this.centerNumData = this.alarmList.length;
         this.time = setInterval(() => {
-          api.alarmList(params).then((response) => {
+          setTimeout(() => {
+            api.alarmList(params).then((response) => {
             response.rows.forEach((element) => {
               element.fenquName = obtainZone(element, this.zoneList)
                 .map((i) => i.name)
@@ -297,6 +301,8 @@ export default {
             this.alarmList = response.rows.filter((i) => i.status != 1);
             this.centerNumData = this.alarmList.length;
           });
+          }, 0);
+          
         }, 3000);
       });
     },
@@ -354,9 +360,12 @@ export default {
       api.getServer().then((res) => {
         this.ljData = res.data;
         this.serveTime = setInterval(() => {
-          api.getServer().then((res1) => {
-            this.ljData = res1.data;
+          setTimeout(() => {
+            api.getServer().then((res1) => {
+            this.ljData = Object.freeze(res1.data) 
           });
+          }, 0);
+          
         }, 10000);
       });
     },
@@ -390,6 +399,9 @@ export default {
     }
   },
   destroyed() {
+    this.clearTime();
+  },
+  beforeDestroy() {
     this.clearTime();
   },
 };

@@ -75,7 +75,7 @@ export default {
       let center = data.split("|");
       if (this.maptalksMap) {
         this.MapCenter = wgs84togcj02(center);
-        // console.log(' this.MapCenter', this.MapCenter);
+        // // console.log(' this.MapCenter', this.MapCenter);
         this.maptalksMap.animateTo(
           {
             // center: [87.617733, 43.792818],
@@ -93,7 +93,7 @@ export default {
     srceenSize: {
       immediate: true,
       handler: function (newValue) {
-        console.log(newValue, "oojojwie");
+        // console.log(newValue, "oojojwie");
       },
     },
   },
@@ -113,7 +113,7 @@ export default {
           style: "mapbox://styles/zhaolixuan/clj0s1h4b00gp01pw7jg20h5i",
         },
       });
-      // console.log(wgs84toepsg3857([116.38821589024599, 39.97533303800978]));
+      // // console.log(wgs84toepsg3857([116.38821589024599, 39.97533303800978]));
       this.maptalksMap = new maptalks.Map("map", {
         // center: [87.617733, 43.792818], //[116.404269, 39.914935],
         center:
@@ -141,13 +141,13 @@ export default {
         // }),
       });
       // const projection = this.maptalksMap.getProjection();
-      // console.log(maptalks);
+      // // console.log(maptalks);
       // if (projection instanceof maptalks.Projection.EPSG3857) {
-      //   console.log("地图使用的是Web墨卡托投影");
+      //   // console.log("地图使用的是Web墨卡托投影");
       // } else if (projection instanceof maptalks.Projection.EPSG4326) {
-      //   console.log("地图使用的是经纬度投影");
+      //   // console.log("地图使用的是经纬度投影");
       // } else {
-      //   console.log("地图使用的是其他自定义投影方式");
+      //   // console.log("地图使用的是其他自定义投影方式");
       // }
 
       window.maptalksMap = this.maptalksMap;
@@ -161,7 +161,7 @@ export default {
       _this.flyToView();
 
       this.maptalksMap.on("dblclick", function (e) {
-        // console.log(
+        // // console.log(
         //   _this.maptalksMap.getCenter(),
         //   _this.maptalksMap.getPitch(),
         //   _this.maptalksMap.getBearing(),
@@ -179,7 +179,7 @@ export default {
           },
           function (geos) {
             if (geos.length === 0) {
-              console.log("初始化");
+              // console.log("初始化");
               _this.isShow = false;
               _this.centerPointLayer.getGeometries().forEach((element) => {
                 element.updateSymbol({
@@ -214,11 +214,11 @@ export default {
         /**
          * 移出地图范围，关闭弹窗
          */
-        // console.log("移出地图范围，关闭弹窗");
+        // // console.log("移出地图范围，关闭弹窗");
         _this.isShow = false;
       });
       this.maptalksMap.on("click", function (e) {
-        console.log(e);
+        // console.log(e);
       });
     },
     initAddLayers() {
@@ -274,7 +274,7 @@ export default {
             // } else {
             //   lnglat = [116.38778960137059, 39.978345549062944]
             // }
-            // console.log(lnglat, wgs84togcj02(lnglat));
+            // // console.log(lnglat, wgs84togcj02(lnglat));
             var point = new maptalks.Marker(wgs84togcj02(lnglat), {
               id: item.aideDeviceId,
               properties: {
@@ -302,7 +302,7 @@ export default {
               ],
             })
               .on("mouseout", function () {
-                console.log("mack移除");
+                // console.log("mack移除");
                 _this.isShow = false;
               })
               .on(
@@ -310,7 +310,7 @@ export default {
                 debounce(function (e) {
                   _this.centerPointLayer.getGeometries().forEach((element) => {
                     if (element == e.target) {
-                      // console.log(element);
+                      // // console.log(element);
                       el = document.getElementById("informationPanel");
                       _this.isShow = true;
                       _this.myTitleName = element.properties.name;
@@ -678,9 +678,12 @@ export default {
         threeLayer.addMesh(groundWall);
 
         setInterval(() => {
-          groundWall.animateShow({
+          setTimeout(() => {  
+            groundWall.animateShow({
             duration: 3000,
           });
+           },0)
+         
         }, 5000);
       }
       function getWallMaterial() {

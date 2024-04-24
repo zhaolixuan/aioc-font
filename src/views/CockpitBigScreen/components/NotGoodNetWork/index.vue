@@ -43,7 +43,7 @@ export default {
   methods: {
     handelrClick() {
       this.DialogShow = true
-      console.log(1);
+      // console.log(1);
     },
   },
   computed: {
