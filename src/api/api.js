@@ -112,7 +112,7 @@ export default {
   // 分区管理接口
   zoneList() {
     return request({
-      url: "/bussiness/zone/list",
+      url: "/bussiness/zone/listAll",
       method: "get"
     });
   },
