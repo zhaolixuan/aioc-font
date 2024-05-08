@@ -10,7 +10,7 @@
     <div class="left_wrap">
       <BusinessIncome :infor="BusinessIncome" @handelrCheck="handelrCheck" :buttonShow="true"></BusinessIncome>
       <!-- <TrueTopTen></TrueTopTen> -->
-      <Wxmap class="Wxmap"></Wxmap>
+      <!-- <Wxmap class="Wxmap"></Wxmap> -->
       <NotGoodNetWork :infor="topFiveData"></NotGoodNetWork>
     </div>
     <div class="right_wrap">

@@ -235,17 +235,11 @@ export default {
 
   systemconfig() {
     return request({
-      url: "system/config/103",
+      url: "/system/config/103",
       method: "get"
     });
   },
 
-  systemconfig() {
-    return request({
-      url: "system/config/103",
-      method: "get"
-    });
-  },
 
   getInfo() {
     return request({

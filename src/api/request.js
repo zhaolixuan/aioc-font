@@ -17,9 +17,9 @@ const service = axios.create({
   // baseURL: process.env.NODE_ENV=='development'?'http://192.168.196.37:8080/': 'http://116.196.79.26:8088/',
   
   //  baseURL: 'http://192.168.196.134/prod-api/',
-  baseURL: 'http://110.41.60.52/prod-api/',
+  // baseURL: 'http://110.41.60.52/prod-api/',
   // baseURL: 'http://116.198.33.33/prod-api/',
-  // baseURL: '/prod-api/',
+  baseURL: '/prod-api/',
   // 超时
   timeout: 10000
 })
