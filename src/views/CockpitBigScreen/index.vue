@@ -273,11 +273,7 @@ export default {
     // 报警记录接口
     getList() {
       if (this.time) clearInterval(this.time);
-      let params = {
-        pageNum: 1,
-        pageSize: 1000,
-      };
-      api.alarmList(params).then((res) => {
+      api.alarmListAll().then((res) => {
         this.$refs.map.addline();
         res.rows.forEach((element) => {
           element.fenquName = obtainZone(element, this.zoneList)
@@ -297,7 +293,7 @@ export default {
         } catch (error) {
         }
 
-        this.centerNumData = this.alarmList.length;
+        // this.centerNumData = this.alarmList.length;
         this.time = setInterval(() => {
           setTimeout(() => {
             api.alarmList(params).then((response) => {
@@ -310,7 +306,7 @@ export default {
               }
             });
             this.alarmList = response.rows.filter((i) => i.status != 1);
-            this.centerNumData = this.alarmList.length;
+            // this.centerNumData = this.alarmList.length;
           });
           }, 0);
           
@@ -406,6 +402,7 @@ export default {
           i.status == 1 ? "已处理" : "未处理"
         );
         this.topFiveData.value = res.rows.map((i) => i.total);
+        this.centerNumData =  this.topFiveData.value[0]
       });
     }
   },
