@@ -273,7 +273,7 @@ export default {
     // 报警记录接口
     getList() {
       if (this.time) clearInterval(this.time);
-      api.alarmListAll().then((res) => {
+      api.alarmListAll({status:0}).then((res) => {
         this.$refs.map.addline();
         res.rows.forEach((element) => {
           element.fenquName = obtainZone(element, this.zoneList)

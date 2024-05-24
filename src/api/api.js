@@ -66,10 +66,10 @@ export default {
     });
   },
     // 报警记录接口
-    alarmListAll() {
+    alarmListAll(params) {
       return request({
         url: "/bussiness/alarm/listAll",
-        method: "get",
+        method: "get",params
       });
     },
   // 通道管理接口
