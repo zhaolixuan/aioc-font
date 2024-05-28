@@ -18,8 +18,8 @@ const service = axios.create({
   
   //  baseURL: 'http://192.168.196.134/prod-api/',
   // baseURL: 'http://110.41.60.52/prod-api/',
-  // baseURL: 'http://116.196.75.78/prod-api/',
-  baseURL: '/prod-api/',
+  baseURL: 'http://116.196.75.78/prod-api/',
+  // baseURL: '/prod-api/',
   // 超时
   timeout: 10000
 })

@@ -4,32 +4,63 @@
     <Map ref="map" class="map" :mapCenter="mapCenter"></Map>
     <div class="section"></div>
     <div class="header">
-      <Header :infor="topData" :sysName="sysName" @handelrOpenShi="handelrOpenShi"
-        @handelrOpenAnfang="handelrOpenAnfang" />
+      <Header
+        :infor="topData"
+        :sysName="sysName"
+        @handelrOpenShi="handelrOpenShi"
+        @handelrOpenAnfang="handelrOpenAnfang"
+      />
     </div>
     <div class="left_wrap">
-      <BusinessIncome :infor="BusinessIncome" @handelrCheck="handelrCheck" :buttonShow="true"></BusinessIncome>
+      <BusinessIncome
+        :infor="BusinessIncome"
+        @handelrCheck="handelrCheck"
+        :buttonShow="true"
+      ></BusinessIncome>
       <!-- <TrueTopTen></TrueTopTen> -->
       <!-- <Wxmap class="Wxmap"></Wxmap> -->
       <NotGoodNetWork :infor="topFiveData"></NotGoodNetWork>
     </div>
     <div class="right_wrap">
-      <TotalSaleMoney :infor="ljData" :flag="flag" @changeFlag="changeFlag"></TotalSaleMoney>
+      <TotalSaleMoney
+        :infor="ljData"
+        :flag="flag"
+        @changeFlag="changeFlag"
+      ></TotalSaleMoney>
       <ShopNumber :infor="sysStatusList"></ShopNumber>
       <GoodsTypeZB></GoodsTypeZB>
     </div>
     <div class="center">
-      <CenterDataView :infor="centerData" :num="centerNumData" @handlerHostClick="handlerHostClick"
-        :curHostData="curHostData"></CenterDataView>
+      <CenterDataView
+        :infor="centerData"
+        :num="centerNumData"
+        @handlerHostClick="handlerHostClick"
+        :curHostData="curHostData"
+      ></CenterDataView>
     </div>
     <div class="footer">
-      <Footer :alarmList="alarmList" @handleAlarm="handleAlarm" @handlerboxin="handlerboxin" />
+      <Footer
+        :alarmList="alarmList"
+        :disabledScroll="disabledScroll"
+        @handleAlarm="handleAlarm"
+        @handlerboxin="handlerboxin"
+        @onloadData="onloadData"
+      />
     </div>
 
-    <audio id="audio" controls="controls" hidden :src="audioUrl" ref="audio"></audio>
+    <audio
+      id="audio"
+      controls="controls"
+      hidden
+      :src="audioUrl"
+      ref="audio"
+    ></audio>
 
     <el-dialog title="实时波峰图" :visible.sync="RealTimeDialog" width="50%">
-      <BusinessIncome :infor="dialogBusinessIncome" :buttonShow="false"></BusinessIncome>
+      <BusinessIncome
+        :infor="dialogBusinessIncome"
+        :buttonShow="false"
+      ></BusinessIncome>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="closeRealTimeDialog">关闭</el-button>
       </span>
@@ -66,7 +97,7 @@ export default {
     TotalSaleMoney,
     GoodsTypeZB,
     ShopNumber,
-    RealTimePeakGraph,
+    RealTimePeakGraph
   },
   data() {
     return {
@@ -86,31 +117,31 @@ export default {
           "9月",
           "10月",
           "11月",
-          "12月",
+          "12月"
         ],
-        value: [101, 100, 130, 15, 16, 17, 18, 19, 10, 22, 122],
+        value: [101, 100, 130, 15, 16, 17, 18, 19, 10, 22, 122]
       },
       BusinessIncome: {
         name: [],
         value: [],
-        value2: [{ name: "", type: "line", data: [] }],
+        value2: [{ name: "", type: "line", data: [] }]
       },
       dialogBusinessIncome: {
         name: [],
         value: [],
-        value2: [{ name: "", type: "line", data: [] }],
+        value2: [{ name: "", type: "line", data: [] }]
       },
       EnterpriseNumber: {},
       content: "",
       topTenData: {
         name: [],
         value: [],
-        data: [],
+        data: []
       },
       topFiveData: {
         name: [],
         value: [],
-        data: [],
+        data: []
       },
       ljData: null,
       flag: false,
@@ -129,33 +160,39 @@ export default {
       anfangbool: true,
       audioUrl: require("./assets/yujing.mp3"),
       BusinessIncometTitle: "",
-      sysName: ''
+      sysName: "",
+      queryParams: {
+        pageNum: 0,
+        pageSize: 10
+      },
+      disabledScroll:false
     };
   },
   created() {
-    this.getSysName()
+    this.getSysName();
   },
   mounted() {
     this.getData();
     this.getTimeData();
     this.gettitle();
     this.getUserInfo();
+    
   },
   methods: {
     getSysName() {
       api.getSysName().then(res => {
-        this.sysName = res.msg
-      })
+        this.sysName = res.msg;
+      });
     },
     getUserInfo() {
-      api.getInfo().then((res) => {
+      api.getInfo().then(res => {
         if (res.code == 200) {
           this.$store.commit("setActiveName", res.user.userName);
         }
       });
     },
     gettitle() {
-      api.systemconfig().then((res) => {
+      api.systemconfig().then(res => {
         this.$store.commit(
           "setBusinessIncometTitle",
           res.data.configValue || ""
@@ -174,10 +211,9 @@ export default {
       this.RealTimeDialog = true;
       this.dialogBusinessIncome = this.BusinessIncome;
     },
-    closeRealTimeDialog(){
-      this.RealTimeDialog = false
+    closeRealTimeDialog() {
+      this.RealTimeDialog = false;
       this.dialogBusinessIncome = null;
-      
     },
     handelrOpenShi(bool) {
       if (bool) {
@@ -205,7 +241,6 @@ export default {
     },
     getTimeData() {
       this.getlpopRedisData();
-      this.getList();
       this.getAlarmStatisticsList();
       this.getServe();
     },
@@ -223,15 +258,15 @@ export default {
     },
     getlpopRedisData() {
       if (this.lpopTime) clearInterval(this.lpopTime);
-      
-      api.realTimeData({ step: 1 }).then((res) => {
+
+      api.realTimeData({ step: 1 }).then(res => {
         if (Object.keys(res.data).length) {
           if (res.data[this.curHostData.hostNo]) {
             let data = JSON.parse(res.data[this.curHostData.hostNo][0]);
             data.forEach((item, index) => {
               let xdata = [];
               for (let index = 0; index < item.sensor.length; index++) {
-                let num = (index * this.curHostData.factor).toFixed(1)
+                let num = (index * this.curHostData.factor).toFixed(1);
                 xdata.push(num);
               }
               this.BusinessIncome.name = xdata;
@@ -241,98 +276,103 @@ export default {
           }
         }
         this.lpopTime = setInterval(() => {
-        
-          this.BusinessIncome={
+          this.BusinessIncome = {
             name: [],
             value: [],
-            value2: [{ name: "", type: "line", data: [] }],
-          }
+            value2: [{ name: "", type: "line", data: [] }]
+          };
           setTimeout(() => {
-            api.realTimeData({ step: 1 }).then((res1) => {
-            if (Object.keys(res1.data).length) {
-              if (res1.data[this.curHostData.hostNo]) {
-                let data = JSON.parse(res1.data[this.curHostData.hostNo][0]);
-                data.forEach((item, index) => {
-                  let xdata = [];
-                  for (let index = 0; index < item.sensor.length; index++) {
-                    let num = (index * this.curHostData.factor).toFixed(1)
-                    xdata.push(num);
-                  }
-                  this.BusinessIncome.name = xdata;
-                  this.BusinessIncome.value2[index].name = item.channel;
-                  this.BusinessIncome.value2[index].data = item.sensor;
-                });
+            api.realTimeData({ step: 1 }).then(res1 => {
+              if (Object.keys(res1.data).length) {
+                if (res1.data[this.curHostData.hostNo]) {
+                  let data = JSON.parse(res1.data[this.curHostData.hostNo][0]);
+                  data.forEach((item, index) => {
+                    let xdata = [];
+                    for (let index = 0; index < item.sensor.length; index++) {
+                      let num = (index * this.curHostData.factor).toFixed(1);
+                      xdata.push(num);
+                    }
+                    this.BusinessIncome.name = xdata;
+                    this.BusinessIncome.value2[index].name = item.channel;
+                    this.BusinessIncome.value2[index].data = item.sensor;
+                  });
+                }
               }
-            }
-          });
+            });
           }, 0);
-          
         }, 5000);
       });
+    },
+    onloadData(){
+      this.queryParams.pageNum++
+      this.getList()
     },
     // 报警记录接口
     getList() {
       if (this.time) clearInterval(this.time);
-      api.alarmListAll({status:0}).then((res) => {
+      api.alarmList({ ...this.queryParams, status: 0 }).then(res => {
         this.$refs.map.addline();
-        res.rows.forEach((element) => {
+        res.rows.forEach(element => {
           element.fenquName = obtainZone(element, this.zoneList)
-            .map((i) => i.name)
+            .map(i => i.name)
             .join(",");
           if (element.status != 1 && this.anfangbool) {
             this.$refs.map.handelgive(element);
           }
+          this.alarmList.push(element)
         });
-
-        this.alarmList = res.rows.filter((i) => i.status != 1);
-
-        try {
-          if (this.alarmList.length > this.centerNumData && this.anfangbool) {
-            this.startplay();
+          if (this.queryParams.pageNum*this.queryParams.pageSize >= res.total) {
+            this.disabledScroll = true
           }
-        } catch (error) {
-        }
+        // this.alarmList = res.rows
+
+        // try {
+        //   if (this.alarmList.length > this.centerNumData && this.anfangbool) {
+        //     this.startplay();
+        //   }
+        // } catch (error) {
+
+        // }
 
         // this.centerNumData = this.alarmList.length;
-        this.time = setInterval(() => {
-          setTimeout(() => {
-            api.alarmList(params).then((response) => {
-            response.rows.forEach((element) => {
-              element.fenquName = obtainZone(element, this.zoneList)
-                .map((i) => i.name)
-                .join(",");
-              if (element.status != 1) {
-                this.$refs.map.handelgive(element);
-              }
-            });
-            this.alarmList = response.rows.filter((i) => i.status != 1);
-            // this.centerNumData = this.alarmList.length;
-          });
-          }, 0);
-          
-        }, 3000);
+        // this.time = setInterval(() => {
+        //   setTimeout(() => {
+        //     api.alarmList(params).then((response) => {
+        //     response.rows.forEach((element) => {
+        //       element.fenquName = obtainZone(element, this.zoneList)
+        //         .map((i) => i.name)
+        //         .join(",");
+        //       if (element.status != 1) {
+        //         this.$refs.map.handelgive(element);
+        //       }
+        //     });
+        //     this.alarmList = response.rows.filter((i) => i.status != 1);
+        //     // this.centerNumData = this.alarmList.length;
+        //   });
+        //   }, 0);
+
+        // }, 3000);
       });
     },
     handleAlarm(data) {
       this.$confirm("此告警以处理完成?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        type: "warning"
       })
         .then(() => {
-          api.updateAlarm({ alarmId: data.alarmId, status: 1 }).then((res) => {
+          api.updateAlarm({ alarmId: data.alarmId, status: 1 }).then(res => {
             if (res && res.code == 200) {
-
               this.getList();
-              this.getAlarmStatisticsList()
+              this.getAlarmStatisticsList();
               this.$message({
                 type: "success",
-                message: "处理成功!",
+                message: "处理成功!"
               });
             }
           });
         })
-        .catch(() => { });
+        .catch(() => {});
     },
     handlerboxin(data) {
       this.getboxingData(data);
@@ -342,16 +382,16 @@ export default {
       this.dialogBusinessIncome = {
         name: [],
         value: [],
-        value2: [{ name: "", type: "line", data: [] }],
+        value2: [{ name: "", type: "line", data: [] }]
       };
 
-      api.guid(data.guid).then((res) => {
+      api.guid(data.guid).then(res => {
         if (res.data) {
           let item = res.data;
           let xdata = [];
           let sevsor = eval(item.sensor);
           for (let index = 0; index < sevsor.length; index++) {
-            let num = (index * this.curHostData.factor).toFixed(1)
+            let num = (index * this.curHostData.factor).toFixed(1);
             xdata.push(num);
           }
           this.dialogBusinessIncome.name = xdata;
@@ -364,45 +404,49 @@ export default {
       // 获取服务信息
       if (this.serveTime) clearInterval(this.serveTime);
 
-      api.getServer().then((res) => {
+      api.getServer().then(res => {
         this.ljData = res.data;
         this.serveTime = setInterval(() => {
           setTimeout(() => {
-            api.getServer().then((res1) => {
-            this.ljData = Object.freeze(res1.data) 
-          });
+            api.getServer().then(res1 => {
+              this.ljData = Object.freeze(res1.data);
+            });
           }, 0);
-          
         }, 10000);
       });
     },
     getData() {
       // 分区
-      api.zoneList().then((res) => {
+      api.zoneList().then(res => {
         this.zoneList = res.rows;
       });
       //主机
-      api.hostManageList().then((res) => {
+      api.hostManageList().then(res => {
         this.centerData = res.rows;
         this.curHostData = res.rows[0];
         this.mapCenter = this.curHostData.latiscope;
       });
       // 警告统计接口
-      this.getAlarmStatisticsList()
+      this.getAlarmStatisticsList();
       // 查询系统状态列表
-      api.listSysStatus().then((res) => {
-        res.rows.forEach((i) => {
+      api.listSysStatus().then(res => {
+        res.rows.forEach(i => {
           this.sysStatusList.push(i);
         });
       });
     },
     getAlarmStatisticsList() {
-      api.alarmStatisticsList().then((res) => {
-        this.topFiveData.name = res.rows.map((i) =>
+      api.alarmStatisticsList().then(res => {
+        this.topFiveData.name = res.rows.map(i =>
           i.status == 1 ? "已处理" : "未处理"
         );
-        this.topFiveData.value = res.rows.map((i) => i.total);
-        this.centerNumData =  this.topFiveData.value[0]
+        this.topFiveData.value = res.rows.map(i => i.total);
+        if (this.topFiveData.value[0] > this.centerNumData) {
+          try {
+            this.startplay();
+          } catch (error) {}
+        }
+        this.centerNumData = this.topFiveData.value[0];
       });
     }
   },
@@ -411,7 +455,7 @@ export default {
   },
   beforeDestroy() {
     this.clearTime();
-  },
+  }
 };
 </script>
 <style lang="less" scoped>

@@ -1,50 +1,38 @@
 <template>
   <div class="footer_wrap">
- 
-    <el-table :data="alarmList">
-      <el-table-column label="序号" align="center" type="index"  />
-      <el-table-column label="主机名称" align="center" prop="hostName"  />
-     
-      <el-table-column label="通道名称" align="center" prop="channelName"  />
-     
+    <el-table
+    style="height: 2rem;"
+      :data="alarmList"
+      v-el-table-infinite-scroll="getCompanyList"
+      :infinite-scroll-distance="0"
+      :infinite-scroll-disabled="disabledScroll"
+    >
+      <el-table-column label="序号" align="center" type="index" />
+      <el-table-column label="主机名称" align="center" prop="hostName" />
+
+      <el-table-column label="通道名称" align="center" prop="channelName" />
+
       <el-table-column label="分区名称" align="center" prop="fenquName" />
-      <el-table-column
-        label="警告类型"
-        align="center"
-        prop="alarmType"
-      >
+      <el-table-column label="警告类型" align="center" prop="alarmType">
         <template slot-scope="scope">
           <el-tag type="info">{{ getAlarmLabel(scope.row.alarmType) }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-        label="报警级别"
-        align="center"
-        prop="alarmLevel"
-      >
+      <el-table-column label="报警级别" align="center" prop="alarmLevel">
         <template slot-scope="scope">
           <el-tag type="info" v-if="scope.row.alarmLevel">{{
             getAlarmCategoryLabel(scope.row.alarmLevel)
           }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-        label="地理位置"
-        align="center"
-        prop="alarmValue"
-      />
-      <el-table-column
-        label="光缆位置"
-        align="center"
-        prop="startPosition"
-      />
+      <el-table-column label="地理位置" align="center" prop="alarmValue" />
+      <el-table-column label="光缆位置" align="center" prop="startPosition" />
       <!-- <el-table-column
         label="结束位置"
         align="center"
         prop="endPosition"
       /> -->
-      
-      
+
       <el-table-column
         label="警告时间"
         align="center"
@@ -57,7 +45,7 @@
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="处理状态" align="center" prop="status" >
+      <el-table-column label="处理状态" align="center" prop="status">
         <template slot-scope="scope">
           <span>{{ scope.row.status == "1" ? "已处理" : "未处理" }}</span>
         </template>
@@ -91,10 +79,13 @@
 </template>
 <script>
 import { setRedisData, getRedisData, lpopRedisData } from "@/utils/redis";
-
+import elTableInfiniteScroll from "el-table-infinite-scroll";
 import api from "@/api/api";
 export default {
-  props: ["alarmList"],
+  directives: {
+    "el-table-infinite-scroll": elTableInfiniteScroll
+  },
+  props: ["alarmList",'disabledScroll'],
   data() {
     return {
       // 查询参数
@@ -118,7 +109,7 @@ export default {
         warningTime: null,
         status: null,
         createTime: null,
-        updateTime: null,
+        updateTime: null
       },
       optionAlarmCategory2: [],
       optionSelectAlarmType: [],
@@ -129,7 +120,7 @@ export default {
       isAble: true,
       optionAlarmCategory: [],
       optionAlarmLevel: [],
-      time: null,
+      time: null
     };
   },
   watch: {},
@@ -148,6 +139,9 @@ export default {
       // this.resetForm("queryForm");
       // this.handleQuery();
       // this.getOptionData();
+    },
+    getCompanyList() {
+      this.$emit("onloadData");
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -179,21 +173,20 @@ export default {
 
     loadPipleLineInfo() {
       //给下拉框赋值，主机、通道、分区等信息
-      api.listPipleLine().then((response) => {
+      api.listPipleLine().then(response => {
         this.pipeLineList = response.data;
       });
     },
     setOptionAlarms() {
-      api.optionsAlarmType().then((response) => {
+      api.optionsAlarmType().then(response => {
         this.optionSelectAlarmType = response.data;
       });
-      api.optionsAlarmCategory().then((response) => {
+      api.optionsAlarmCategory().then(response => {
         this.optionAlarmCategory2 = response.data;
       });
-      api.optionsAlarmLevel().then((response) => {
+      api.optionsAlarmLevel().then(response => {
         this.optionAlarmLevel = response.data;
       });
-      
     },
     //根据类型值获取警告类型名称
     getAlarmLabel(data) {
@@ -205,7 +198,7 @@ export default {
         }
       }
     },
-    
+
     getAlarmCategoryLabel(data) {
       for (let a = 0; a < this.optionAlarmLevel.length; a++) {
         if (data == this.optionAlarmLevel[a].dictValue) {
@@ -216,7 +209,7 @@ export default {
     setOptionALarmCategory(data, flag) {
       //如果警告类型为告警则初始化告警分类下拉框
       if (data == 3) {
-        optionsAlarmCategory().then((response) => {
+        optionsAlarmCategory().then(response => {
           if (flag) {
             this.optionAlarmCategory1 = response.data;
           } else {
@@ -237,12 +230,11 @@ export default {
     },
     handlerboxin(data) {
       this.$emit("handlerboxin", data);
-    },
-    
-  },
+    }
+  }
 };
 </script>
-<style lang='less' scoped>
+<style lang="less" scoped>
 .footer_wrap {
   width: 100%;
   height: 100%;
@@ -300,7 +292,6 @@ export default {
       overflow: auto;
       // overflow-y: auto;
     }
-    
   }
 }
 </style>
