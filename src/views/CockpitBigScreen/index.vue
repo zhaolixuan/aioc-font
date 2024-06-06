@@ -30,7 +30,7 @@
         :buttonShow="true"
       ></BusinessIncome>
       <!-- <TrueTopTen></TrueTopTen> -->
-      <!-- <Wxmap class="Wxmap"></Wxmap> -->
+      <Wxmap class="Wxmap"></Wxmap>
       <NotGoodNetWork :infor="topFiveData"></NotGoodNetWork>
     </div>
     <div class="right_wrap">
@@ -53,10 +53,8 @@
     <div class="footer">
       <Footer
         :alarmList="alarmList"
-        :disabledScroll="disabledScroll"
         @handleAlarm="handleAlarm"
         @handlerboxin="handlerboxin"
-        @onloadData="onloadData"
       />
     </div>
 
@@ -173,12 +171,7 @@ export default {
       audioUrl: require("./assets/yujing.mp3"),
       BusinessIncometTitle: "",
       sysName: "",
-      queryParams: {
-        pageNum: 0,
-        pageSize: 10
-      },
-      disabledScroll: false,
-      zoom: .6,
+      zoom: 0.6,
       x: 0,
       y: 0,
       startx: "",
@@ -200,7 +193,7 @@ export default {
     change_img(e) {
       console.log(e);
       if (e.deltaY < 0) this.zoom += 0.1;
-      else this.zoom <=0.1 ? this.zoom =0.1 : (this.zoom -= 0.1);
+      else this.zoom <= 0.1 ? (this.zoom = 0.1) : (this.zoom -= 0.1);
     },
     //用mousedown/mousemove/mouseup事件实现鼠标拖拽图片移动效果
     mousedown(e) {
@@ -283,6 +276,7 @@ export default {
     },
     getTimeData() {
       this.getlpopRedisData();
+      this.getList();
       this.getAlarmStatisticsList();
       this.getServe();
     },
@@ -293,7 +287,7 @@ export default {
     },
     // foot点击处理时间
     handelgive(data) {
-      this.$refs.map && this.$refs.map.handelgive(data);
+      this.$refs.map.handelgive(data);
     },
     changeFlag(val) {
       this.flag = val;
@@ -345,55 +339,49 @@ export default {
         }, 5000);
       });
     },
-    onloadData() {
-      this.queryParams.pageNum++;
-      this.getList();
-    },
     // 报警记录接口
     getList() {
       if (this.time) clearInterval(this.time);
-      api.alarmList({ ...this.queryParams, status: 0 }).then(res => {
-        this.$refs.map && this.$refs.map.addline();
+      let params = {
+        pageNum: 1,
+        pageSize: 1000
+      };
+      api.alarmList(params).then(res => {
+        this.$refs.map.addline();
         res.rows.forEach(element => {
           element.fenquName = obtainZone(element, this.zoneList)
             .map(i => i.name)
             .join(",");
           if (element.status != 1 && this.anfangbool) {
-            this.$refs.map && this.$refs.map.handelgive(element);
+            this.$refs.map.handelgive(element);
           }
-          this.alarmList.push(element);
         });
-        if (this.queryParams.pageNum * this.queryParams.pageSize >= res.total) {
-          this.disabledScroll = true;
-        }
-        // this.alarmList = res.rows
 
-        // try {
-        //   if (this.alarmList.length > this.centerNumData && this.anfangbool) {
-        //     this.startplay();
-        //   }
-        // } catch (error) {
+        this.alarmList = res.rows.filter(i => i.status != 1);
 
-        // }
+        try {
+          if (this.alarmList.length > this.centerNumData && this.anfangbool) {
+            this.startplay();
+          }
+        } catch (error) {}
 
-        // this.centerNumData = this.alarmList.length;
-        // this.time = setInterval(() => {
-        //   setTimeout(() => {
-        //     api.alarmList(params).then((response) => {
-        //     response.rows.forEach((element) => {
-        //       element.fenquName = obtainZone(element, this.zoneList)
-        //         .map((i) => i.name)
-        //         .join(",");
-        //       if (element.status != 1) {
-        //         this.$refs.map.handelgive(element);
-        //       }
-        //     });
-        //     this.alarmList = response.rows.filter((i) => i.status != 1);
-        //     // this.centerNumData = this.alarmList.length;
-        //   });
-        //   }, 0);
-
-        // }, 3000);
+        this.centerNumData = this.alarmList.length;
+        this.time = setInterval(() => {
+          setTimeout(() => {
+            api.alarmList(params).then(response => {
+              response.rows.forEach(element => {
+                element.fenquName = obtainZone(element, this.zoneList)
+                  .map(i => i.name)
+                  .join(",");
+                if (element.status != 1) {
+                  this.$refs.map.handelgive(element);
+                }
+              });
+              this.alarmList = response.rows.filter(i => i.status != 1);
+              this.centerNumData = this.alarmList.length;
+            });
+          }, 0);
+        }, 3000);
       });
     },
     handleAlarm(data) {
@@ -483,12 +471,6 @@ export default {
           i.status == 1 ? "已处理" : "未处理"
         );
         this.topFiveData.value = res.rows.map(i => i.total);
-        if (this.topFiveData.value[0] > this.centerNumData) {
-          try {
-            this.startplay();
-          } catch (error) {}
-        }
-        this.centerNumData = this.topFiveData.value[0];
       });
     }
   },
@@ -507,7 +489,11 @@ export default {
   position: relative;
   overflow: hidden;
   background: #000;
-
+  .bgimg{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
   .mask_img {
     position: fixed;
     width: 100%;
@@ -522,11 +508,7 @@ export default {
       pointer-events: none;
     }
   }
-  .bgimg {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-  }
+
   .header {
     height: 16%;
     width: 100%;
