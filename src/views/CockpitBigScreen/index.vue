@@ -1,7 +1,8 @@
 <template>
   <div class="LeaderCockpit">
     <div class="mask_img"><img src="./assets/mask_bg.png" /></div>
-    <Map ref="map" class="map" :mapCenter="mapCenter"></Map>
+    <!-- <Map ref="map" class="map" :mapCenter="mapCenter"></Map> -->
+    <img class="bgimg" src="/static/image/bgimg.png" alt="" />
     <div class="section"></div>
     <div class="header">
       <Header
@@ -165,7 +166,7 @@ export default {
         pageNum: 0,
         pageSize: 10
       },
-      disabledScroll:false
+      disabledScroll: false
     };
   },
   created() {
@@ -176,7 +177,6 @@ export default {
     this.getTimeData();
     this.gettitle();
     this.getUserInfo();
-    
   },
   methods: {
     getSysName() {
@@ -251,7 +251,7 @@ export default {
     },
     // foot点击处理时间
     handelgive(data) {
-      this.$refs.map.handelgive(data);
+      this.$refs.map && this.$refs.map.handelgive(data);
     },
     changeFlag(val) {
       this.flag = val;
@@ -303,27 +303,27 @@ export default {
         }, 5000);
       });
     },
-    onloadData(){
-      this.queryParams.pageNum++
-      this.getList()
+    onloadData() {
+      this.queryParams.pageNum++;
+      this.getList();
     },
     // 报警记录接口
     getList() {
       if (this.time) clearInterval(this.time);
       api.alarmList({ ...this.queryParams, status: 0 }).then(res => {
-        this.$refs.map.addline();
+        this.$refs.map && this.$refs.map.addline();
         res.rows.forEach(element => {
           element.fenquName = obtainZone(element, this.zoneList)
             .map(i => i.name)
             .join(",");
           if (element.status != 1 && this.anfangbool) {
-            this.$refs.map.handelgive(element);
+            this.$refs.map && this.$refs.map.handelgive(element);
           }
-          this.alarmList.push(element)
+          this.alarmList.push(element);
         });
-          if (this.queryParams.pageNum*this.queryParams.pageSize >= res.total) {
-            this.disabledScroll = true
-          }
+        if (this.queryParams.pageNum * this.queryParams.pageSize >= res.total) {
+          this.disabledScroll = true;
+        }
         // this.alarmList = res.rows
 
         // try {
@@ -479,7 +479,11 @@ export default {
       pointer-events: none;
     }
   }
-
+  .bgimg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
   .header {
     height: 16%;
     width: 100%;
