@@ -2,7 +2,19 @@
   <div class="LeaderCockpit">
     <div class="mask_img"><img src="./assets/mask_bg.png" /></div>
     <!-- <Map ref="map" class="map" :mapCenter="mapCenter"></Map> -->
-    <img class="bgimg" src="/static/image/bgimg.png" alt="" />
+    <img
+      class="bgimg"
+      id="pic"
+      :style="{
+        zoom: zoom,
+        transform: 'translate(' + x + 'px,' + y + 'px) scale(' + zoom + ')'
+      }"
+      draggable="false"
+      @mousewheel="change_img($event)"
+      @mousedown="mousedown($event)"
+      src="/static/image/bgimg.png"
+      alt=""
+    />
     <div class="section"></div>
     <div class="header">
       <Header
@@ -166,7 +178,14 @@ export default {
         pageNum: 0,
         pageSize: 10
       },
-      disabledScroll: false
+      disabledScroll: false,
+      zoom: 1,
+      x: 0,
+      y: 0,
+      startx: "",
+      starty: "",
+      endx: 0,
+      endy: 0
     };
   },
   created() {
@@ -179,6 +198,30 @@ export default {
     this.getUserInfo();
   },
   methods: {
+    change_img(e) {
+      console.log(e);
+      if (e.deltaY < 0) this.zoom += 0.1;
+      else this.zoom <=0.1 ? this.zoom =0.1 : (this.zoom -= 0.1);
+    },
+    //用mousedown/mousemove/mouseup事件实现鼠标拖拽图片移动效果
+    mousedown(e) {
+      // 绑定mousemove
+      this.startx = e.pageX;
+      this.starty = e.pageY;
+      document.addEventListener("mousemove", this.mousemove);
+      document.getElementById("pic").addEventListener("mouseup", this.mouseup);
+    },
+    mousemove(e) {
+      this.x = e.pageX - this.startx + this.endx;
+      this.y = e.pageY - this.starty + this.endy;
+    },
+
+    mouseup() {
+      // 解除绑定mousemove
+      document.removeEventListener("mousemove", this.mousemove, false);
+      this.endx = this.x;
+      this.endy = this.y;
+    },
     getSysName() {
       api.getSysName().then(res => {
         this.sysName = res.msg;
@@ -464,6 +507,7 @@ export default {
   height: 100%;
   position: relative;
   overflow: hidden;
+  background: #000;
 
   .mask_img {
     position: fixed;
