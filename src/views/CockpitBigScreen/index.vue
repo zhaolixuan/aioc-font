@@ -6,7 +6,6 @@
       class="bgimg"
       id="pic"
       :style="{
-        zoom: zoom,
         transform: 'translate(' + x + 'px,' + y + 'px) scale(' + zoom + ')'
       }"
       draggable="false"
@@ -179,7 +178,7 @@ export default {
         pageSize: 10
       },
       disabledScroll: false,
-      zoom: 1,
+      zoom: .6,
       x: 0,
       y: 0,
       startx: "",
