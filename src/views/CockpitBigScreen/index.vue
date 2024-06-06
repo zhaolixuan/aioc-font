@@ -1,19 +1,8 @@
 <template>
   <div class="LeaderCockpit">
     <div class="mask_img"><img src="./assets/mask_bg.png" /></div>
-    <!-- <Map ref="map" class="map" :mapCenter="mapCenter"></Map> -->
-    <img
-      class="bgimg"
-      id="pic"
-      :style="{
-        transform: 'translate(' + x + 'px,' + y + 'px) scale(' + zoom + ')'
-      }"
-      draggable="false"
-      @mousewheel="change_img($event)"
-      @mousedown="mousedown($event)"
-      src="/static/image/bgimg.png"
-      alt=""
-    />
+    <Map ref="map" class="map" :mapCenter="mapCenter"></Map>
+   
     <div class="section"></div>
     <div class="header">
       <Header
