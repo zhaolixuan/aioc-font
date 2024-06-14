@@ -28,11 +28,11 @@ export default {
   props: {
     mapCenter: {
       type: String,
-      default: "116.38821589024599|39.97533303800978"
+      default: "117.652413|38.753553"
     },
     zoom: {
       type: Number,
-      default: 13
+      default: 15
     }
   },
   components: {
@@ -57,7 +57,6 @@ export default {
     mapCenter: {
       deep: true,
       handler: function(data) {
-        // console.log(data);
         if (!data) return;
         if (this.map) {
           this.map.panTo(data.split("|"), 500);
@@ -88,7 +87,8 @@ export default {
           "AMap.PolyEdito",
           "AMap.MouseTool",
           "AMap.Autocomplete",
-          "AMap.PlaceSearch"
+          "AMap.PlaceSearch",
+          "AMap.ElasticMarker"
         ] // 需要使用的的插件列表，如比例尺'AMap.Scale'等
       }).then(AMap => {
         this.map = new AMap.Map("map", {
@@ -213,15 +213,24 @@ export default {
         if (!res.rows.length) return;
         this.zoneList = res.rows;
         const qipaoicon = new AMap.Icon({
-          size: new AMap.Size(35, 30), // 设置图标大小
+          size: new AMap.Size(15, 15), // 设置图标大小
           image: require(`../../assets/image/qipao.png`), // 设置图标路径
-          imageSize: new AMap.Size(35, 30) // 设置图标显示大小
+          imageSize: new AMap.Size(15, 15) // 设置图标显示大小
         });
         res.rows.forEach(item => {
           if (item.latscope) {
             var reg = new RegExp("\n", "g");
             let resData = item.latscope.replace(reg, "").split(",");
             let pointData = [];
+            var zoomStyleMapping1 = {
+              14: 0,
+              15: 0,
+              16: 0,
+              17: 0,
+              18: 0,
+              19: 0,
+              20: 0
+            };
             resData.forEach(j => {
               let resData_item = ba_gd(j.split("|"));
               if (resData_item.length) {
@@ -231,7 +240,7 @@ export default {
             const polyline = new AMap.Polyline({
               path: pointData,
               strokeColor: "#1bbc9b",
-              strokeWeight: 5,
+              strokeWeight: 1,
               extData: {
                 name: item.channelZoneName,
                 channelStartNum: item.channelStartNum,
@@ -269,14 +278,37 @@ export default {
                 ];
                 _this.infoWindow.open(_this.map, [e.lnglat.lng, e.lnglat.lat]);
               });
-              console.log(item);
+            // console.log(item);
             const position = new AMap.LngLat(pointData[0][0], pointData[0][1]);
             // const markerContent = `<div class="custom-content-marker">${item.channelName}</div>`;
-            const marker = new AMap.Marker({
-              icon: qipaoicon,
+            const marker = new AMap.ElasticMarker({
+              // icon: qipaoicon,
               position: position,
-              label: { content: item.channelZoneName, direction: "center",fontsize:'12px' }, //将 html 传给 content
-              offset: new AMap.Pixel(0, -30) //以 icon 的 [center bottom] 为原点
+              zooms: [17, 20],
+              zoomStyleMapping: zoomStyleMapping1,
+              styles: [
+                {
+                  icon: {
+                    img:  require(`../../assets/image/qipao.png`),
+                    size: [25, 20], //可见区域的大小
+                    anchor: "center", //锚点
+                    fitZoom: 17, //最合适的级别
+                    scaleFactor: 2, //地图放大一级的缩放比例系数
+                    maxScale: 1.4, //最大放大比例
+                    minScale: 0.8, //最小放大比例
+                    minZoom: 17,
+
+                  },
+                  label: {
+                    content:  item.channelZoneName,
+                    position: 'C',
+                    minZoom: 17,
+                    
+                }
+                }
+              ]
+              // label: { content: item.channelZoneName, direction: "center",fontsize:'12px' }, //将 html 传给 content
+              // offset: new AMap.Pixel(0, -15) //以 icon 的 [center bottom] 为原点
             });
             _this.map.add(marker);
 
@@ -372,6 +404,8 @@ export default {
   justify-content: center;
   flex-wrap: wrap;
   white-space: break-spaces;
-  font-size: 10px;
+  font-size: 9px;
+  text-align: center;
+  line-height: 12px;
 }
 </style>
