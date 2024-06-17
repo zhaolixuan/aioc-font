@@ -247,16 +247,6 @@ export default {
               strokeColor: "#1bbc9b",
               strokeWeight: 1
             })
-              .on(
-                "mouseout",
-                debounce(function() {
-                  // console.log("line移除");
-                  _this.infoWindow.close();
-                  _this.isShow = false;
-                }, 200)
-              )
-              .on("mouseover", function(e) {});
-            // console.log(item);
             const position = new AMap.LngLat(pointData[0][0], pointData[0][1]);
             // const markerContent = `<div class="custom-content-marker">${item.channelName}</div>`;
             const marker = new AMap.Marker({
