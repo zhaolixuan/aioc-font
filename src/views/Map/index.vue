@@ -231,6 +231,11 @@ export default {
               19: 0,
               20: 0
             };
+            let qipaoicon = new AMap.Icon({
+              size: new AMap.Size(15, 15), // 设置图标大小
+              image: require(`../../assets/image/qipao.png`), // 设置图标路径
+              imageSize: new AMap.Size(15, 15) // 设置图标显示大小
+            });
             resData.forEach(j => {
               let resData_item = ba_gd(j.split("|"));
               if (resData_item.length) {
@@ -240,15 +245,7 @@ export default {
             const polyline = new AMap.Polyline({
               path: pointData,
               strokeColor: "#1bbc9b",
-              strokeWeight: 1,
-              extData: {
-                name: item.channelZoneName,
-                channelStartNum: item.channelStartNum,
-                channelName: item.channelName,
-                channelEndNum: item.channelEndNum,
-                pointDataStart: pointData[0],
-                pointDataEnd: pointData[pointData.length - 1]
-              }
+              strokeWeight: 1
             })
               .on(
                 "mouseout",
@@ -258,8 +255,27 @@ export default {
                   _this.isShow = false;
                 }, 200)
               )
-              .on("mouseover", function(e) {
+              .on("mouseover", function(e) {});
+            // console.log(item);
+            const position = new AMap.LngLat(pointData[0][0], pointData[0][1]);
+            // const markerContent = `<div class="custom-content-marker">${item.channelName}</div>`;
+            const marker = new AMap.Marker({
+              icon: qipaoicon,
+              position: position,
+              zooms: [17, 20],
+              anchor: "center",
+              extData: {
+                name: item.channelZoneName,
+                channelStartNum: item.channelStartNum,
+                channelName: item.channelName,
+                channelEndNum: item.channelEndNum,
+                pointDataStart: pointData[0],
+                pointDataEnd: pointData[pointData.length - 1]
+              }
+            })
+              .on("mouseover", e => {
                 let properties = e.target.getExtData();
+                console.log('properties :>> ', properties);
                 _this.isShow = true;
                 _this.myTitleName = properties.name;
                 _this.myDataList = [
@@ -277,39 +293,17 @@ export default {
                   }
                 ];
                 _this.infoWindow.open(_this.map, [e.lnglat.lng, e.lnglat.lat]);
-              });
-            // console.log(item);
-            const position = new AMap.LngLat(pointData[0][0], pointData[0][1]);
-            // const markerContent = `<div class="custom-content-marker">${item.channelName}</div>`;
-            const marker = new AMap.ElasticMarker({
-              // icon: qipaoicon,
-              position: position,
-              zooms: [17, 20],
-              zoomStyleMapping: zoomStyleMapping1,
-              styles: [
-                {
-                  icon: {
-                    img:  require(`../../assets/image/qipao.png`),
-                    size: [25, 20], //可见区域的大小
-                    anchor: "center", //锚点
-                    fitZoom: 17, //最合适的级别
-                    scaleFactor: 2, //地图放大一级的缩放比例系数
-                    maxScale: 1.4, //最大放大比例
-                    minScale: 0.8, //最小放大比例
-                    minZoom: 17,
 
-                  },
-                  label: {
-                    content:  item.channelZoneName,
-                    position: 'C',
-                    minZoom: 17,
-                    
-                }
-                }
-              ]
-              // label: { content: item.channelZoneName, direction: "center",fontsize:'12px' }, //将 html 传给 content
-              // offset: new AMap.Pixel(0, -15) //以 icon 的 [center bottom] 为原点
-            });
+                marker.setLabel({ content: item.channelZoneName });
+              })
+              .on("mouseout", () => {
+                debounce(function() {
+                  // console.log("line移除");
+                  _this.infoWindow.close();
+                  _this.isShow = false;
+                }, 200);
+                marker.setLabel({ content: "" });
+              });
             _this.map.add(marker);
 
             _this.map.add(polyline);
@@ -397,7 +391,7 @@ export default {
   background: transparent;
   border: none;
   color: #fff;
-  width: 32px;
+  min-width: 50px;
   height: 32px;
   display: flex;
   align-items: center;
