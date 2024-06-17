@@ -32,7 +32,7 @@ export default {
     },
     zoom: {
       type: Number,
-      default: 15
+      default: 17.5
     }
   },
   components: {
@@ -59,7 +59,7 @@ export default {
       handler: function(data) {
         if (!data) return;
         if (this.map) {
-          this.map.panTo(data.split("|"), 500);
+          this.map.panTo(ba_gd(data.split("|")), 500);
         }
       }
     }
@@ -91,9 +91,10 @@ export default {
           "AMap.ElasticMarker"
         ] // 需要使用的的插件列表，如比例尺'AMap.Scale'等
       }).then(AMap => {
+        console.log(this.mapCenter && this.mapCenter.split("|"));
         this.map = new AMap.Map("map", {
           zoom: this.zoom,
-          center: this.mapCenter && this.mapCenter.split("|"),
+          center:ba_gd(this.mapCenter && this.mapCenter.split("|")), 
           mapStyle: "amap://styles/darkblue",
           showIndoorMap: false
         });
@@ -232,9 +233,9 @@ export default {
               20: 0
             };
             let qipaoicon = new AMap.Icon({
-              size: new AMap.Size(15, 15), // 设置图标大小
+              size: new AMap.Size(10, 10), // 设置图标大小
               image: require(`../../assets/image/qipao.png`), // 设置图标路径
-              imageSize: new AMap.Size(15, 15) // 设置图标显示大小
+              imageSize: new AMap.Size(10, 10) // 设置图标显示大小
             });
             resData.forEach(j => {
               let resData_item = ba_gd(j.split("|"));
@@ -246,7 +247,7 @@ export default {
               path: pointData,
               strokeColor: "#1bbc9b",
               strokeWeight: 1
-            })
+            });
             const position = new AMap.LngLat(pointData[0][0], pointData[0][1]);
             // const markerContent = `<div class="custom-content-marker">${item.channelName}</div>`;
             const marker = new AMap.Marker({
@@ -265,7 +266,6 @@ export default {
             })
               .on("mouseover", e => {
                 let properties = e.target.getExtData();
-                console.log('properties :>> ', properties);
                 _this.isShow = true;
                 _this.myTitleName = properties.name;
                 _this.myDataList = [
@@ -284,15 +284,15 @@ export default {
                 ];
                 _this.infoWindow.open(_this.map, [e.lnglat.lng, e.lnglat.lat]);
 
-                marker.setLabel({ content: item.channelZoneName });
+                // marker.setLabel({ content: item.channelZoneName });
               })
               .on("mouseout", () => {
-                debounce(function() {
-                  // console.log("line移除");
-                  _this.infoWindow.close();
-                  _this.isShow = false;
-                }, 200);
-                marker.setLabel({ content: "" });
+                // debounce(function() {
+                // console.log("line移除");
+                _this.infoWindow.close();
+                _this.isShow = false;
+                // }, 200);
+                // marker.setLabel({ content: "" });
               });
             _this.map.add(marker);
 
