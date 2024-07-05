@@ -13,15 +13,7 @@
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
-      <el-form-item prop="code" v-if="captchaEnabled">
-        <el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" style="width: 63%"
-          @keyup.enter.native="handleLogin">
-          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
-        </el-input>
-        <div class="login-code">
-          <img :src="codeUrl" @click="getCode" class="login-code-img" />
-        </div>
-      </el-form-item>
+    
       <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
       <el-form-item style="width:100%;">
         <el-button :loading="loading" size="medium" type="primary" style="width:100%;"
@@ -42,7 +34,7 @@
 </template>
 
 <script>
-import { getCodeImg,login } from "@/api/login";
+import { getCodeImg,login,clogin } from "@/api/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from '@/utils/jsencrypt'
 import { setToken } from '@/utils/auth'
@@ -57,7 +49,6 @@ export default {
         username: "",
         password: "",
         rememberMe: false,
-        code: "",
         uuid: "",
         url: "ws://127.0.0.1:8080/websocket/message",
         message: "",
@@ -71,7 +62,6 @@ export default {
         password: [
           { required: true, trigger: "blur", message: "请输入您的密码" }
         ],
-        code: [{ required: true, trigger: "change", message: "请输入验证码" }]
       },
       loading: false,
       // 验证码开关
@@ -93,7 +83,7 @@ export default {
   },
   created() {
     this.getSysName()
-    this.getCode();
+    // this.getCode();
     this.getCookie();
   },
   methods: {
@@ -124,14 +114,14 @@ export default {
           } else {
             Cookies.remove('rememberMe');
           }
-          let {username, password, code, uuid} = this.loginForm
-          login(username, password, code, uuid).then(res => {
+          let {username, password} = this.loginForm
+          clogin(username, password).then(res => {
             setToken(res.token)
             this.$router.push({ path: this.redirect || "/" })
           }).catch(error => {
             this.loading = false;
             if (this.captchaEnabled) {
-              this.getCode();
+              // this.getCode();
             }
           })
 
@@ -190,7 +180,8 @@ export default {
   background: #ffffff;
   width: 400px;
   padding: 25px 25px 5px 25px;
-
+  display: flex;
+  flex-direction: column;
   .el-input {
     height: 38px;
 
