@@ -18,6 +18,22 @@ export function login(username, password, code, uuid) {
   })
 }
 
+// 登录方法
+export function clogin(username, password) {
+  const data = {
+    username,
+    password,
+  }
+  return request({
+    url: '/cLogin',
+    headers: {
+      isToken: false
+    },
+    method: 'post',
+    data: data
+  })
+}
+
 // 注册方法
 export function register(data) {
   return request({
