@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Leader from '@/views/CockpitBigScreen/index'
+import Map from '@/views/CockpitBigScreen/map'
 import Login from '@/views/login/index'
 
 Vue.use(Router)
@@ -12,6 +13,11 @@ const router = new Router({
             path: '/',
             name: 'Leader',
             component: Leader
+        },
+        {
+            path: '/map',
+            name: 'Map',
+            component: Map
         },
         {
             path: '/login',

@@ -1,8 +1,8 @@
 <template>
   <div class="LeaderCockpit">
-    <div class="mask_img"><img src="./assets/mask_bg.png" /></div>
-    <!-- <Map ref="map" class="map" :mapCenter="mapCenter"></Map> -->
-    <img
+    <!-- <div class="mask_img"><img src="./assets/mask_bg.png" /></div> -->
+    <Map ref="map" class="map" :mapCenter="mapCenter"></Map>
+    <!-- <img
       class="bgimg"
       id="pic"
       :style="{
@@ -13,7 +13,7 @@
       @mousedown="mousedown($event)"
       src="/static/image/bgimg.png"
       alt=""
-    />
+    /> -->
     <div class="section"></div>
     <div class="header">
       <Header
