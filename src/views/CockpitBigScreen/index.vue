@@ -6,7 +6,7 @@
       class="bgimg"
       id="pic"
       :style="{
-        transform: 'translate(' + x + 'px,' + y + 'px) scale(' + zoom + ')'
+        transform: 'translate(' + x + 'px,' + y + 'px) scale(' + zoom + ')',
       }"
       draggable="false"
       @mousewheel="change_img($event)"
@@ -107,7 +107,7 @@ export default {
     TotalSaleMoney,
     GoodsTypeZB,
     ShopNumber,
-    RealTimePeakGraph
+    RealTimePeakGraph,
   },
   data() {
     return {
@@ -127,31 +127,31 @@ export default {
           "9月",
           "10月",
           "11月",
-          "12月"
+          "12月",
         ],
-        value: [101, 100, 130, 15, 16, 17, 18, 19, 10, 22, 122]
+        value: [101, 100, 130, 15, 16, 17, 18, 19, 10, 22, 122],
       },
       BusinessIncome: {
         name: [],
         value: [],
-        value2: [{ name: "", type: "line", data: [] }]
+        value2: [{ name: "", type: "line", data: [] }],
       },
       dialogBusinessIncome: {
         name: [],
         value: [],
-        value2: [{ name: "", type: "line", data: [] }]
+        value2: [{ name: "", type: "line", data: [] }],
       },
       EnterpriseNumber: {},
       content: "",
       topTenData: {
         name: [],
         value: [],
-        data: []
+        data: [],
       },
       topFiveData: {
         name: [],
         value: [],
-        data: []
+        data: [],
       },
       ljData: null,
       flag: false,
@@ -177,7 +177,7 @@ export default {
       startx: "",
       starty: "",
       endx: 0,
-      endy: 0
+      endy: 0,
     };
   },
   created() {
@@ -215,19 +215,19 @@ export default {
       this.endy = this.y;
     },
     getSysName() {
-      api.getSysName().then(res => {
+      api.getSysName().then((res) => {
         this.sysName = res.msg;
       });
     },
     getUserInfo() {
-      api.getInfo().then(res => {
+      api.getInfo().then((res) => {
         if (res.code == 200) {
           this.$store.commit("setActiveName", res.user.userName);
         }
       });
     },
     gettitle() {
-      api.systemconfig().then(res => {
+      api.systemconfig().then((res) => {
         this.$store.commit(
           "setBusinessIncometTitle",
           res.data.configValue || ""
@@ -287,7 +287,7 @@ export default {
     },
     // foot点击处理时间
     handelgive(data) {
-      this.$refs.map.handelgive(data);
+      this.$refs.map && this.$refs.map.handelgive(data);
     },
     changeFlag(val) {
       this.flag = val;
@@ -295,7 +295,7 @@ export default {
     getlpopRedisData() {
       if (this.lpopTime) clearInterval(this.lpopTime);
 
-      api.realTimeData({ step: 1 }).then(res => {
+      api.realTimeData({ step: 1 }).then((res) => {
         if (Object.keys(res.data).length) {
           if (res.data[this.curHostData.hostNo]) {
             let data = JSON.parse(res.data[this.curHostData.hostNo][0]);
@@ -315,10 +315,10 @@ export default {
           this.BusinessIncome = {
             name: [],
             value: [],
-            value2: [{ name: "", type: "line", data: [] }]
+            value2: [{ name: "", type: "line", data: [] }],
           };
           setTimeout(() => {
-            api.realTimeData({ step: 1 }).then(res1 => {
+            api.realTimeData({ step: 1 }).then((res1) => {
               if (Object.keys(res1.data).length) {
                 if (res1.data[this.curHostData.hostNo]) {
                   let data = JSON.parse(res1.data[this.curHostData.hostNo][0]);
@@ -344,20 +344,20 @@ export default {
       if (this.time) clearInterval(this.time);
       let params = {
         pageNum: 1,
-        pageSize: 1000
+        pageSize: 1000,
       };
-      api.alarmList(params).then(res => {
-        this.$refs.map.addline();
-        res.rows.forEach(element => {
+      api.alarmList(params).then((res) => {
+        this.$refs.map && this.$refs.map.addline();
+        res.rows.forEach((element) => {
           element.fenquName = obtainZone(element, this.zoneList)
-            .map(i => i.name)
+            .map((i) => i.name)
             .join(",");
           if (element.status != 1 && this.anfangbool) {
-            this.$refs.map.handelgive(element);
+            this.$refs.map && this.$refs.map.handelgive(element);
           }
         });
 
-        this.alarmList = res.rows.filter(i => i.status != 1);
+        this.alarmList = res.rows.filter((i) => i.status != 1);
 
         try {
           if (this.alarmList.length > this.centerNumData && this.anfangbool) {
@@ -368,16 +368,16 @@ export default {
         this.centerNumData = this.alarmList.length;
         this.time = setInterval(() => {
           setTimeout(() => {
-            api.alarmList(params).then(response => {
-              response.rows.forEach(element => {
+            api.alarmList(params).then((response) => {
+              response.rows.forEach((element) => {
                 element.fenquName = obtainZone(element, this.zoneList)
-                  .map(i => i.name)
+                  .map((i) => i.name)
                   .join(",");
                 if (element.status != 1) {
-                  this.$refs.map.handelgive(element);
+                  this.$refs.map && this.$refs.map.handelgive(element);
                 }
               });
-              this.alarmList = response.rows.filter(i => i.status != 1);
+              this.alarmList = response.rows.filter((i) => i.status != 1);
               this.centerNumData = this.alarmList.length;
             });
           }, 0);
@@ -388,16 +388,16 @@ export default {
       this.$confirm("此告警以处理完成?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
-          api.updateAlarm({ alarmId: data.alarmId, status: 1 }).then(res => {
+          api.updateAlarm({ alarmId: data.alarmId, status: 1 }).then((res) => {
             if (res && res.code == 200) {
               this.getList();
               this.getAlarmStatisticsList();
               this.$message({
                 type: "success",
-                message: "处理成功!"
+                message: "处理成功!",
               });
             }
           });
@@ -412,10 +412,10 @@ export default {
       this.dialogBusinessIncome = {
         name: [],
         value: [],
-        value2: [{ name: "", type: "line", data: [] }]
+        value2: [{ name: "", type: "line", data: [] }],
       };
 
-      api.guid(data.guid).then(res => {
+      api.guid(data.guid).then((res) => {
         if (res.data) {
           let item = res.data;
           let xdata = [];
@@ -434,11 +434,11 @@ export default {
       // 获取服务信息
       if (this.serveTime) clearInterval(this.serveTime);
 
-      api.getServer().then(res => {
+      api.getServer().then((res) => {
         this.ljData = res.data;
         this.serveTime = setInterval(() => {
           setTimeout(() => {
-            api.getServer().then(res1 => {
+            api.getServer().then((res1) => {
               this.ljData = Object.freeze(res1.data);
             });
           }, 0);
@@ -447,11 +447,11 @@ export default {
     },
     getData() {
       // 分区
-      api.zoneList().then(res => {
+      api.zoneList().then((res) => {
         this.zoneList = res.rows;
       });
       //主机
-      api.hostManageList().then(res => {
+      api.hostManageList().then((res) => {
         this.centerData = res.rows;
         this.curHostData = res.rows[0];
         this.mapCenter = this.curHostData.latiscope;
@@ -459,27 +459,27 @@ export default {
       // 警告统计接口
       this.getAlarmStatisticsList();
       // 查询系统状态列表
-      api.listSysStatus().then(res => {
-        res.rows.forEach(i => {
+      api.listSysStatus().then((res) => {
+        res.rows.forEach((i) => {
           this.sysStatusList.push(i);
         });
       });
     },
     getAlarmStatisticsList() {
-      api.alarmStatisticsList().then(res => {
-        this.topFiveData.name = res.rows.map(i =>
+      api.alarmStatisticsList().then((res) => {
+        this.topFiveData.name = res.rows.map((i) =>
           i.status == 1 ? "已处理" : "未处理"
         );
-        this.topFiveData.value = res.rows.map(i => i.total);
+        this.topFiveData.value = res.rows.map((i) => i.total);
       });
-    }
+    },
   },
   destroyed() {
     this.clearTime();
   },
   beforeDestroy() {
     this.clearTime();
-  }
+  },
 };
 </script>
 <style lang="less" scoped>
@@ -489,7 +489,7 @@ export default {
   position: relative;
   overflow: hidden;
   background: #000;
-  .bgimg{
+  .bgimg {
     position: absolute;
     width: 100%;
     height: 100%;
