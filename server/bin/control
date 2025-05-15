@@ -1,0 +1,39 @@
+#!/bin/bash
+
+help(){
+    return 0
+}
+checkhealth(){
+    return 0
+}
+start(){
+
+    echo "start"
+    echo "def_app_name ${def_app_name}"
+    echo "def_instance_name ${def_instance_name}"
+    ln -sf /export/Instances/$def_app_name/$def_instance_name/runtime /export/Instances/aioc-jiujiang-html
+
+    return 0
+}
+
+stop(){
+    return 0
+}
+
+case "${1}" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status|health|checkhealth)
+        checkhealth
+        ;;
+    restart)
+        stop && start
+        ;;
+    *)
+        help
+        ;;
+esac
