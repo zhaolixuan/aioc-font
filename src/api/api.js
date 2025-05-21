@@ -347,4 +347,32 @@ export default {
       method: 'delete'
     })
   }
+
+  // 报警信息处理记录
+  , updateAlarmSolve(data) {
+    return request({
+      url: '/bussiness/alarm/solve',
+      method: 'post',
+      data: data
+    })
+  }
+
+  // 反馈结果下拉框
+  , sysDataProce(data) {
+    return request({
+      url: '/system/dict/data/type/sys_data_processing',
+      method: 'get',
+      params: data
+    })
+  }
+
+  // 报警类型下拉框
+  , bizAlarmType(data) {
+    return request({
+      url: '/bussiness/alarmType/optionsAlarmType/biz_alarm_type',
+      method: 'get',
+      params: data
+    })
+  }
+
 };

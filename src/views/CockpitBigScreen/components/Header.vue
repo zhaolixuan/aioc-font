@@ -1,5 +1,5 @@
 <template>
-  <div class="header_wrap">
+  <div class="header_wrap" style="position: absolute;">
     <div class="address"></div>
     <div class="infor" style="padding-left: 5%; box-sizing: border-box">
       <p class="item_infor">
@@ -28,11 +28,11 @@
       <el-dropdown @command="handleLogin" class="title_dropdown">
         <p class="item_infor">
           {{ urseName }}
-          <img src="../assets/quit.svg" alt="" />
+          <!-- <img src="../assets/quit.svg" alt="" /> -->
         </p>
-        <el-dropdown-menu slot="dropdown" class="op-dropdown">
+        <!-- <el-dropdown-menu slot="dropdown" class="op-dropdown">
           <el-dropdown-item class="op-dropdown-item">退出登录</el-dropdown-item>
-        </el-dropdown-menu>
+        </el-dropdown-menu> -->
       </el-dropdown>
     </div>
   </div>

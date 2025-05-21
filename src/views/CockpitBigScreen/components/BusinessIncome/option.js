@@ -4,30 +4,57 @@ export default {
     show: true,
     trigger: 'axis',
     axisPointer: {
-      type: 'none',
+      type: 'cross',
+      label: {
+        backgroundColor: '#6a7985'
+      },
       lineStyle: {
-        color: '#999'
+        color: '#6a7985'
       }
     },
+      // trigger: "item",
+      // formatter: "{b}<br/>{c} (条)",
+   
   },
   grid: {
-    left: '0',
+    left: '1%',
     right: '4%',
     bottom: '20%',
-    top: '5%',
+    top: '10%',
     containLabel: true
   },
   dataZoom: [
     {
       type: 'inside',
-      start: 0,
-      end: 100
-    },
+      start:0,
+      end: 100,
+      height: 20,
+      bottom: 0,
+
+ },
     {
       start: 0,
       end: 100,
       height: 20,
       bottom: 0,
+      borderColor:"rgba(255,255,255,0.1)", 
+      // backgroundColor: 'red',
+      fillerColor: 'rgba(74, 240, 255, 0.3)', 
+      handleStyle:{
+        borderWidth:2,
+      },
+      dataBackground:{
+        lineStyle:{
+          color:'#00D4FF',
+          width:4,
+        },
+        areaStyle:{
+          color:'#a8e7f6',
+          shadowBlur:12,
+          opacity:0,
+        },
+       
+      },
     }
   ],
   xAxis: {
@@ -82,8 +109,18 @@ export default {
   },
   series: [
     {
+      name:'666',
       data: [150, 230, 224, 218, 135, 147, 260],
-      type: 'line'
+      type: 'line',
+      // markPoint: {
+      //   data: [
+      //     { type: 'max', name: 'Max' },
+      //     { type: 'min', name: 'Min' }
+      //   ]
+      // },
+      // markLine: {
+      //   data: [{ type: 'average', name: 'Avg' }]
+      // }
     }
   ]
 

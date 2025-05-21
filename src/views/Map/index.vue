@@ -269,7 +269,7 @@ export default {
                 ];
                 _this.infoWindow.open(_this.map, [e.lnglat.lng, e.lnglat.lat]);
               });
-              console.log(item);
+              // console.log(item);
             const position = new AMap.LngLat(pointData[0][0], pointData[0][1]);
             // const markerContent = `<div class="custom-content-marker">${item.channelName}</div>`;
             const marker = new AMap.Marker({

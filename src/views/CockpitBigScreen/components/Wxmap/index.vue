@@ -392,4 +392,40 @@ export default {
     background: #409eff !important;
   }
 }
+
+
+
+/** 修改表单label字体颜色*/
+/deep/ .el-form-item__label {
+  color: #00D4FF;
+}
+/**改变input里的字体颜色*/
+/deep/ input::-webkit-input-placeholder {
+  color: #00D4FF;
+  font-size: 12px;
+}
+/**改变input框背景颜色*/
+/deep/ .el-input__inner {
+  background-color: transparent !important;
+}
+/**修改边框和字体颜色 */
+/deep/ .el-select {
+  position: relative;
+  /** 修改输入框透明及选择完字体颜色更改*/
+  .el-input {
+    input {
+      border-color: #235FA7;
+      color: #00D4FF;
+    }
+  }
+}
+/** 修改下拉框字体颜色*/
+/deep/ .el-select-dropdown__item {
+  color: white;
+}
+/** 修改下拉框选中字体颜色*/
+.selected {
+  color: #00D4FF;
+
+}
 </style>

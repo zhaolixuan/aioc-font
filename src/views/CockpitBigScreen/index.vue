@@ -39,7 +39,7 @@
         :flag="flag"
         @changeFlag="changeFlag"
       ></TotalSaleMoney>
-      <ShopNumber :infor="sysStatusList"></ShopNumber>
+      <ShopNumber :infor="sysStatusList" style="margin-bottom: 12px;"></ShopNumber>
       <GoodsTypeZB></GoodsTypeZB>
     </div>
     <div class="center">
@@ -65,6 +65,7 @@
       :src="audioUrl"
       ref="audio"
     ></audio>
+    <!-- <div class="business_dialog" v-if="RealTimeDialogList"></div> -->
 
     <el-dialog title="实时波峰图" :visible.sync="RealTimeDialog" width="50%">
       <BusinessIncome
@@ -75,6 +76,18 @@
         <el-button type="primary" @click="closeRealTimeDialog">关闭</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      :modal="true"
+      title="实时波峰图"
+      :visible.sync="RealTimeDialogList"
+      width="80%"
+    >
+      <BusinessIncomeList :curHostData="curHostData" :infor="dialogBusinessIncome"
+      :buttonShow="false"/>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="closeRealTimeDialogList">关闭</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -83,6 +96,7 @@ import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
 import CenterDataView from "./components/CenterDataView";
 import BusinessIncome from "./components/BusinessIncome/index";
+import BusinessIncomeList from "./components/BusinessIncome/businessList.vue";
 import TrueTopTen from "./components/TrueTopTen";
 import NotGoodNetWork from "./components/NotGoodNetWork";
 import TotalSaleMoney from "./components/TotalSaleMoney";
@@ -96,6 +110,7 @@ import { obtainZone } from "@/utils/pointiInZone";
 export default {
   name: "CockpitBigScreen",
   components: {
+    BusinessIncomeList,
     Header,
     BusinessIncome,
     Footer,
@@ -111,6 +126,8 @@ export default {
   },
   data() {
     return {
+      RealTimeDialog: false,
+      RealTimeDialogList: false,
       tableList: [],
       industry: "",
       topData: {},
@@ -190,6 +207,12 @@ export default {
     this.getUserInfo();
   },
   methods: {
+    closeRealTimeDialogList() {
+    //  setTimeout(()=>{
+      this.RealTimeDialogList = false;
+      this.dialogBusinessIncome = null;
+    //  },2000)
+    },
     change_img(e) {
       // console.log(e);
       if (e.deltaY < 0) this.zoom += 0.1;
@@ -243,7 +266,7 @@ export default {
     },
     // 左上角波纹图放大
     handelrCheck() {
-      this.RealTimeDialog = true;
+      this.RealTimeDialogList = true;
       this.dialogBusinessIncome = this.BusinessIncome;
     },
     closeRealTimeDialog() {
@@ -384,25 +407,27 @@ export default {
         }, 3000);
       });
     },
-    handleAlarm(data) {
-      this.$confirm("此告警以处理完成?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          api.updateAlarm({ alarmId: data.alarmId, status: 1 }).then((res) => {
-            if (res && res.code == 200) {
-              this.getList();
-              this.getAlarmStatisticsList();
-              this.$message({
-                type: "success",
-                message: "处理成功!",
-              });
-            }
-          });
-        })
-        .catch(() => {});
+    handleAlarm() {
+      this.getList();
+      this.getAlarmStatisticsList();
+      // this.$confirm("此告警以处理完成?", "提示", {
+      //   confirmButtonText: "确定",
+      //   cancelButtonText: "取消",
+      //   type: "warning",
+      // })
+      //   .then(() => {
+      //     api.updateAlarm({ alarmId: data.alarmId, status: 1 }).then((res) => {
+      //       if (res && res.code == 200) {
+      //         this.getList();
+      //         this.getAlarmStatisticsList();
+      //         this.$message({
+      //           type: "success",
+      //           message: "处理成功!",
+      //         });
+      //       }
+      //     });
+      //   })
+      //   .catch(() => {});
     },
     handlerboxin(data) {
       this.getboxingData(data);
@@ -827,4 +852,31 @@ export default {
   display: flex;
   justify-content: flex-end;
 }
+
+.business_dialog {
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.06);
+  // background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(10px);
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+}
+/deep/ .el-dialog {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  // background-color: rgba(255,255,255,0.5)!important;
+}
+
+/deep/ .el-dialog {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  // background-color: rgba(255,255,255,0.9)!important;
+}
+.footer_wrap /deep/ .el-dialog {
+  // background-color: rgba(0, 0, 0, 0.8) !important;
+  background-color: rgba(255,255,255,0.7)!important;
+  color: #000;
+}
+
 </style>

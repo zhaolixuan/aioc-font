@@ -15,7 +15,7 @@
 	}
 	.page .el-dialog,
 	.el-pager li {
-	  background: none;
+	  /* background: none; */
 	  /* border: 1px solid #0257a8; */
 	  min-width: 0.42rem;
 	  font-weight: normal;

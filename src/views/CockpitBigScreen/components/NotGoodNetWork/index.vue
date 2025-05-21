@@ -1,7 +1,7 @@
 <template>
   <div class="NoPhysicalOnlineSales_wrap">
     <div class="card_wrap" @click="handelrClick">
-      <norm title="历史报警数量" :icon="1" />
+      <norm title="历史报警数量" icon="alarm" />
     </div>
     <div class="scroll">
       <div ref="canvasChart" style="height:2rem;width:100%"></div>

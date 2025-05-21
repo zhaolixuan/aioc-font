@@ -1,12 +1,12 @@
 <template>
   <div class="ShopNumber_wrap">
     <div class="card_wrap">
-      <norm title="服务器系统状态" :icon="6" />
+      <norm title="服务器系统状态" icon="fwq" />
     </div>
     <div class="dark_table">
       <el-table :data="infor">
         <el-table-column   width="auto" label="模块名称" align="center" prop="moduleName" />
-        <el-table-column    width="46" label="状态" align="center" prop="status">
+        <el-table-column    width="66" label="状态" align="center" prop="status">
           <template slot-scope="scope">
             {{ !scope.row.status == "1" ? "异常" : "正常" }}
           </template>
@@ -170,6 +170,12 @@ export default {
     padding: 2px 6px;
     border: 1px solid #ddd;
     background: #171616;
+  }
+}
+/deep/ .el-table__cell {
+  .cell {
+    font-size: 0.16rem;
+    line-height: 0.42rem;
   }
 }
 </style>

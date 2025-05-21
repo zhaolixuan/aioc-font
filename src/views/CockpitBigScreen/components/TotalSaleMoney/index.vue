@@ -1,7 +1,7 @@
 <template>
   <div class="TotalSaleMoney_wrap">
     <div class="card_wrap">
-      <norm title="终端系统状态" :icon="1" />
+      <norm title="终端系统状态" icon="zd" />
     </div>
     <div class="scroll">
       <div ref="canvasChart" style="height:2rem;width:50%"></div>

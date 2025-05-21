@@ -1,7 +1,7 @@
 <template>
   <div class="ShopNumber_wrap">
     <div class="card_wrap">
-      <norm title="实时AI分析" :icon="6" />
+      <norm title="实时AI分析" icon="ai" />
     </div>
     <div class="dark_table">
       <el-table :data="tableData" style="width: 100%" center>

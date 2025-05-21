@@ -1,11 +1,12 @@
 import axios from 'axios'
 import { Notification, MessageBox, Loading } from 'element-ui'
 import router from '@/router'
-import { getToken } from '@/utils/auth'
+import { getToken,setToken } from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
 import { tansParams, blobValidate } from "@/utils/mounttai";
 import cache from '@/plugins/cache'
 import { Mesage } from '@/utils/resetMessage' // 引入重写的message
+import { clogin } from "@/api/login";
 
 // 是否显示重新登录
 export let isRelogin = { show: false };
@@ -15,7 +16,6 @@ axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 const service = axios.create({
   // axios中请求配置有baseURL选项，表示请求URL公共部分
   // baseURL: process.env.NODE_ENV=='development'?'http://192.168.196.37:8080/': 'http://116.196.79.26:8088/',
-  
   //  baseURL: 'http://192.168.196.134/prod-api/',
   // baseURL: 'http://110.41.60.52/prod-api/',
   // baseURL: 'http://116.198.33.33/prod-api/',
@@ -29,6 +29,7 @@ const service = axios.create({
 service.interceptors.request.use(config => {
   // 是否需要设置 token
   const isToken = (config.headers || {}).isToken === false
+  // const isToken = false
   // 是否需要防止数据重复提交
   const isRepeatSubmit = (config.headers || {}).repeatSubmit === false
   if (getToken() && !isToken) {
@@ -83,15 +84,23 @@ service.interceptors.response.use(res => {
   if (code === 401) {
     if (!isRelogin.show) {
       isRelogin.show = true;
-      MessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示', { confirmButtonText: '重新登录', cancelButtonText: '取消', type: 'warning' }).then(() => {
-        isRelogin.show = false;
-        router.push({ path: "/login" })
-      }).catch(() => {
+      let username = "admin"
+      let password = "admin123"
+      clogin(username, password).then((res) => {
+        setToken(res.token);
         isRelogin.show = false;
       });
+      // MessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示', { confirmButtonText: '重新登录', cancelButtonText: '取消', type: 'warning' }).then(() => {
+      //   isRelogin.show = false;
+      //   router.push({ path: "/login" })
+      // }).catch(() => {
+      //   isRelogin.show = false;
+      // });
     }
-    return Promise.reject('无效的会话，或者会话已过期，请重新登录。')
-  } else if (code === 500) {
+    return Promise.reject(new Error(msg))
+    // return Promise.reject('无效的会话，或者会话已过期，请重新登录。')
+  }
+  if (code === 500) {
     // Mesage({ message: msg, type: 'error' })
     return Promise.reject(new Error(msg))
   } else if (code === 601) {
