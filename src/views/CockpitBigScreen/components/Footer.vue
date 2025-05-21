@@ -14,7 +14,7 @@
         prop="alarmType"
       >
         <template slot-scope="scope">
-          <el-tag type="info">{{ getAlarmLabel(scope.row.alarmType) }}</el-tag>
+          <el-tag type="info" v-if="scope.row.alarmType">{{ getAlarmLabel(scope.row.alarmType) }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -23,6 +23,7 @@
         prop="alarmLevel"
       >
         <template slot-scope="scope">
+          {{  scope.row.alarmLevel}}
           <el-tag type="info" v-if="scope.row.alarmLevel">{{
             getAlarmCategoryLabel(scope.row.alarmLevel)
           }}</el-tag>

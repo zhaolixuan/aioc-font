@@ -59,11 +59,11 @@
     </div>
 
     <audio
-      id="audio"
+      id="audioMap"
       controls="controls"
       hidden
       :src="audioUrl"
-      ref="audio"
+      ref="audioMap"
     ></audio>
 
     <el-dialog title="实时波峰图" :visible.sync="RealTimeDialog" width="50%">
@@ -235,10 +235,10 @@ export default {
       });
     },
     startplay() {
-      this.$refs.audio.currentTime = 0; //从头开始播放提示音
-      this.$refs.audio.play(); //播放
+      this.$refs.audioMap.currentTime = 0; //从头开始播放提示音
+      this.$refs.audioMap.play(); //播放
       setTimeout(() => {
-        this.$refs.audio.pause();
+        this.$refs.audioMap.pause();
       }, 2000);
     },
     // 左上角波纹图放大

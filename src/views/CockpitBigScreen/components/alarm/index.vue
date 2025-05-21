@@ -68,7 +68,7 @@
       <el-table-column label="警告编号" align="center" prop="alarmId" />
       <el-table-column label="警告类型" align="center" prop="alarmType">
         <template slot-scope="scope">
-          <el-tag type="info">{{ getAlarmLabel(scope.row.alarmType) }}</el-tag>
+          <el-tag type="info" v-if="scope.row.alarmType">{{ getAlarmLabel(scope.row.alarmType) }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="报警级别" align="center" prop="alarmLevel">
