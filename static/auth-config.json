@@ -1,0 +1,5 @@
+{
+  "username": "admin",
+  "password": "admin123",
+  "description": "认证配置文件 - 打包后可以手动修改此文件中的用户名和密码"
+} 

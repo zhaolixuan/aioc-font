@@ -11,12 +11,28 @@ import { setToken } from "@/utils/auth";
 export default {
   name: "App",
   mounted() {
-    let username = "admin";
-    let password = "admin123";
-    clogin(username, password).then((res) => {
-      setToken(res.token);
-      this.$router.push({ path: this.redirect || "/" });
-    });
+    // 动态加载外部配置文件
+    fetch('/static/auth-config.json')
+      .then(response => response.json())
+      .then(config => {
+        console.log('config',config);
+        let username = config.username || "admin";
+        let password = config.password || "admin123";
+        clogin(username, password).then((res) => {
+          setToken(res.token);
+          this.$router.push({ path: this.redirect || "/" });
+        });
+      })
+      .catch(error => {
+        console.warn('无法加载认证配置文件，使用默认值:', error);
+        // 如果配置文件加载失败，使用默认值
+        let username = "admin";
+        let password = "admin123";
+        clogin(username, password).then((res) => {
+          setToken(res.token);
+          this.$router.push({ path: this.redirect || "/" });
+        });
+      });
   },
 };
 </script>
